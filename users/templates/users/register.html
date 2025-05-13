@@ -32,17 +32,11 @@
         font-size: 1rem;
         padding: 0.75rem 1.5rem;
       }
-      .password-toggle-icon {
-        position: absolute;
-        top: 61%;
-        right: 400px;
-        transform: translateY(-50%);
-        cursor: pointer;
-      }
-      .password-toggle-icon i {
-        font-size: 18px;
-        color:rgb(20, 20, 20);
-        margin-bottom: 20px;
+      .password-icon {
+        float: right;
+        margin-right: 10px;
+        margin-top: -34px;
+        position: relative;
       }
     </style>
   </head>
@@ -74,7 +68,7 @@
                   <!-- <input type="password" name="password" id="senha" autocomplete="new-password" required="" class="form-control form-control-lg"> -->
                   
                   </div>
-                  <span onclick="togglePassword()" style="cursor:pointer;"><i class="fas fa-eye"></i></span>
+                  <span class="password-icon" onclick="togglePassword()" style="cursor:pointer;"><i class="fas fa-eye"></i></span>
                   <br>
                   <input class="btn btn-primary btn-lg" type="submit" value="Enviar" name="submit" />
                 </form>

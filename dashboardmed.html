@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Healenth</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+      :root {
+        --topnav-height: 50px;
+        --sidenav-width: 200px;
+        --primary-color: #06a4c0;
+        --dark-color: #000;
+        --light-color: #f2f2f2;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      .topnav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--topnav-height);
+        background-color: var(--primary-color);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .topnav a {
+        color: var(--light-color);
+        text-decoration: none;
+        padding: 0 10px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      .topnav h2 {
+        margin: 0;
+      }
+
+      .topnav split {
+        margin-left: auto;
+        display: flex;
+        gap: 10px;
+      }
+
+      .sidenav {
+        height: 100vh;
+        width: var(--sidenav-width);
+        position: fixed;
+        top: var(--topnav-height);
+        left: 0;
+        background-color: var(--light-color);
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        overflow-x: hidden;
+        padding-top: 5px;
+        z-index: 900;
+      }
+
+      .sidenav a {
+        padding: 15px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        color: #000;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .sidenav h5 {
+        margin-bottom: 10px;
+        margin-left: 15px;
+        padding: 2px 0;
+      }
+
+      .sidenav a:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+
+      .sidenav a.active {
+        background-color: var(#000);
+      }
+
+      .main {
+        margin-left: var(--sidenav-width);
+        margin-top: var(--topnav-height);
+        padding: 20px;
+      }
+
+      @media screen and (max-width: 765px) {
+        .sidenav {
+          width: 0;
+          padding-top: 0;
+          transition: 0.3s;
+        }
+
+        .main {
+          margin-left: 0;
+        }
+
+        .sidenav.active {
+          width: var(--sidenav-width);
+          padding-top: 20px;
+        }
+      }
+
+      .dropbtn {
+        background-color: #06a4c0;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+      }
+
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #ddd;
+      }
+
+      .show {
+        display: block;
+      }
+
+      .container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .container .card {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        margin: auto;
+        width: 100%;
+      }
+
+      .containertab {
+        display: flex;
+        padding: 20px;
+        gap: 20px;
+      }
+
+      .containertab .table {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        margin: auto;
+        width: 100%;
+      }
+
+      .containertab .tableside {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        margin: auto;
+        width: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="topnav">
+        <a href="/">
+          <img src="{{'/media/logo2.png'}}" alt="Healenth" width="100">
+        </a>
+        <div class="dropdown">
+          <button onclick="myFunction()" class="dropbtn">
+            <i class="fa-solid fa-user"></i>
+          </button>
+          <div id="myDropdown" class="dropdown-content">
+            <a href="#">Link 1</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <aside>
+      <div class="sidenav">
+        <h5>Menu</h5>
+        <a class="active" href="/dashboard/pacientes">
+          <i class="fa fa-fw fa-home"></i>
+          <span>Inicio</span>
+        </a>
+        <a href="/dashboard/pacientes/agendamentos">
+          <i class="fa fa-fw fa-search"></i>
+          <span>Agendamentos</span>
+        </a>
+        <a href="/contact">
+          <i class="fa fa-fw fa-user-doctor"></i>
+          <span>Médicos</span>
+        </a>
+      </div>
+    </aside>
+    <main class="main">
+      <div class="container">
+        <div class="card">
+          <img src="{{'/media/logo2.png'}}" alt="Healenth" width="100">
+          <h2>Próximo</h2>
+          <p>Data: 20/10/2023</p>
+        </div>
+        <div class="card">
+          <img src="{{'/media/logo2.png'}}" alt="Healenth" width="100">
+          <h2>Marcados</h2>
+          <p>2</p>
+        </div>
+        <div class="card">
+          <img src="{{'/media/logo2.png'}}" alt="Healenth" width="100">
+          <h2>Terminados</h2>
+          <p>2</p>
+        </div>
+      </div>
+      <div class="containertab">
+        <div class="table">
+          <h3>Agendamentos</h3>
+        </div>
+        <div class="tableside">
+          <h3>Histórico</h3>
+        </div>
+    </main>
+  </body>
+  <script>
+    function myFunction() {
+      document.getElementById("myDropdown").classList.toggle("show");
+    }
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+  </script>
+</html>

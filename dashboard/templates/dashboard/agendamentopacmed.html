@@ -20,7 +20,6 @@
           <div id="myDropdown" class="dropdown-content">
             <a href="#">Link 1</a>
             <a href="#">Link 2</a>
-            <button action="{% url 'users:logout' %}" method="post" style="border: 0;">
             <form action="{% url 'users:logout' %}" method="post" style="margin: 2px 2px 5px 10px;">
               {% csrf_token %}
               <button action="{% url 'users:logout' %}" method="post" style="border: 0;">Logout</button>
@@ -46,31 +45,8 @@
       </div>
     </aside>
     <main class="main">
-      <h1>Bem-vindo, {{ user.username }}!</h1>
       <div class="container">
-        <div class="card">
-          <i class="fa-solid fa-arrow-right"></i>
-          <h2>Próximo</h2>
-          <p>Data: 20/10/2023</p>
-        </div>
-        <div class="card">
-          <i class="fa-solid fa-marker"></i>
-          <h2>Marcados</h2>
-          <p>2</p>
-        </div>
-        <div class="card">
-          <i class="fa-solid fa-check"></i>
-          <h2>Terminados</h2>
-          <p>2</p>
-        </div>
       </div>
-      <div class="containertab">
-        <div class="table">
-          <h3>Agendamentos</h3>
-        </div>
-        <div class="tableside">
-          <h3>Histórico</h3>
-        </div>
     </main>
   </body>
   <script>

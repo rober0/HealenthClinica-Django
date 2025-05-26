@@ -1,0 +1,203 @@
+:root {
+        --topnav-height: 50px;
+        --sidenav-width: 200px;
+        --primary-color: #06a4c0;
+        --dark-color: #000;
+        --light-color: #f2f2f2;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      .topnav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--topnav-height);
+        background-color: var(--primary-color);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .topnav a {
+        color: var(--light-color);
+        text-decoration: none;
+        padding: 0 10px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      .topnav h2 {
+        margin: 0;
+      }
+
+      .topnav split {
+        margin-left: auto;
+        display: flex;
+        gap: 10px;
+      }
+
+      .sidenav {
+        height: 100vh;
+        width: var(--sidenav-width);
+        position: fixed;
+        top: var(--topnav-height);
+        left: 0;
+        background-color: var(--light-color);
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        overflow-x: hidden;
+        padding-top: 5px;
+        z-index: 900;
+      }
+
+      .sidenav a {
+        padding: 15px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        color: #000;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .sidenav h5 {
+        margin-bottom: 10px;
+        margin-left: 15px;
+        padding: 2px 0;
+      }
+
+      .sidenav a:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+
+      .sidenav a.active {
+        background-color: var(#000);
+      }
+
+      .main {
+        margin-left: var(--sidenav-width);
+        margin-top: var(--topnav-height);
+        padding: 20px;
+      }
+
+      @media screen and (max-width: 760px) {
+        .sidenav {
+          width: 0;
+          padding-top: 0;
+          transition: 0.3s;
+        }
+
+        .main {
+          margin-left: 0;
+        }
+
+        .sidenav.active {
+          width: var(--sidenav-width);
+          padding-top: 20px;
+        }
+      }
+
+      .dropdown .dropbtn {
+        background-color: inherit;
+        color: white;
+        padding: 14px 16px;
+        font-size: 16px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        margin: 0;
+      }
+
+      .dropdown {
+        float: left;
+        overflow: hidden;
+      }
+
+      .topnav .dropbtn:focus {
+        background-color: #06a4c0;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        overflow: auto;
+        right: 0;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+      }
+
+      .dropdown-content a {
+        float: none;
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #ddd;
+      }
+
+      .show {
+        display: block;
+      }
+
+      .container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .container .card {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        margin: auto;
+        width: 100%;
+      }
+
+      .containertab {
+        display: flex;
+        padding: 20px;
+        gap: 20px;
+      }
+
+      .containertab .table {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        margin: auto;
+        width: 100%;
+      }
+
+      .containertab .tableside {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        margin: auto;
+        width: 400px;
+      }
+
+      .i fa-solid {
+        font-size: 32px
+      }
+
+      #username {
+        font-size: 8px;
+      }

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from .models import Usuario
 from .forms import RegistroForm, LoginForm
 from .decorators import user_redirect_handler
@@ -11,6 +12,8 @@ def register_view(request):
     if request.user.is_authenticated:
         if request.user.is_superuser or request.user.is_staff:
             return redirect('dashboard:administrador')
+        if request.user.groups.filter(name='Medico'.exists()):
+            return redirect('dashboard:medicos')
         return redirect('dashboard:pacientes')
 
     if request.method == "POST":
@@ -21,6 +24,10 @@ def register_view(request):
             password = form.cleaned_data['password']
             user = Usuario.objects.create_user(username=username, email=email, password=password)
             login(request, user)
+
+            paciente_group = Group.objects.get(name='Paciente')
+            user.groups.add(paciente_group)
+
             if user.is_superuser or user.is_staff:
                 return redirect('dashboard:administrador')
             return redirect('dashboard:pacientes')
@@ -33,6 +40,8 @@ def login_view(request):
     if request.user.is_authenticated:
         if request.user.is_superuser or request.user.is_staff:
             return redirect('dashboard:administrador')
+        if request.user.groups.filter(name='Medico').exists():
+            return redirect('dashboard:medicos')    
         return redirect('dashboard:pacientes')
 
     if request.method == "POST":

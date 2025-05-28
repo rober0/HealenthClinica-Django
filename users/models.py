@@ -1,3 +1,4 @@
+from email.headerregistry import Group
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
@@ -19,6 +20,24 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
+    
+    def create_medico(self, email, username, password=None, **extra_fields):
+        user = self.create_user(email, username, **extra_fields)
+        try:
+            medico_group = Group.objects.get(Name='Medico')
+            user.groups.add(medico_group)
+        except Group.DoesNotExist:
+            print("O grupo 'Medico' não existe.")
+        return user
+
+    def create_paciente(self, email, username, password=None, **extra_fields):
+        user = self.create_user(email, username, **extra_fields)
+        try:
+            paciente_group = Group.objects.get(Name='Paciente')
+            user.groups.add(paciente_group)
+        except Group.DoesNotExist:
+            print("O grupo 'Paciente' não existe.")
+        return user
 
     def create_staffuser(self, email, username, password=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
@@ -29,7 +48,6 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         return self.create_user(email, username, password, **extra_fields)
-
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(

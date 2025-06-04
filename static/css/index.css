@@ -17,6 +17,7 @@ body {
       .logo img {
         margin-right: 20px;
         vertical-align: middle;
+        height: auto;
       }
 
       nav ul {
@@ -34,6 +35,55 @@ body {
         text-decoration: none;
         color: #333;
         font-weight: bold;
+        transition: color 0.3s ease;
+      }
+
+      .headerlink:hover {
+        color: #26aac2;
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown .dropbtn {
+        font-size: 16px;  
+        border: none;
+        outline: none;
+        color: black;
+        background-color: transparent;
+        font-family: inherit;
+        margin: 0;
+        cursor: pointer;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        z-index: 1;
+        border-radius: 20px;
+      }
+
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+        transition: all 0.3s ease;
+      }
+
+      .dropdown-content a:hover {
+        color: #06a4c0;
+        background-color: #f0f0f0;
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
       }
 
       .cta {
@@ -47,6 +97,17 @@ body {
         text-decoration: none;
         border-radius: 5px;
         font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn:hover {
+        background-color: #048ca3;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
       }
 
       .main {
@@ -56,116 +117,58 @@ body {
 
       .main h1 {
         font-size: 60px;
+        margin-bottom: 20px;
       }
 
-      footer {
-        background-color: #06a4c0;
-        padding: 10px 0;
+      .examdiv {
+        align-items: center;
         display: flex;
+        width: 100%;
+        border-radius: 10px;
+        justify-content: center;
+        gap: 50px;
       }
 
-      .container {
+      .examtext {
+        max-width: 40%;
+        font-weight: normal;
+      }
+
+      .examimg {
+        max-width: 50%;
+        border-radius: 10px;
+        object-fit: cover;
+      }
+
+      .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #06a4c0;
+        color: #fff;
+        text-align: center;
+        padding: 15px 0;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .footer-content {
         max-width: 1200px;
         margin: 0 auto;
-      }
-      .headerlink:hover {
-        color:#26aac2;
+        padding: 0 20px;
       }
 
-.dropdown {
-  float: left;
-  overflow: hidden;
-}
+      .footer-nav {
+        margin-top: 10px;
+      }
 
-.dropdown .dropbtn {
-  font-size: 16px;  
-  border: none;
-  outline: none;
-  color: black;
-  background-color: inherit;
-  font-family: inherit;
-  margin: 0;
-}
+      .footer-nav a {
+        color: #fff;
+        text-decoration: none;
+        margin: 0 10px;
+        transition: opacity 0.3s ease;
+      }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  border-radius: 20px;
-}
-
-.dropdown-content a {
-  float: none;
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-}
-.dropdown-content a:hover{
-  color: #06a4c0;
-}
-
-.dropdown-content a:hover {
-  background-color: #ddd;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.examdiv{
-  align-items: center;
-  display: flex;
-  min-width: 100%;
-  border-radius: 10px;
-  justify-content: center;
-}
-
-.examtext{
-  max-width: 40%;
-  font-weight: normal;
-}
-
-.examimg{
-  max-width: 50%;
-  text-align: right;
-  margin-left: 50px;
-  border-radius: 10px;
-}
-
-.footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #06a4c0;
-    color: #fff;
-    text-align: center;
-    padding: 15px 0;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-
-.footer-nav {
-    margin-top: 10px;
-}
-
-.footer-nav a {
-    color: #fff;
-    text-decoration: none;
-    margin: 0 10px;
-}
-
-.footer-nav a:hover {
-    text-decoration: underline;
-}
+      .footer-nav a:hover {
+        opacity: 0.8;
+      }

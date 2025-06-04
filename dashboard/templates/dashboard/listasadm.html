@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Healenth</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.1/js/dataTables.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.dataTables.css" />
     <link rel="stylesheet" href="/static/css/dashboard.css">
+    <link rel="script" href="/static/js/dashboard.js">
   </head>
   <body>
     <header>
@@ -21,9 +25,6 @@
             <a href="#">Link 1</a>
             <a href="#">Link 2</a>
             <a href="#">Link 3</a>
-            <form action="{% url 'users:logout' %}" method="post" style=" margin: 2px 2px 5px 10px;">
-              {% csrf_token %}
-              <button action="{% url 'users:logout' %}" method="post" style="border: 0;">Logout</button>
           </div>
         </div>
       </div>
@@ -46,32 +47,26 @@
       </div>
     </aside>
     <main class="main">
-    <h1>Bem-vindo, {{ user.username }}!</h1>
-    <p>Você está vendo está página como um administrador.</p>
-      <div class="container">
-        <div class="card">
-          <img src="{{'/media/logo2.png'}}" alt="Healenth" width="100">
-          <h2>Próximo</h2>
-          <p>Data: 20/10/2023</p>
-        </div>
-        <div class="card">
-          <img src="{{'/media/logo2.png'}}" alt="Healenth" width="100">
-          <h2>Marcados</h2>
-          <p>2</p>
-        </div>
-        <div class="card">
-          <img src="{{'/media/logo2.png'}}" alt="Healenth" width="100">
-          <h2>Terminados</h2>
-          <p>2</p>
-        </div>
-      </div>
-      <div class="containertab">
-        <div class="table">
-          <h3>Agendamentos</h3>
-        </div>
-        <div class="tableside">
-          <h3>Histórico</h3>
-        </div>
+      <h1>Lista de Usuários</h1>
+        <table id="myTable" class="display">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Grupo</th>
+        </tr>
+    </thead>
+    <tbody>
+         {% for usuario in usuarios %}
+              <tr>
+                <td>{{ usuario.username }}</td>
+                <td>{{ usuario.email }}</td>
+                <td>{{ usuario.groups.first.name }}</td>
+              </tr>
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>
     </main>
   </body>
   <script>
@@ -90,5 +85,11 @@
         }
       }
     }
+  </script>
+  <script>
+    $(document).ready( function () {
+    $('#myTable').DataTable();
+    
+} );
   </script>
 </html>

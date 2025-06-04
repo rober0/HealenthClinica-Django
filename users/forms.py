@@ -17,6 +17,7 @@ class RegistroForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control form-control-lg'}),
         }
 
+
 class LoginForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={
         'class': 'form-control form-control-lg'
@@ -49,3 +50,19 @@ class LoginForm(forms.Form):
         if commit:
             user.save()
         return user
+
+class RegistroMedicoForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control form-control-lg'
+    }))
+    password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control form-control-lg'
+    }))
+
+    class Meta:
+        model = Usuario
+        fields = ['username', 'email', 'password', 'password_confirm']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control form-control-lg'}),
+        }

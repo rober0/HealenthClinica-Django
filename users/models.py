@@ -1,6 +1,6 @@
 from email.headerregistry import Group
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin, Group
 from django.utils.translation import gettext_lazy as _
 
 class UserManager(BaseUserManager):
@@ -8,13 +8,15 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError("Users must have an email address")
         
-        email = self.normalize_email(email)
+        email = self.normalize_email(email)   
+        grupo = extra_fields.pop("grupo", None)
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         
         user = self.model(
             email=email,
             username=username,
+            grupo=grupo,
             **extra_fields,
         )
         user.set_password(password)
@@ -60,6 +62,13 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         max_length=150,
         unique=True,
     )
+    grupo = models.ForeignKey(
+        Group,
+        verbose_name=_("Grupo"),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
     is_active = models.BooleanField(_("Active"),default=True)
     is_staff = models.BooleanField(_("Staff Status"),default=False)
     is_superuser = models.BooleanField(_("Super User Status"), default=False)
@@ -77,3 +86,12 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    def get_group_name(self):
+        group = self.groups.first()
+        return group.name if group else "Sem grupo"    
+    
+    def save(self, *args, **kwargs):
+        if not self.grupo and self.groups.exists():
+            self.grupo = self.groups.first()
+        super().save(*args, **kwargs)

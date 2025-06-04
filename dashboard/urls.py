@@ -12,10 +12,8 @@ urlpatterns = [
     path('medicos/', views.medicos, name='medicos'),
     path('medicos/agendamentos', views.medicos_agenda, name='agendamedicos'),
     path('administrador/', views.administrador, name='administrador'),
-    path('administrador/medicos', views.administrador_medicos, name='administrador_medicos'),
-    path('administrador/pacientes', views.administrador_pacientes, name='administrador_pacientes'),
-    path('administrador/medicos/agendamentos', views.administrador_medicos_agendamentos, name='administrador_medicos_agendamentos'),
-    path('administrador/pacientes/agendamentos', views.administrador_pacientes_agendamentos, name='administrador_pacientes_agendamentos'),    
+    path('administrador/agendamentos', views.administrador_agendamentos, name='administrador_agendamentos'),
+    path('administrador/lista', views.administrador_lista, name='administrador_listas'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

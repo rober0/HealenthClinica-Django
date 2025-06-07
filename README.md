@@ -7,5 +7,5 @@ git clone https://github.com/rober0/HealenthClinica-Django.git
 ```
 
 Referências:
-https://github.com/sajib1066/event-calendar
+https://github.com/sajib1066/event-calendar <br>
 https://github.com/eduardoplnascimento/medmazza

@@ -6,6 +6,9 @@ Um simples projeto de TCC feito no Django para realizar consultas médicas.
 git clone https://github.com/rober0/HealenthClinica-Django.git
 ```
 
-Referências:
+Referências: <br>
 https://github.com/sajib1066/event-calendar <br>
-https://github.com/eduardoplnascimento/medmazza
+https://github.com/eduardoplnascimento/medmazza <br>
+https://conclinica.com.br/agenda-medica/ <br>
+https://iclinic.com.br/funcionalidades/agenda-medica/ <br>
+https://www.gestaods.com.br/funcionalidades/agenda-medica/ <br>

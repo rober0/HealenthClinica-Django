@@ -1,37 +1,34 @@
 from django import forms
-from users.models import Usuario
+from users.models import Paciente
 
 class RegistroForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'form-control form-control-lg'
-        }))
+    }))
     password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'form-control form-control-lg'
-        }))
+    }))
 
     class Meta:
-        model = Usuario
-        fields = ['username', 'email', 'password', 'password_confirm']
+        model = Paciente
+        fields = ['username', 'email', 'cpf', 'data_nascimento', 'numero', 'genero', 'password', 'password_confirm']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
             'email': forms.EmailInput(attrs={'class': 'form-control form-control-lg'}),
-        }
-
-
-class LoginForm(forms.Form):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={
-        'class': 'form-control form-control-lg'
-    }))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'form-control form-control-lg'
-    }))
-
-    class Meta:
-        model = Usuario
-        fields = ['email', 'password']
-        widgets = {
-            'email': forms.EmailInput(attrs={'class': 'form-control form-control-lg'}),
-            'password': forms.PasswordInput(attrs={'class': 'form-control form-control-lg'}),
+            'cpf': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
+            'data_nascimento': forms.DateInput(attrs={
+                'class': 'form-control form-control-lg',
+                'type': 'date'
+            }),
+            'numero': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
+            'genero': forms.Select(attrs={
+                'class': 'form-control form-control-lg'
+            }, choices=[
+                ('', 'Selecione o gênero'),
+                ('M', 'Masculino'),
+                ('F', 'Feminino'),
+                ('O', 'Outro')
+            ]),
         }
 
     def clean(self):
@@ -41,7 +38,6 @@ class LoginForm(forms.Form):
 
         if password and password_confirm and password != password_confirm:
             raise forms.ValidationError("As senhas não coincidem.")
-
         return cleaned_data
 
     def save(self, commit=True):
@@ -51,18 +47,10 @@ class LoginForm(forms.Form):
             user.save()
         return user
 
-class RegistroMedicoForm(forms.ModelForm):
+class LoginForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={
+        'class': 'form-control form-control-lg'
+    }))
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'form-control form-control-lg'
     }))
-    password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'form-control form-control-lg'
-    }))
-
-    class Meta:
-        model = Usuario
-        fields = ['username', 'email', 'password', 'password_confirm']
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control form-control-lg'}),
-        }

@@ -57,14 +57,27 @@
         </tr>
     </thead>
     <tbody>
-         {% for usuario in usuarios %}
-              <tr>
-                <td>{{ usuario.username }}</td>
-                <td>{{ usuario.email }}</td>
-                <td>{{ usuario.groups.first.name }}</td>
-              </tr>
-            {% endfor %}
+        {% for paciente in pacientes %}
+        <tr>
+            <td>{{ paciente.username }}</td>
+            <td>{{ paciente.email }}</td>
+            <td>Paciente</td>
         </tr>
+        {% endfor %}
+        {% for medico in medicos %}
+        <tr>
+            <td>{{ medico.username }}</td>
+            <td>{{ medico.email }}</td>
+            <td>Médico</td>
+        </tr>
+        {% endfor %}
+        {% for administrador in administradores %}
+        <tr>
+            <td>{{ administrador.username }}</td>
+            <td>{{ administrador.email }}</td>
+            <td>Administrador</td>
+        </tr>
+        {% endfor %}
     </tbody>
 </table>
     </main>

@@ -4,9 +4,8 @@ from django.core.exceptions import PermissionDenied
 from users.models import Administrador, Medico, Paciente
 
 def admin_required(function):
-    @wraps(function)
     def wrap(request, *args, **kwargs):
-        if isinstance(request.user, Administrador):
+        if request.user.is_superuser or isinstance(request.user, Administrador):
             return function(request, *args, **kwargs)
         raise PermissionDenied
     return wrap
@@ -14,15 +13,19 @@ def admin_required(function):
 def medico_required(function):
     @wraps(function)
     def wrap(request, *args, **kwargs):
-        if isinstance(request.user, Medico):
+        try:
+            medico = Medico.objects.get(email=request.user.email)
             return function(request, *args, **kwargs)
-        raise PermissionDenied
+        except Medico.DoesNotExist:
+            raise PermissionDenied
     return wrap
 
 def paciente_required(function):
     @wraps(function)
     def wrap(request, *args, **kwargs):
-        if isinstance(request.user, Paciente):
+        try:
+            paciente = Paciente.objects.get(email=request.user.email)
             return function(request, *args, **kwargs)
-        raise PermissionDenied
+        except Paciente.DoesNotExist:
+            raise PermissionDenied
     return wrap

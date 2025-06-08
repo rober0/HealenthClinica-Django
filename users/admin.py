@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from .models import Paciente, Medico, Administrador
+from .models import Usuario, Paciente, Medico, Administrador
 
 class CustomUserAdmin(UserAdmin):
     ordering = ('email',)
@@ -64,6 +64,7 @@ class AdministradorAdmin(CustomUserAdmin):
         }),
     )
 
+admin.site.register(Usuario, CustomUserAdmin)
 admin.site.register(Paciente, PacienteAdmin)
 admin.site.register(Medico, MedicoAdmin)
 admin.site.register(Administrador, AdministradorAdmin)

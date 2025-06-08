@@ -1,5 +1,5 @@
 from django import forms
-from users.models import Paciente
+from .models import Paciente
 
 class RegistroForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
@@ -11,7 +11,7 @@ class RegistroForm(forms.ModelForm):
 
     class Meta:
         model = Paciente
-        fields = ['username', 'email', 'cpf', 'data_nascimento', 'numero', 'genero', 'password', 'password_confirm']
+        fields = ['username', 'email', 'cpf', 'data_nascimento', 'numero', 'genero']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
             'email': forms.EmailInput(attrs={'class': 'form-control form-control-lg'}),
@@ -36,8 +36,9 @@ class RegistroForm(forms.ModelForm):
         password = cleaned_data.get("password")
         password_confirm = cleaned_data.get("password_confirm")
 
-        if password and password_confirm and password != password_confirm:
-            raise forms.ValidationError("As senhas não coincidem.")
+        if password and password_confirm:
+            if password != password_confirm:
+                raise forms.ValidationError("As senhas não coincidem")
         return cleaned_data
 
     def save(self, commit=True):

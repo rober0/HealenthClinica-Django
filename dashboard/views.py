@@ -46,3 +46,8 @@ def medico(request):
 @paciente_required
 def paciente(request):
     return render(request, 'dashboard/dashboardpac.html')
+
+@login_required(login_url='users:login')
+@paciente_required
+def paciente_agenda(request):
+    return render(request, 'dashboard/agendamentopac.html')

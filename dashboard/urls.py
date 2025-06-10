@@ -7,7 +7,7 @@ app_name = 'dashboard'
 
 urlpatterns = [
     path('pacientes/', views.paciente, name='pacientes'),
-    # path('pacientes/agendamentos', views.pacientes_agenda, name='agendapacientes'),
+    path('pacientes/agendamentos', views.paciente_agenda, name='agendapacientes'),
     # path('pacientes/medicos', views.pacientes_agendamedico, name='agendapacientesmed'),
     path('medicos/', views.medico, name='medicos'),
     # path('medicos/agendamentos', views.medicos_agenda, name='agendamedicos'),

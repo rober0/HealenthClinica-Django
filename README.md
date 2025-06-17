@@ -5,7 +5,7 @@ Um simples projeto de TCC feito no Django para realizar consultas médicas.
 ```
 git clone https://github.com/rober0/HealenthClinica-Django.git
 py -m venv .venv
-.venv/bin/activate
+.venv\Scripts\activate
 pip install -r requirements.txt
 ```
 

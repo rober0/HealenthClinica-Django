@@ -1,12 +1,17 @@
-function togglePassword() {
-    const passwordInput = document.querySelector('input[name="password"]');
-    if (passwordInput) {
-      passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+document.addEventListener('DOMContentLoaded', function() {
+    var input = document.querySelector("#phone");
+    if(input) {
+        window.intlTelInput(input, {
+            utilsScript: "/static/intl-tel-input/build/js/utils.js",
+            preferredCountries: ['br'],
+            initialCountry: "br",
+            separateDialCode: true,
+            showFlags: false,
+            allowDropdown: true,
+            autoPlaceholder: "aggressive",
+            customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
+                return "Ex: " + selectedCountryPlaceholder;
+            },
+        });
     }
-  }
-  function togglePassword2() {
-    const passwordInput = document.querySelector('input[name="password_confirm"]');
-    if (passwordInput) {
-      passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
-    }
-  }
+});

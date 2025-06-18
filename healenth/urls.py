@@ -25,6 +25,7 @@ app_name = 'healenth'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path("__reload__/", include("django_browser_reload.urls")),
     path('users/', include('users.urls', namespace='users')),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
     path('procedimentos/', views.procedimentos, name='procedimentos'),

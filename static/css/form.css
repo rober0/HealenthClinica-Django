@@ -1,5 +1,6 @@
+@import "../../theme/static_src/node_modules/intl-tel-input/build/css/intlTelInput.css";
+
 body {
-    background-color: #f5f5f5;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -7,29 +8,16 @@ body {
     margin: 0;
   }
 
-  .card {
-    max-width: 800px;
-    margin: auto;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
 
-  .form-control {
-    font-size: 1rem;
-    padding: 0.25rem;
-  }
-  .btn {
-    font-size: 1rem;
-    padding: 0.75rem 1.5rem;
-  }
-  .password-icon {
-    float: right;
-    margin-right: 10px;
-    margin-top: -34px;
-    position: relative;
-  }
-  .password-icon2 {
-    float: right;
-    margin-right: 10px;
-    margin-top: -136px;
-    position: relative;
-  }
+input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px white inset !important;
+            -webkit-text-fill-color: inherit !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        input:focus {
+            outline: none;
+        }

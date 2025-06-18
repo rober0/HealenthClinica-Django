@@ -1,75 +1,100 @@
+{% load static tailwind_tags %}
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html data-theme="light" lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Healenth</title>
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-    <!-- MDB -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.2.0/mdb.min.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="/static/css/form.css" />
+    <title>Registrar</title>
+    <script src="{% static 'js/form.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <link rel="stylesheet" href="{% static 'intl-tel-input/build/css/intlTelInput.css' %}">
+    <script src="{% static 'intl-tel-input/build/js/intlTelInput.min.js' %}"></script>
+    {% tailwind_css %}
   </head>
   <body>
-    <div class="container">
-      <div class="card" style="border-radius: 1rem;">
-        <div class="row g-0">
-          <div class="col-md-6 col-lg-7 d-flex align-items-center">
-            <div class="card-body p-4 p-lg-5 text-black">
-              <form method="post">
+    <!--- <div class="container"><div class="card" style="border-radius: 1rem;"><div class="row g-0"><div class="col-md-6 col-lg-7 d-flex align-items-center"><div class="card-body p-4 p-lg-5 text-black"><form method="post">
                 {% csrf_token %}
-                 <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Registre-se</h5>
-                <div>
-                  <label class="form-label" for="nome">Nome</label>
+                 <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Registre-se</h5><div><label class="form-label" for="nome">Nome</label>
                   {{ form.username }}
-                </div>
-                <br>
-                <div>
-                  <label class="form-label" for="email">Email</label>
+                </div><br><div><label class="form-label" for="email">Email</label>
                   {{ form.email }}
-                </div>
-                <br>
-                <div>
-                  <label class="form-label" for="cpf">CPF</label>
+                </div><br><div><label class="form-label" for="cpf">CPF</label>
                   {{ form.cpf }}
-                </div>
-                <br>
-                <div>
-                  <label class="form-label" for="data">Data de Nascimento</label>
+                </div><br><div><label class="form-label" for="data">Data de Nascimento</label>
                   {{ form.data_nascimento }}
-                </div>
-                <br>
-                <div>
-                  <label class="form-label" for="numero">Número de Telefone</label>
+                </div><br><div><label class="form-label" for="numero">Número de Telefone</label>
                   {{ form.numero }}
-                </div>
-                <br>
-                <div>
-                  <label class="form-label" for="genero">Gênero</label>
+                </div><br><div><label class="form-label" for="genero">Gênero</label>
                   {{ form.genero }}
-                </div>
-                <br>
-                <div>
-                  <label class="form-label" for="senha">Senha</label>
+                </div><br><div><label class="form-label" for="senha">Senha</label>
                   {{ form.password }}
-                </div>
-                <br>
-                <div>
-                  <label class="form-label" for="senha">Confirme a Senha</label>
+                </div><br><div><label class="form-label" for="senha">Confirme a Senha</label>
                   {{ form.password_confirm }}
-                </div>
-                <span class="password-icon" onclick="togglePassword2()" style="cursor:pointer;"><i class="fas fa-eye"></i></span>
-                  <span class="password-icon2" onclick="togglePassword()" style="cursor:pointer;"><i class="fas fa-eye"></i></span>
-                  <br>
-                  <input class="btn btn-primary btn-lg" type="submit" value="Enviar" name="submit" />
-                </form>
-            </div>
-          </div>
-        </div>
+                </div><span class="password-icon" onclick="togglePassword2()" style="cursor:pointer;"><i class="fas fa-eye"></i></span><span class="password-icon2" onclick="togglePassword()" style="cursor:pointer;"><i class="fas fa-eye"></i></span><br><input class="btn btn-primary btn-lg" type="submit" value="Enviar" name="submit" /></form> -->
+    <form method="post"> 
+      {% csrf_token %} 
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+        <legend class="fieldset-legend">Registre-se</legend>
+        <label class="label">Nome</label>
+        <label class="input validator">
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </g>
+          </svg>
+          {{ form.username }}
+        </label>
+        <label class="label">Email</label>
+        <label class="input validator">
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </g>
+          </svg>
+          {{ form.email}}
+        </label>
+        <label class="label">Data de Aniversario</label>
+        {{ form.data_nascimento }}
+        <label class="label">Número de Telefone</label>
+        <label class="input validator">
+          <input type="tel" id="phone" minlength="13" maxlength="13"/>
+        </label>
+        <label class="label">Gênero</label>
+        <select class="select validator" required>
+          <option disabled selected value=""></option>
+          <option>Masculino</option>
+          <option>Feminino</option>
+          <option>Outro</option>
+        </select>
+        <label class="label">Senha</label>
+        <label class="input validator">
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+              <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
+              <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
+            </g>
+          </svg>
+          <input type="password" required placeholder="Senha" minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must be more than 8 characters, including number, lowercase letter, uppercase letter" />
+        </label>
+        <label class="label">Confirme a Senha</label>
+        <label class="input validator">
+          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+              <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
+              <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
+            </g>
+          </svg>
+          <input type="password" required placeholder="Confirme a Senha" minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must be more than 8 characters, including number, lowercase letter, uppercase letter" />
+        </label>
+        <button class="btn btn-neutral mt-4">Registrar</button>
+      </fieldset>
       </div>
-    </div>
+      </div>
+      </div>
+      </div>
+      </div>
   </body>
-  <script src="/static/js/form.js"></script>
 </html>

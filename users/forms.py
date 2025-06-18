@@ -11,14 +11,13 @@ class RegistroForm(forms.ModelForm):
 
     class Meta:
         model = Paciente
-        fields = ['username', 'email', 'cpf', 'data_nascimento', 'numero', 'genero']
+        fields = ['username', 'email', 'data_nascimento', 'numero', 'genero']
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control form-control-lg'}),
-            'cpf': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
+            'username': forms.TextInput(attrs={'type': 'text', 'class': "input validator", 'name': 'username', 'required placeholder': 'Nome', 'minlength': '3', 'pattern': '[A-Za-zÀ-ÖØ-öø-ÿ\s]{3,}', 'title': 'Must be more than 3 characters, only letters and spaces'
+                                               }),
+            'email': forms.EmailInput(attrs={'type': 'email', 'class': "input validator", 'placeholder': '@', 'required': 'required'}),
             'data_nascimento': forms.DateInput(attrs={
-                'class': 'form-control form-control-lg',
-                'type': 'date'
+                'type': "date", 'class': "input validator", 'required placeholder': "Pick a date in 2025", 'min': "1935-01-01", 'max': "2025-12-31", 'title': "Must be valid"
             }),
             'numero': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
             'genero': forms.Select(attrs={

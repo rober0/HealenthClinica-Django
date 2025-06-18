@@ -21,17 +21,17 @@ class CustomUserAdmin(UserAdmin):
     )
 
 class PacienteAdmin(CustomUserAdmin):
-    list_display = ('username', 'email', 'cpf', 'data_nascimento', 'numero', 'genero')
+    list_display = ('username', 'email', 'data_nascimento', 'numero', 'genero')
     
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Informações Pessoais', {'fields': ('username', 'cpf', 'data_nascimento', 'numero', 'genero')}),
+        ('Informações Pessoais', {'fields': ('username', 'data_nascimento', 'numero', 'genero')}),
         ('Permissões', {'fields': ('is_active', 'groups', 'user_permissions')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'cpf', 'data_nascimento', 'numero', 'genero', 'password1', 'password2'),
+            'fields': ('email', 'username', 'data_nascimento', 'numero', 'genero', 'password1', 'password2'),
         }),
     )
 

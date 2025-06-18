@@ -32,6 +32,7 @@ class CustomUserManager(BaseUserManager):
             admin.is_superuser = True
             admin.set_password(password)
             admin.save()
+            
             return admin
         except Exception as e:
             user.delete()
@@ -59,7 +60,6 @@ class Administrador(Usuario):
         verbose_name_plural = 'Administradores'
 
 class Paciente(Usuario):
-    cpf = models.CharField(max_length=11, unique=True)
     data_nascimento = models.DateField(null=True, blank=True)
     numero = models.CharField(max_length=15)
     genero = models.CharField(max_length=20)

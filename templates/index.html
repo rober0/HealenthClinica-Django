@@ -1,58 +1,111 @@
+{% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html data-theme="light" lang="pt-BR">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Healenth</title>
-    <link rel="stylesheet" href="/static/css/index.css">
+    <title>Página Inicial</title> 
+    {% tailwind_css %}
   </head>
   <body>
     <section class="header">
-      <div class="container">
-        <header>
-          <div class="logo">
-            <a href="/"> <img src="{{'media/logo1.png'}}" alt="Healenth" width="120">
+      <header>
+        <div class="navbar bg-base-100 shadow-sm">
+          <div class="navbar-start">
+            <div class="dropdown">
+              <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                </svg>
+              </div>
+              <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                <li>
+                  <a>Item 1</a>
+                </li>
+                <li>
+                  <a>Parent</a>
+                  <ul class="p-2">
+                    <li>
+                      <a>Submenu 1</a>
+                    </li>
+                    <li>
+                      <a>Submenu 2</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+           <a href="/" class="btn btn-ghost inline-flex">
+            <img src="{{'/media/logo1.webp'}}" alt="Healenth" width="110"></a>
           </div>
-          <nav>
-            <ul>
-            <li><a href="index.html" class="headerlink">Home</a></li>
-            <li><a href="#" class="headerlink">Sobre</a></li>
-            <li><div class="dropdown"><button class="dropbtn"><a class="headerlink">Serviços</a> <i class="fa fa-caret-down"></i></button>
-                <div class="dropdown-content">
-                  <a href="procedimentos"  style="border-radius: 10px 10px 0px 0px;" class="drop-content">Exames e procedimentos</a>
-                  <a href="telemedicina.html" class="drop-content">Telemedicina</a>
-                  <a href="vacinas.html" style="border-radius: 0px 0px 10px 10px;" class="drop-content">Vacinas</a>
-                </div>
+          <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+              <li>
+                <a href="/">Início</a>
+              </li>
+              <li>
+                <a href="/sobre">Sobre</a>
+              </li>
+              <li>
+                <details>
+                  <summary>Serviços</summary>
+                  <ul class="p-2 ring shadow-xl/20">
+                    <li>
+                      <a href="/procedimentos">Procedimentos</a>
+                    </li>
+                    <li>
+                      <a>Telemedicina</a>
+                    </li>
+                    <li>
+                      <a>Vacinas</a>
+                  </ul>
+                </details>
+              </li>
             </ul>
-          </nav>
-          <div class="cta">
-            <a href="/users/login" class="btn">Entrar</a>
-            <a href="/users/register" class="btn">Registrar</a>
           </div>
-        </header>
-        <div class="main">
-    <div class="examdiv">
-        <div class="bord">
-          <h1>Nosso <br> Consultorio</h1>
-          <p>A agenda médica do Healenth permite uma organização <br> mais eficiente dos atendimentos em sua clínica ou consultório, <br> otimizando os horários, automatizando consultas com os pacientes <br> e até mesmo definindo uma fila de espera.</p>         
-          <br>
-          <a href="/users/login" class="btn">Agende sua consulta</a>
+          <div class="navbar-end gap-x-2">
+            <a href="/users/login" class="btn btn-soft btn-primary">Entrar</a>
+            <a href="/users/register" class="btn btn-soft btn-primary">Registrar</a>
+          </div>
         </div>
-        <img src="https://imgs.jusbr.com/publications/images/3a8fa44de08d0583f0b6aa8ef70dbbee" class="examimg">
-    </div>
-        </div>
-        </div>
-      </div>
+      </header>
     </section>
-    <br>
-    <footer class="footer">
-      <div class="footer-content">
-          <nav class="footer-nav">
-            <a href="">Healenth@gmail.com</a>
-            <a href="">+55(55)5555-5555</a>
-            <a href="">+55(00)0000-0000</a>
-          </nav>
-          <p style="color: #ffffff;">&copy; 2024 Healenth. Todos os direitos reservados.</p>
+    <article>
+      <div class="container mx-auto flex items-center justify-between p-6">
+        <div class="text-left w-1/2">
+          <h1 class="text-5xl font-bold text-left mt-10">Sua saúde, nossa prioridade.</h1>
+          <br>
+          <p class="text-left mt-4 text-lg">A agenda médica do Healenth permite uma organização <br> mais eficiente dos atendimentos em sua clínica ou consultório, <br> otimizando os horários, automatizando consultas com os pacientes <br> e até mesmo definindo uma fila de espera. </p>
+          <br>
+          <a href="/users/login" class="btn btn-soft btn-primary">Agendar Consulta</a>
+        </div>
+        <div class="w-1/2">
+          <img src="{{'media/default.webp'}}" alt="Pet" class="w-full h-auto rounded-lg shadow-lg">
+        </div>
       </div>
+      <br>
+      <article>
+        <footer class="footer sm:footer-horizontal bg-base-200 text-base-content p-10">
+          <aside>
+            <p class="text-xl">Healenth </p> <p> Desde 2025, oferecendo o melhor. </p>
+          </aside>
+          <nav>
+            <h6 class="footer-title">Serviços</h6>
+            <a class="link link-hover"></a>
+            <a class="link link-hover"></a>
+            <a class="link link-hover"></a>
+          </nav>
+          <nav>
+            <h6 class="footer-title">Companhia</h6>
+            <a class="link link-hover">Sobre Nós</a>
+            <a class="link link-hover">Contato</a>
+            <a class="link link-hover">Trabalhos</a>
+          </nav>
+          <nav>
+            <h6 class="footer-title">Legal</h6>
+            <a class="link link-hover">Termos de Uso</a>
+            <a class="link link-hover">Política de Privacidade</a>
+          </nav>
+        </footer>
   </body>
 </html>

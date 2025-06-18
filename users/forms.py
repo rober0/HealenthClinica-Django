@@ -3,27 +3,27 @@ from .models import Paciente
 
 class RegistroForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'form-control form-control-lg'
+        'type': "password", 'required placeholder': "Senha", 'minlength': "8", 'title': "Must be more than 8 characters, including number, lowercase letter, uppercase letter"
     }))
     password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'form-control form-control-lg'
+        'type': "password", 'required placeholder': "Confirme a Senha", 'minlength': "8", 'title': "Must be more than 8 characters, including number, lowercase letter, uppercase letter"
     }))
 
     class Meta:
         model = Paciente
-        fields = ['username', 'email', 'data_nascimento', 'numero', 'genero']
+        fields = ['username', 'email', 'data_nascimento', 'telefone', 'genero']
         widgets = {
-            'username': forms.TextInput(attrs={'type': 'text', 'class': "input validator", 'name': 'username', 'required placeholder': 'Nome', 'minlength': '3', 'pattern': '[A-Za-zÀ-ÖØ-öø-ÿ\s]{3,}', 'title': 'Must be more than 3 characters, only letters and spaces'
+            'username': forms.TextInput(attrs={'type': 'text', 'class': "input validator", 'name': 'username', 'required placeholder': 'Nome', 'minlength': '3', 'title': 'Must be more than 3 characters, only letters and spaces'
                                                }),
-            'email': forms.EmailInput(attrs={'type': 'email', 'class': "input validator", 'placeholder': '@', 'required': 'required'}),
+            'email': forms.EmailInput(attrs={'type': 'email', 'class': "input validator", 'placeholder': 'exemplo@gmail.com', 'required': 'required'}),
             'data_nascimento': forms.DateInput(attrs={
-                'type': "date", 'class': "input validator", 'required placeholder': "Pick a date in 2025", 'min': "1935-01-01", 'max': "2025-12-31", 'title': "Must be valid"
+                'type': "date", 'class': "input validator", 'min': "1935-01-01", 'max': "2025-12-31", 'title': "Must be valid"
             }),
-            'numero': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
+            'telefone': forms.TextInput(attrs={'type': "tel", "id": "phone"}),
             'genero': forms.Select(attrs={
-                'class': 'form-control form-control-lg'
+                'class': "select validator", 'required': "required"
             }, choices=[
-                ('', 'Selecione o gênero'),
+                ('', ''),
                 ('M', 'Masculino'),
                 ('F', 'Feminino'),
                 ('O', 'Outro')

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
             preferredCountries: ['br'],
             initialCountry: "br",
             separateDialCode: true,
-            showFlags: false,
+            showFlags: true,
             allowDropdown: true,
             autoPlaceholder: "aggressive",
             customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {

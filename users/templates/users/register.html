@@ -13,25 +13,6 @@
     {% tailwind_css %}
   </head>
   <body>
-    <!--- <div class="container"><div class="card" style="border-radius: 1rem;"><div class="row g-0"><div class="col-md-6 col-lg-7 d-flex align-items-center"><div class="card-body p-4 p-lg-5 text-black"><form method="post">
-                {% csrf_token %}
-                 <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Registre-se</h5><div><label class="form-label" for="nome">Nome</label>
-                  {{ form.username }}
-                </div><br><div><label class="form-label" for="email">Email</label>
-                  {{ form.email }}
-                </div><br><div><label class="form-label" for="cpf">CPF</label>
-                  {{ form.cpf }}
-                </div><br><div><label class="form-label" for="data">Data de Nascimento</label>
-                  {{ form.data_nascimento }}
-                </div><br><div><label class="form-label" for="numero">Número de Telefone</label>
-                  {{ form.numero }}
-                </div><br><div><label class="form-label" for="genero">Gênero</label>
-                  {{ form.genero }}
-                </div><br><div><label class="form-label" for="senha">Senha</label>
-                  {{ form.password }}
-                </div><br><div><label class="form-label" for="senha">Confirme a Senha</label>
-                  {{ form.password_confirm }}
-                </div><span class="password-icon" onclick="togglePassword2()" style="cursor:pointer;"><i class="fas fa-eye"></i></span><span class="password-icon2" onclick="togglePassword()" style="cursor:pointer;"><i class="fas fa-eye"></i></span><br><input class="btn btn-primary btn-lg" type="submit" value="Enviar" name="submit" /></form> -->
     <form method="post"> 
       {% csrf_token %} 
       <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
@@ -60,14 +41,10 @@
         {{ form.data_nascimento }}
         <label class="label">Número de Telefone</label>
         <label class="input validator">
-          <input type="tel" id="phone" minlength="13" maxlength="13"/>
+          {{ form.telefone }}
         </label>
         <label class="label">Gênero</label>
-        <select class="select validator" required>
-          <option disabled selected value=""></option>
-          <option>Masculino</option>
-          <option>Feminino</option>
-          <option>Outro</option>
+        {{ form.genero }}
         </select>
         <label class="label">Senha</label>
         <label class="input validator">
@@ -77,7 +54,7 @@
               <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
             </g>
           </svg>
-          <input type="password" required placeholder="Senha" minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must be more than 8 characters, including number, lowercase letter, uppercase letter" />
+          {{ form.password }}
         </label>
         <label class="label">Confirme a Senha</label>
         <label class="input validator">
@@ -87,7 +64,7 @@
               <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
             </g>
           </svg>
-          <input type="password" required placeholder="Confirme a Senha" minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must be more than 8 characters, including number, lowercase letter, uppercase letter" />
+         {{ form.password_confirm }}
         </label>
         <button class="btn btn-neutral mt-4">Registrar</button>
       </fieldset>

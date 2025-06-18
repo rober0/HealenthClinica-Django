@@ -61,7 +61,7 @@ class Administrador(Usuario):
 
 class Paciente(Usuario):
     data_nascimento = models.DateField(null=True, blank=True)
-    numero = models.CharField(max_length=15)
+    telefone = models.CharField(max_length=15)
     genero = models.CharField(max_length=20)
 
     class Meta:
@@ -71,7 +71,7 @@ class Paciente(Usuario):
 class Medico(Usuario):
     especialidade = models.CharField(max_length=100)
     data_nascimento = models.DateField(null=True, blank=True)
-    numero = models.CharField(max_length=15)
+    telefone = models.CharField(max_length=15)
     genero = models.CharField(max_length=20)
 
     class Meta:

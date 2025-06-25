@@ -45,9 +45,6 @@ INSTALLED_APPS = [
     'django_browser_reload',
 ]
 
-if DEBUG:
-    INSTALLED_APPS += ("django_removals",)
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -1,96 +1,42 @@
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Healenth</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <link rel="stylesheet" href="/static/css/dashboard.css">
-  </head>
-  <body>
-    <section class="header">
-      <header>
-        <div class="navbar bg-base-100 shadow-sm">
-          <div class="navbar-start">
-            <div class="dropdown">
-              <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
-                </svg>
-              </div>
-              <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-                <li>
-                  <a>Item 1</a>
-                </li>
-                <li>
-                  <a>Parent</a>
-                  <ul class="p-2">
-                    <li>
-                      <a>Submenu 1</a>
-                    </li>
-                    <li>
-                      <a>Submenu 2</a>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
-           <a href="/" class="btn-ghost inline-flex">
-            <img src="{{'/media/logo1.webp'}}" alt="Healenth" width="110"></a>
-          </div>
-         
-          <div class="navbar-end gap-x-2">
-            <a href="/users/login" class="btn btn-soft btn-primary">Entrar</a>
-            <a href="/users/register" class="btn btn-soft btn-primary">Registrar</a>
-          </div>
-        </div>
-      </header>
-    </section>
-    <aside>
-      <div class="sidenav">
-        <h5>Menu</h5>
-        <a class="active" href="/dashboard/administrador">
-          <i class="fa fa-fw fa-home"></i>
-          <span>Inicio</span>
-        </a>
-        <a href="/dashboard/administrador/agendamentos">
-          <i class="fa fa-fw fa-search"></i>
-          <span>Agendamentos</span>
-        </a>
-        <a href="/dashboard/administrador/lista">
-          <i class="fa fa-fw fa-user-doctor"></i>
-          <span>Lista</span>
-        </a>
-      </div>
-    </aside>
+{% extends "./base.html" %}
+{% block main %}
     <main class="main">
     <h1>Bem-vindo, {{ user.username }}!</h1>
     <p>Você está vendo está página como um administrador.</p>
-      <div class="container">
-        <div class="card">
-          <img src="{{'/media/logo2.png'}}" alt="Healenth" width="100">
-          <h2>Próximo</h2>
-          <p>Data: 20/10/2023</p>
-        </div>
-        <div class="card">
-          <img src="{{'/media/logo2.png'}}" alt="Healenth" width="100">
-          <h2>Marcados</h2>
-          <p>2</p>
-        </div>
-        <div class="card">
-          <img src="{{'/media/logo2.png'}}" alt="Healenth" width="100">
-          <h2>Terminados</h2>
-          <p>2</p>
-        </div>
-      </div>
-      <div class="containertab">
-        <div class="table">
-          <h3>Agendamentos</h3>
-        </div>
-        <div class="tableside">
-          <h3>Histórico</h3>
-        </div>
+    <br>
+<div class="flex flex-row gap-x-2 justify-center">
+  <div class="card w-full bg-base-200 card-md shadow-sm">
+    <div class="card-body">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
+      </svg>
+      <h2 class="card-title">Próxima Data</h2>
+      <p>Data: 00/00/0000</p>
+      <div class="justify-end card-actions"></div>
+    </div>
+  </div>
+  <div class="card w-full bg-base-200 card-md shadow-sm">
+    <div class="card-body">
+     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+  <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd" />
+</svg>
+
+      <h2 class="card-title">Agendamentos</h2>
+      <p></p>
+      <div class="justify-end card-actions"></div>
+    </div>
+  </div>
+  <div class="card w-full bg-base-200 card-md shadow-sm">
+    <div class="card-body">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+  <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
+</svg>
+
+      <h2 class="card-title">Concluídos</h2>
+      <p></p>
+      <div class="justify-end card-actions"></div>
+    </div>
+  </div>
+</div>
     </main>
-  </body>
-</html>
+{% endblock %}

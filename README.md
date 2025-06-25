@@ -9,6 +9,7 @@ git clone https://github.com/rober0/HealenthClinica-Django.git
 ```
 cd theme\static_src
 npm install
+cd ../..
 ```
 
 ## Terminal

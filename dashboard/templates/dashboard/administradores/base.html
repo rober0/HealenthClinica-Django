@@ -6,13 +6,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    {% tailwind_css %}
     <link rel="stylesheet" href="{% static 'datatables.net-dt/css/dataTables.dataTables.css' %}">
     <link rel="stylesheet" href="{% static 'datatables.net-rowgroup-dt/css/rowGroup.dataTables.css' %}">
     <script src="{% static 'jquery/dist/jquery.min.js'%}"></script>
     <script src="{% static 'js/datatable.js' %}"></script>
     <script src="{% static 'datatables.net/js/dataTables.min.js' %}"></script> 
     <script src="{% static 'datatables.net-rowgroup/js/dataTables.rowGroup.min.js' %}"></script>
-    {% tailwind_css %}
   </head>
   <body>
     <section class="header">
@@ -23,7 +23,27 @@
               <img src="{{'/media/logo1.webp'}}" alt="Healenth" width="110">
             </a>
           </div>
-          <div class="navbar-end gap-x-2"></div>
+          <div class="navbar-end dropdown dropdown-end">
+<div tabindex="0" role="button" class="btn btn-ghost btn-sm btn-circle avatar dropdown-toggle">
+  <div class="size-4 rounded-full">
+    <img
+      alt="Avatar do usuário"
+      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+  </div>
+</div>
+  <ul
+    tabindex="0"
+    class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+    <li>
+      <a class="justify-between" href="#">
+        Profile
+        <span class="badge">New</span>
+      </a>
+    </li>
+    <li><a href="#">Settings</a></li>
+    <li><a href="/logout/">Logout</a></li>
+  </ul>
+</div>
         </div>
       </header>
     </section>

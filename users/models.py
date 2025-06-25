@@ -51,6 +51,11 @@ class Usuario(AbstractUser):
         verbose_name = 'Usuário'
         verbose_name_plural = 'Usuários'
 
+    def save(self, *args, **kwargs):
+        if self.username:
+            self.username = self.username.upper()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.email
 

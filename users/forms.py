@@ -1,6 +1,5 @@
 from django import forms
 from .models import Paciente
-import re
 
 class RegistroForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
@@ -47,9 +46,6 @@ class RegistroForm(forms.ModelForm):
         if Paciente.objects.filter(email=email).exists():
             raise forms.ValidationError("Este email já está em uso.")
         
-        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-            raise forms.ValidationError("Endereço de email inválido.")
-    
         return email    
 
     def save(self, commit=True):

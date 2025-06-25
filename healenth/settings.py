@@ -42,8 +42,11 @@ INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
     'tailwind',
     'theme',
-    'django_browser_reload'
+    'django_browser_reload',
 ]
+
+if DEBUG:
+    INSTALLED_APPS += ("django_removals",)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

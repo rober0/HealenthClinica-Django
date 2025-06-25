@@ -1,75 +1,6 @@
-{% load static tailwind_tags %}
-<!DOCTYPE html>
-<html data-theme="light" lang="pt-BR">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Inicial</title> 
-    {% tailwind_css %}
-  </head>
-  <body>
-    <section class="header">
-      <header>
-        <div class="navbar bg-base-100 shadow-sm">
-          <div class="navbar-start">
-            <div class="dropdown">
-              <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
-                </svg>
-              </div>
-              <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-                <li>
-                  <a>Item 1</a>
-                </li>
-                <li>
-                  <a>Parent</a>
-                  <ul class="p-2">
-                    <li>
-                      <a>Submenu 1</a>
-                    </li>
-                    <li>
-                      <a>Submenu 2</a>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
-           <a href="/" class="btn-ghost inline-flex">
-            <img src="{{'/media/logo1.webp'}}" alt="Healenth" width="110"></a>
-          </div>
-          <div class="navbar-center hidden lg:flex">
-            <ul class="menu menu-horizontal px-1">
-              <li>
-                <a href="/">Início</a>
-              </li>
-              <li>
-                <a href="/sobre">Sobre</a>
-              </li>
-              <li>
-                <details>
-                  <summary>Serviços</summary>
-                  <ul class="p-2 ring shadow-xl/20">
-                    <li>
-                      <a href="/procedimentos">Procedimentos</a>
-                    </li>
-                    <li>
-                      <a>Telemedicina</a>
-                    </li>
-                    <li>
-                      <a>Vacinas</a>
-                  </ul>
-                </details>
-              </li>
-            </ul>
-          </div>
-          <div class="navbar-end gap-x-2">
-            <a href="/users/login" class="btn btn-soft btn-primary">Entrar</a>
-            <a href="/users/register" class="btn btn-soft btn-primary">Registrar</a>
-          </div>
-        </div>
-      </header>
-    </section>
+{% extends "base.html" %}  
+
+{% block article %}
     <article>
       <div class="container mx-auto flex items-center justify-between p-6">
         <div class="text-left w-1/2">
@@ -77,73 +8,41 @@
           <br>
           <p class="text-left mt-4 text-lg">A agenda médica do Healenth permite uma organização <br> mais eficiente dos atendimentos em sua clínica ou consultório, <br> otimizando os horários, automatizando consultas com os pacientes <br> e até mesmo definindo uma fila de espera. </p>
           <br>
-          <a href="/users/login" class="btn btn-soft btn-primary">Agendar Consulta</a>
+          <a href="/users/login" class="btn btn-primary">Agendar Consulta</a>
         </div>
         <div class="w-1/2">
           <img src="{{'media/default.webp'}}" alt="Pet" class="w-full h-auto rounded-lg shadow-lg">
         </div>
       </div>
       <br>
-      <div class="hero bg-base-200">
-  <div class="hero content mx-auto flex items-center justify-between p-10">
-    <div class="max-w-md">
-      <h1 class="text-5xl font-bold">Nossos Recursos</h1>
-      <p class="py-6">
-        <br>
-
-<div class="flex gap-6">
-  
-  <div class="card bg-white shadow-sm p-6 rounded-lg w-64">
-  <div class="card-body">
-    <h2 class="card-title">Large Card</h2>
-    <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-    <div class="justify-end card-actions">
-    </div>
-  </div>
-</div>
-<div class="card bg-white shadow-sm p-6 rounded-lg w-64">
-  <div class="card-body">
-    <h2 class="card-title">Large Card</h2>
-    <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-    <div class="justify-end card-actions">
-    </div>
-  </div>
-</div>
-<div class="card bg-white shadow-sm p-6 rounded-lg w-64">
-  <div class="card-body">
-    <h2 class="card-title">Large Card</h2>
-    <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-    <div class="justify-end card-actions">
-    </div>
-  </div>
-</div>
+        <div class="flex flex-col items-start p-10 max-w-6xl mx-auto w-full">
+          <h1 class="text-5xl font-bold text-left mt-10 mb-8">Nossos Recursos</h1>
+          <br>
+          <div class="flex flex-wrap gap-8">
+            <div class="card w-96 bg-base-300 card-md shadow-sm">
+              <div class="card-body">
+                <h2 class="card-title">Agendamento Online</h2>
+                <p>Agende consultas de forma rápida e fácil, sem complicações.</p>
+                <div class="justify-end card-actions">
+                  <button class="btn btn-primary">Saiba Mais</button>
+                </div>
+              </div>
+            </div>
+            <div class="card w-96 bg-base-300 card-md shadow-sm">
+              <div class="card-body">
+                <h2 class="card-title">Gerenciamento de Pacientes</h2>
+                <p>Organize e acesse informações dos pacientes de forma eficiente.</p>
+                <div class="justify-end card-actions">
+                  <button class="btn btn-primary">Saiba Mais</button>
+                </div>
+              </div>
+            </div>
+     
+          </div>
         </div>
-      </p>
+      </div>
     </div>
-  </div>
-</div>
-      <article>
-        <footer class="footer sm:footer-horizontal bg-base-200 text-base-content p-10">
-          <aside>
-            <p class="text-xl">Healenth </p> <p> Desde 2025, oferecendo o melhor. </p>
-          </aside>
-          <nav>
-            <h6 class="footer-title">Serviços</h6>
-            <a class="link link-hover"></a>
-            <a class="link link-hover"></a>
-            <a class="link link-hover"></a>
-          </nav>
-          <nav>
-            <h6 class="footer-title">Companhia</h6>
-            <a class="link link-hover">Sobre Nós</a>
-            <a class="link link-hover">Contato</a>
-            <a class="link link-hover">Trabalhos</a>
-          </nav>
-          <nav>
-            <h6 class="footer-title">Legal</h6>
-            <a class="link link-hover">Termos de Uso</a>
-            <a class="link link-hover">Política de Privacidade</a>
-          </nav>
-        </footer>
+  </article>
+{% endblock %}
   </body>
 </html>

@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Healenth</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+  </head>
+  <body>
+    <section class="header">
+      <header>
+        <div class="navbar bg-base-100 shadow-sm">
+          <div class="navbar-start">
+            <div class="dropdown">
+              <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                </svg>
+              </div>
+              <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                <li>
+                  <a>Item 1</a>
+                </li>
+                <li>
+                  <a>Parent</a>
+                  <ul class="p-2">
+                    <li>
+                      <a>Submenu 1</a>
+                    </li>
+                    <li>
+                      <a>Submenu 2</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+           <a href="/" class="btn-ghost inline-flex">
+            <img src="{{'/media/logo1.webp'}}" alt="Healenth" width="110"></a>
+          </div>
+         
+          <div class="navbar-end gap-x-2">
+            <a href="/users/login" class="btn btn-soft btn-primary">Entrar</a>
+            <a href="/users/register" class="btn btn-soft btn-primary">Registrar</a>
+          </div>
+        </div>
+      </header>
+    </section>
+    <aside>
+      <div class="sidenav">
+        <h5>Menu</h5>
+        <a class="active" href="/dashboard/administrador">
+          <i class="fa fa-fw fa-home"></i>
+          <span>Inicio</span>
+        </a>
+        <a href="/dashboard/administrador/agendamentos">
+          <i class="fa fa-fw fa-search"></i>
+          <span>Agendamentos</span>
+        </a>
+        <a href="/dashboard/administrador/lista">
+          <i class="fa fa-fw fa-user-doctor"></i>
+          <span>Lista</span>
+        </a>
+      </div>
+    </aside>
+    <main class="main">
+    <h1>Bem-vindo, {{ user.username }}!</h1>
+    <p>Você está vendo está página como um administrador.</p>
+      <div class="container">
+        <div class="card">
+          <img src="{{'/media/logo2.png'}}" alt="Healenth" width="100">
+          <h2>Próximo</h2>
+          <p>Data: 20/10/2023</p>
+        </div>
+        <div class="card">
+          <img src="{{'/media/logo2.png'}}" alt="Healenth" width="100">
+          <h2>Marcados</h2>
+          <p>2</p>
+        </div>
+        <div class="card">
+          <img src="{{'/media/logo2.png'}}" alt="Healenth" width="100">
+          <h2>Terminados</h2>
+          <p>2</p>
+        </div>
+      </div>
+      <div class="containertab">
+        <div class="table">
+          <h3>Agendamentos</h3>
+        </div>
+        <div class="tableside">
+          <h3>Histórico</h3>
+        </div>
+    </main>
+  </body>
+</html>

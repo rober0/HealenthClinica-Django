@@ -1,18 +1,78 @@
+{% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-    <title>Django Tailwind</title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		{% tailwind_css %}
-	</head>
+<html data-theme="healenth" lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial</title> {% tailwind_css %}
+  </head>
+  <body>
+    <section class="header">
+      <header>
+        <div class="navbar bg-base-100 shadow-sm">
+          <div class="navbar-start">
+            <a href="/" class="btn-ghost inline-flex">
+              <img src="{{'/media/logo1.webp'}}" alt="Healenth" width="110">
+            </a>
+          </div>
+          <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+              <li>
+                <a href="/">Início</a>
+              </li>
+              <li>
+                <a href="/sobre">Sobre</a>
+              </li>
+              <li>
+                <details>
+                  <summary>Serviços</summary>
+                  <ul class="p-2 ring shadow-xl/20">
+                    <li>
+                      <a href="/procedimentos">Procedimentos</a>
+                    </li>
+                    <li>
+                      <a>Telemedicina</a>
+                    </li>
+                    <li>
+                      <a>Vacinas</a>
+                  </ul>
+                </details>
+              </li>
+            </ul>
+          </div>
+          <div class="navbar-end gap-x-2">
+            <a href="/users/login" class="btn btn-primary">Entrar</a>
+            <a href="/users/register" class="btn btn-primary">Registrar</a>
+          </div>
+        </div>
+      </header>
+	</section>
 
-	<body class="bg-gray-50 font-serif leading-normal tracking-normal">
-		<div class="container mx-auto">
-			<section class="flex items-center justify-center h-screen">
-				<h1 class="text-5xl">Django + Tailwind = ❤️</h1>
-			</section>
-		</div>
-	</body>
+	{% block article %}
+	{% endblock %}
+
+	<footer class="footer sm:footer-horizontal bg-base-200 text-base-content p-10">
+          <aside>
+            <p class="text-xl">Healenth </p>
+            <p> Desde 2025, oferecendo o melhor. </p>
+          </aside>
+          <nav>
+            <h6 class="footer-title">Serviços</h6>
+            <a class="link link-hover"></a>
+            <a class="link link-hover"></a>
+            <a class="link link-hover"></a>
+          </nav>
+          <nav>
+            <h6 class="footer-title">Companhia</h6>
+            <a class="link link-hover">Sobre Nós</a>
+            <a class="link link-hover">Contato</a>
+            <a class="link link-hover">Trabalhos</a>
+          </nav>
+          <nav>
+            <h6 class="footer-title">Legal</h6>
+            <a class="link link-hover">Termos de Uso</a>
+            <a class="link link-hover">Política de Privacidade</a>
+          </nav>
+        </footer>
+</body>
 </html>

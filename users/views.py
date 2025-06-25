@@ -19,9 +19,7 @@ def register_view(request):
         if form.is_valid():
             try:
                 user = form.save()
-                
                 login(request, user)
-                
                 return redirect('dashboard:pacientes')
                 
             except Exception as e:
@@ -74,6 +72,7 @@ def login_view(request):
     
     return render(request, 'users/login.html', {'form': form})
 
+    
 @login_required
 def logout_view(request):
     logout(request)

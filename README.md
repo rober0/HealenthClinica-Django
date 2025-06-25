@@ -9,6 +9,7 @@ git clone https://github.com/rober0/HealenthClinica-Django.git
 ```
 cd theme\static_src
 npm install
+cd ../..
 ```
 
 ## Terminal
@@ -16,6 +17,13 @@ npm install
 py -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
+```
+
+## Migrações
+```
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
 ```
 
 Referências: <br>

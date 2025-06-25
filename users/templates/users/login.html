@@ -1,4 +1,6 @@
-{% load static tailwind_tags %} {% load static %} <html lang="en">
+{% load static tailwind_tags %} 
+{% load static %} 
+<html data-theme="light" lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +10,8 @@
     <script src="{% static 'intl-tel-input/build/js/intlTelInput.min.js' %}"></script> {% tailwind_css %}
   </head>
   <body>
-    <form method="post"> {% csrf_token %} <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+    <form method="post"> 
+      {% csrf_token %} <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
         <legend class="fieldset-legend">Login</legend>
         <label class="label">Email</label>
         <label class="input validator">

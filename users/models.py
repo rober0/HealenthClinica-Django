@@ -18,7 +18,7 @@ class CustomUserManager(BaseUserManager):
             
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('username', email.split('@')[0])
+        extra_fields.setdefault('username')
 
         user = self.create_user(email=email, password=password, **extra_fields)
         
@@ -50,6 +50,11 @@ class Usuario(AbstractUser):
     class Meta:
         verbose_name = 'Usuário'
         verbose_name_plural = 'Usuários'
+
+    def save(self, *args, **kwargs):
+        if self.username:
+            self.username = self.username.upper()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.email

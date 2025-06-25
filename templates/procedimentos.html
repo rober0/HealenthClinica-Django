@@ -1,75 +1,9 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Healenth</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/index.css" />
-    <style>
+{% extends "base.html" %}  
 
-.hd {
-  border-top-width: 0px;
-    border-left-width: 0px;
-    border-right-width: 0px;
-    min-width: 100%;
-    border-bottom-style: solid;
-    border-bottom-color: rgb(180, 198, 204);
-    text-align: right;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.examdiv{
-  align-items: center;
-  display: flex;
-  min-width: 100%;
-}
-
-</style>
-</head>
-<body>
-    <section class="header">
-      <div class="container">
-        <header>
-          <div class="logo">
-            <a href="/"> <img src="{{'/media/logo1.png'}}" alt="Healenth" width="120">
-          </div>
-          <nav>
-            <ul>
-            <li><a href="/" class="headerlink">Home</a></li>
-            <li><a href="#" class="headerlink">Sobre</a></li>
-            <li><div class="dropdown"><button class="dropbtn"><a class="headerlink">Serviços</a> <i class="fa fa-caret-down"></i></button>
-                <div class="dropdown-content">
-                  <a href="/procedimentos"  style="border-radius: 10px 10px 0px 0px;" class="drop-content">Exames e procedimentos</a>
-                  <a href="telemedicina.html" class="drop-content">Telemedicina</a>
-                  <a href="vacinas.html" style="border-radius: 0px 0px 10px 10px;" class="drop-content">Vacinas</a>
-                </div>
-            </ul>
-          </nav>
-          <div class="cta">
-            <a href="/users/login" class="btn">Entrar</a>
-            <a href="/users/register" class="btn">Registrar</a>
-          </div>
-          </fieldset>
-        </header>
-      <div class="main">
-          <h2 style="color: #154c79;">Lorem Ipsun</h2>
-          <div class="examdiv">
-          <h3 class="examtext">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consequuntur pariatur laudantium accusantium ducimus fugiat corrupti soluta delectus illum accusamus quisquam voluptatum expedita labore eum, porro molestias quas assumenda inventore voluptatibus.</h3>
-        <img src="https://imgs.jusbr.com/publications/images/3a8fa44de08d0583f0b6aa8ef70dbbee" class="examimg">
-        </div>
-      </div>
-      </div>
-    </section>
-    <br>
-    <footer class="footer">
-      <div class="footer-content">
-          <nav class="footer-nav">
-            <a href="">Healenth@gmail.com</a>
-            <a href="">+55(55)5555-5555</a>
-            <a href="">+55(00)0000-0000</a>
-          </nav>
-          <p style="color: #ffffff;">&copy; 2024 Healenth. Todos os direitos reservados.</p>
-</body>
+{% block article %}
+    <article>
+      
+  </article>
+{% endblock %}
+  </body>
 </html>

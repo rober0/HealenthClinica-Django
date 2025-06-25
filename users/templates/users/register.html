@@ -8,8 +8,8 @@
     <title>Registrar</title>
     <script src="{% static 'js/form.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/form.css' %}">
-    <link rel="stylesheet" href="{% static 'intl-tel-input/build/css/intlTelInput.css' %}">
-    <script src="{% static 'intl-tel-input/build/js/intlTelInput.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static '/intl-tel-input/build/css/intlTelInput.css' %}">
+    <script src="{% static 'intl-tel-input/build/js/intlTelInputWithUtils.min.js' %}"></script>
     {% tailwind_css %}
   </head>
   <body>
@@ -55,6 +55,8 @@
             </g>
           </svg>
           {{ form.password }}
+          <p class="validator-hint hidden">
+        </p>
         </label>
         <label class="label">Confirme a Senha</label>
         <label class="input validator">

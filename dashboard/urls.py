@@ -14,6 +14,7 @@ urlpatterns = [
     path('administrador/', views.administrador, name='administrador'),
     path('administrador/agendamentos', views.administrador_agendamentos, name='administrador_agendamentos'),
     path('administrador/lista', views.administrador_lista, name='administrador_listas'),
+    path('edit/<int:user_id>/', views.edit_user, name='edit')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

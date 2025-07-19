@@ -10,6 +10,7 @@ git clone https://github.com/rober0/HealenthClinica-Django.git
 ```
 python -m venv .venv
 .venv\Scripts\activate
+npm install
 pip install -r requirements.txt
 ```
 

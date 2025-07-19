@@ -1,0 +1,34 @@
+{% extends "../base.html" %}
+
+{% block main %}
+<form method="post" enctype="multipart/form-data">
+ {% csrf_token %}
+ <div class="flex flex-col gap-y-2">
+  <div class="breadcrumbs text-sm mb-2">
+  <ul>
+    <li><a href="{% url "dashboard:administrador_listas" %}">Lista de Usuários</a></li>
+    <li>Registrar Administrador</li>
+  </ul>
+</div>
+    <div class="flex items-center gap-4 mb-2">
+    <img src="{{ '/media/avatars/default.png' }}" alt="Avatar" width="80" class="float-left" style="border-radius: 50%;" fallback-src="/static/avatars/default.png">
+    <div>
+    {{ form.avatar }}
+    </div>
+  </div>
+  <p class="text-xl font-medium mb-1">Informações do Administrador</p>
+    <label>Email:</label>
+        {{ form.email }}
+        <label>Nome:</label>
+        {{ form.username }}
+        <label>Senha:</label>
+        {{ form.password }}
+        <label>Confirmação de Senha:</label>
+        {{ form.password_confirm }}
+</div>
+<br>
+ <button class="btn btn-neutral" type="submit">Registrar</button>
+</form>
+{% endblock %}
+
+

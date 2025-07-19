@@ -1,0 +1,49 @@
+{% extends "base.html" %}  
+
+{% block article %}
+    <article>
+      <div class="container mx-auto flex items-center justify-between p-6">
+        <div class="text-left w-1/2">
+          <h1 class="text-5xl font-bold text-left mt-10">Sua saúde, nossa prioridade.</h1>
+          <br>
+          <p class="text-left mt-4 text-lg">A agenda médica do Healenth permite uma organização <br> mais eficiente dos atendimentos em sua clínica ou consultório, <br> otimizando os horários, automatizando consultas com os pacientes <br> e até mesmo definindo uma fila de espera. </p>
+          <br>
+          <a href="/users/login" class="btn btn-primary">Agendar Consulta</a>
+        </div>
+        <div class="w-1/2">
+          <img src="{{'media/default.webp'}}" alt="Pet" class="w-full h-auto rounded-lg shadow-lg">
+        </div>
+      </div>
+      <br>
+      <div class="container mx-auto max-w-screen bg-gray-200/30 flex">
+        <div class="container mx-auto flex flex-col justify-between p-6">
+          <h1 class="text-5xl font-bold text-left mt-10 mb-8">Nossos Recursos</h1>
+          <br>
+          <div class="flex max-w-fit gap-x-2 justify-center">
+            <div class="card w-auto bg-base-200 card-md shadow-sm">
+              <div class="card-body">
+                <h2 class="card-title">Agendamento Online</h2>
+                <p>Agende consultas de forma rápida e fácil, sem complicações.</p>
+              </div>
+            </div>
+            <div class="card w-auto bg-base-200 card-md shadow-sm">
+              <div class="card-body">
+                <h2 class="card-title">Gerenciamento de Pacientes</h2>
+                <p>Organize e acesse informações dos pacientes de forma eficiente.</p>
+              </div>
+            </div>
+            <div class="card w-auto bg-base-200 card-md shadow-sm">
+              <div class="card-body">
+                <h2 class="card-title">Gerenciamento de Pacientes</h2>
+                <p>Organize e acesse informações dos pacientes de forma eficiente.</p>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+{% endblock %}
+  </body>
+</html>

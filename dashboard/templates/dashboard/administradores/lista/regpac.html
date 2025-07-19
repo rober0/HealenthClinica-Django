@@ -1,0 +1,52 @@
+{% extends "../base.html" %} 
+{% load static %}
+
+{% block head %}
+<script src="{% static 'js/intl.js' %}"></script>
+<link rel="stylesheet" href="{% static '/intl-tel-input/build/css/intlTelInput.css' %}">
+<script src="{% static 'intl-tel-input/build/js/intlTelInputWithUtils.min.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+<form method="post" enctype="multipart/form-data"> 
+ {% csrf_token %} 
+ <div class="flex flex-col gap-y-2">
+  <div class="breadcrumbs text-sm mb-2">
+  <ul>
+    <li><a href="{% url "dashboard:administrador_listas" %}">Lista de Usuários</a></li>
+    <li>Registrar Paciente</li>
+  </ul>
+</div>
+    <div class="flex items-center gap-4 mb-2">
+    <img src="{{ '/media/avatars/default.png' }}" alt="Avatar" width="80" class="float-left" style="border-radius: 50%;" fallback-src="/static/avatars/default.png">
+    <div>
+    {{ form.avatar }}
+    </div>
+  </div>
+  <div class="container mx-auto flex flex-col md:flex-row gap-4">
+  <div class="flex flex-col items-start w-full md:w-1/2 gap-y-2">
+        <p class="text-xl font-medium mb-1">Informações do Paciente</p>
+        <label>Email:</label>
+        {{ form.email }}
+        <label>Nome:</label>
+        {{ form.username }}
+        <label>Senha:</label>
+        {{ form.password }}
+        <label>Confirme a Senha:</label>
+        {{ form.password_confirm }}
+    </div>
+    <div class="flex flex-col items-start w-full md:w-1/2 gap-y-2">
+        <p class="text-xl font-medium mb-1">Informações Pessoais</p>
+        <label>Telefone:</label>
+        {{ form.telefone }}
+        <label>Data de Nascimento:</label>
+        {{ form.data_nascimento }}
+        <label>Gênero:</label>
+        {{ form.genero }}
+  </div>
+</div>
+</div>
+<br>
+ <button class="btn btn-neutral" type="submit">Registrar</button>
+ <button class="btn btn-error"><a href="{% url "dashboard:administrador_listas" %}">Cancelar</a></button>
+</form> {% endblock %}

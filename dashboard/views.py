@@ -28,9 +28,10 @@ def edit_user(request, user_id):
     else:
         return redirect('dashboard:administrador_listas')
 
-    form = form_class(request.POST or None, request.FILES or None, instance=instance)
-    if form.is_valid():
-        form.save()
+    if request.method == 'POST':
+        form = form_class(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
+            form.save()
         return redirect('dashboard:administrador_listas')
     else:
         form = form_class(instance=instance)

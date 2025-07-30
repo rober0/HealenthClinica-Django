@@ -3,6 +3,7 @@ from .models import Paciente, Medico, Usuario
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth import authenticate
 
 class RegistroForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
@@ -79,13 +80,23 @@ class RegistroForm(forms.ModelForm):
         return user
 
 class LoginForm(forms.Form):
-     email = forms.EmailField(widget=forms.EmailInput(attrs={
+    email = forms.EmailField(widget=forms.EmailInput(attrs={
          'type': 'email', 'class': "input validator", 'placeholder': 'exemplo@gmail.com', 'required': 'required'
          }),
         validators=[validate_email]
          )
-     password = forms.CharField(widget=forms.PasswordInput(attrs={
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
          'type': "password", 'required placeholder': "Senha", 'class': "input validator", 'minlength': "8", 'title': "Must be more than 8 characters, including number, lowercase letter, uppercase letter"
     }),
-        validators=[validate_password]
-    )
+        validators=[validate_password],
+     )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get("email")
+        password = cleaned_data.get("password")
+        if email and password:
+            user = authenticate(username=email, password=password)
+            if user is None:
+                raise forms.ValidationError("Email ou senha inválidos.")
+        return cleaned_data

@@ -1,7 +1,9 @@
 from django import forms
+from django.forms import ModelForm, DateInput
 from django.core.validators import validate_email
 from django.contrib.auth.password_validation import validate_password
 from users.models import Paciente, Medico, Administrador, Usuario
+from dashboard.models import CriarEvento, MembroEvento
 
 class PacienteForm(forms.ModelForm):
     avatar = forms.ImageField(required=False)
@@ -303,3 +305,36 @@ class AdministradorForm(forms.ModelForm):
             user.is_superuser = True
             user.save()
         return user
+
+class AgendamentoForm(ModelForm):
+    class Meta:
+        model = CriarEvento
+        fields = ["paciente", "procedimentos", "convenio", "observacoes", "data_inicio", "data_fim"]
+        widgets = {
+            "paciente": forms.Select(attrs={"class": "select validator", "required": "required"}),
+            "procedimentos": forms.Select(attrs={"class": "select validator", "required": "required", "placeholder": "Procedimentos"}, choices=[
+                ('', 'Selecione um Procedimento'),
+                ('Consulta', 'Consulta'),
+                ('Exame', 'Exame'),
+                ('Retorno', 'Retorno'),
+                ('Outro', 'Outro')
+            ]),
+            "convenio": forms.Select(attrs={"class": "select validator", "required": "required"}, choices=[
+                ('', 'Selecione um Convênio'),
+                ('Publico', 'Público'),
+                ('Particular', 'Particular')
+            ]),
+            "observacoes": forms.Textarea(attrs={"class": "textarea", "placeholder": "Observações"}),
+            "data_inicio": DateInput(attrs={"type": "datetime-local", "class": "input validator"}, format="%Y-%m-%dT%H:%M"),
+            "data_fim": DateInput(attrs={"type": "datetime-local", "class": "input validator"}, format="%Y-%m-%dT%H:%M"),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["data_inicio"].input_formats = ("%Y-%m-%dT%H:%M",)
+        self.fields["data_fim"].input_formats = ("%Y-%m-%dT%H:%M",)
+
+class MembroForm(forms.ModelForm):
+    class Meta:
+        model = MembroEvento
+        fields = ["paciente"]

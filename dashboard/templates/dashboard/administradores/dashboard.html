@@ -1,4 +1,7 @@
 {% extends "./base.html" %}
+{% block head %} 
+<title>Página Inicial</title>
+{% endblock %}
 {% block main %}
     <main class="main">
     <h1>Bem-vindo, {{ user.username }}!</h1>
@@ -11,7 +14,11 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
       </svg>
       <h2 class="card-title">Próxima Data</h2>
-      <p>Data: 00/00/0000</p>
+      <p>{% if proxima_data %}
+        Data: {{ proxima_data|date:"d/m/Y H:i" }}
+      {% else %}
+        Nenhuma próxima data
+      {% endif %}</p>
       <div class="justify-end card-actions"></div>
     </div>
   </div>
@@ -22,7 +29,7 @@
 </svg>
 
       <h2 class="card-title">Agendados</h2>
-      <p></p>
+      <p>{{ eventos_proximos|length }}</p>
       <div class="justify-end card-actions"></div>
     </div>
   </div>
@@ -33,10 +40,25 @@
 </svg>
 
       <h2 class="card-title">Concluídos</h2>
-      <p></p>
+      <p>{{ eventos_completos|length }}</p>
       <div class="justify-end card-actions"></div>
     </div>
   </div>
+
+  <div class="card w-full bg-base-200 card-md shadow-sm">
+    <div class="card-body">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+  <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
+</svg>
+
+      <h2 class="card-title">
+        Cancelados
+      </h2>
+      <p>{{ eventos_cancelados|length }}</p>
+      <div class="justify-end card-actions"></div>
+    </div>
+  </div>
+
 </div>
     </main>
 {% endblock %}

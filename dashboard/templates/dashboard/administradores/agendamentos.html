@@ -1,0 +1,109 @@
+{% extends "./base.html" %}
+{% load static %}
+
+{% block head %}
+  <script src="{% static "js/agenda.js" %}"></script>
+  <script src={% static "fullcalendar/index.global.min.js" %}></script>
+{% endblock %}
+
+{% block main %}
+<div class="container mx-auto">
+  <h2 class="text-2xl font-bold mb-6">Agendamentos da Semana</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    {% for event in ultimos_eventos %}
+      <div class="bg-white rounded-lg shadow p-4 border border-gray-100">
+        <h3 class="text-lg font-semibold mb-2">{{ event.procedimentos }}</h3>
+        <p class="text-sm text-gray-600 mb-1">Paciente: {{ event.paciente.username }}</p>
+        <p class="text-xs text-gray-400">ID: {{ event.id }}</p>
+        <p class="text-xs text-gray-500">De: {{ event.data_inicio }}</p>
+        <p class="text-xs text-gray-500">Até: {{ event.data_fim }}</p>
+      </div>
+    {% empty %}
+      <p class="text-gray-500">Nenhum agendamento encontrado.</p>
+    {% endfor %}
+  </div>
+  <div id="calendar" class="mb-8"></div>
+</div>
+<dialog id="create_modal" class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold mb-4">Novo Agendamento</h3>
+    <form method="post" action="{% url 'dashboard:create_event' %}" class="space-y-3">
+      {% csrf_token %}
+      <div>
+        <label>Paciente</label>
+        {{ form.paciente }}
+      </div>
+      <div>
+        <label>Procedimentos</label>
+        {{ form.procedimentos }}
+      </div>
+      <div>
+        <label>Convênio</label>
+        {{ form.convenio }}
+      </div>
+      <div>
+        <label>Observações</label>
+        {{ form.observacoes }}
+      </div>
+      <div>
+        <label>Data de Início</label>
+        {{ form.data_inicio }}
+      </div>
+      <div>
+        <label>Data de Fim</label>
+        {{ form.data_fim }}
+      </div>
+      <button type="submit" class="btn btn-primary w-full">Salvar</button>
+    </form>
+    <div class="modal-action mt-4">
+      <form method="dialog">
+        <button class="btn w-full">Fechar</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="view_modal" class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box">
+    <form method="post">
+      {% csrf_token %}
+      <h3 class="text-lg font-bold mb-4">Detalhes do Agendamento</h3>
+      <div class="space-y-2">
+        <div>
+          <label class="block text-sm font-medium">Procedimentos</label>
+          <p id="procedimentos_detalhes" class="text-base"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Paciente</label>
+          <p id="paciente_detalhes" class="text-base"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Observações</label>
+          <p id="observacoes_detalhes" class="text-base"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Data de Início</label>
+          <p id="data_inicio_detalhes" class="text-base"></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Data de Fim</label>
+          <p id="data_fim_detalhes" class="text-base"></p>
+        </div>
+      </div>
+      <div class="flex gap-2 mt-4">
+        <button id="delete-event-button" data-event-id="" type="button" class="btn btn-error flex-1">Deletar</button>
+        <a id="edit-event-button" href="#" class="btn btn-neutral flex-1">Editar</a>
+      </div>
+    </form>
+    <div class="modal-action mt-4">
+      <form method="dialog">
+        <button class="btn w-full">Fechar</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+<script id="events-data" type="application/json">
+  {{ eventos|safe }}
+</script>
+{% endblock %}

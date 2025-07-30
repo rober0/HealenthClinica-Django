@@ -20,3 +20,5 @@ https://github.com/eduardoplnascimento/medmazza <br>
 https://conclinica.com.br/agenda-medica/ <br>
 https://iclinic.com.br/funcionalidades/agenda-medica/ <br>
 https://www.gestaods.com.br/funcionalidades/agenda-medica/ <br>
+
+Thanks to the sabij1066 calendar event project, it was possible to carry out this project.

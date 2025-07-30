@@ -1,4 +1,8 @@
-{% extends "./base.html" %} {% load django_vite %} {% load static %} <head> {% vite_asset 'static/css/datatable.css' %} </head> {% block main %} <div class="flex flex-row gap-x-2">
+{% extends "./base.html" %} {% load django_vite %} {% load static %} <head>
+  {% block head %} 
+  <title>Lista de Usuários</title>
+  {% endblock %}
+  {% vite_asset 'static/css/datatable.css' %} </head> {% block main %} <div class="flex flex-row gap-x-2">
   <details class="dropdown">
     <summary class="btn m-1 btn-primary">+ Adicionar</summary>
     <ul class="menu dropdown-content bg-base-100 rounded-box border-1 border-gray-300 z-1 w-52 p-2 shadow-sm">

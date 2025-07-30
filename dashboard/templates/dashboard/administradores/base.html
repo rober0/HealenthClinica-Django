@@ -1,12 +1,17 @@
-{% load django_vite %} {% load static %}
+{% load django_vite %} 
+{% load static %}
 <!DOCTYPE html>
 <html data-theme="healenth" lang="pt-br">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
     <script src="{% static "flowbite/dist/flowbite.min.js" %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script> {% block head %} {% endblock %} {% vite_hmr_client %} {% vite_asset 'static/css/dashboard.css' %}
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script> 
+    {% block head %} 
+    {% endblock %} 
+
+    {% vite_hmr_client %} 
+    {% vite_asset 'static/css/dashboard.css' %}
   </head>
   <body>
     <section class="header">

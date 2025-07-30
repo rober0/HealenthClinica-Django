@@ -76,6 +76,9 @@ class Paciente(Usuario):
         verbose_name = 'Paciente'
         verbose_name_plural = 'Pacientes'
 
+    def __str__(self):
+        return f"{self.username}"
+    
 class Medico(Usuario):
     especialidade = models.CharField(max_length=100)
     data_nascimento = models.DateField(null=False, blank=False)

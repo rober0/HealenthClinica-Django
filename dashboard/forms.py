@@ -1,9 +1,11 @@
 from django import forms
 from django.forms import ModelForm, DateInput
 from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from users.models import Paciente, Medico, Administrador, Usuario
 from dashboard.models import CriarEvento, MembroEvento
+from django.conf import settings
 
 class PacienteForm(forms.ModelForm):
     avatar = forms.ImageField(required=False)
@@ -58,9 +60,9 @@ class PacienteForm(forms.ModelForm):
                 'required': "required"
             }, choices=[
                 ('', ''),
-                ('M', 'Masculino'),
-                ('F', 'Feminino'),
-                ('O', 'Outro')
+                ('Masculino', 'Masculino'),
+                ('Feminino', 'Feminino'),
+                ('Outro', 'Outro')
             ]),
         }
 
@@ -177,9 +179,9 @@ class MedicoForm(forms.ModelForm):
                 'required': "required"
             }, choices=[
                 ('', ''),
-                ('M', 'Masculino'),
-                ('F', 'Feminino'),
-                ('O', 'Outro')
+                ('Masculino', 'Masculino'),
+                ('Feminino', 'Feminino'),
+                ('Outro', 'Outro')
             ]),
         }
 
@@ -333,6 +335,15 @@ class AgendamentoForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["data_inicio"].input_formats = ("%Y-%m-%dT%H:%M",)
         self.fields["data_fim"].input_formats = ("%Y-%m-%dT%H:%M",)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        inicio = cleaned_data.get("data_inicio")
+        fim = cleaned_data.get("data_fim")
+
+        if fim and inicio and fim < inicio:
+            raise ValidationError("Data final não pode ser anterior à data inicial")
+        return cleaned_data
 
 class MembroForm(forms.ModelForm):
     class Meta:

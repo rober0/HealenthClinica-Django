@@ -24,82 +24,97 @@
   </div>
   <div id="calendar" class="mb-8"></div>
 </div>
-<dialog id="create_modal" class="modal modal-bottom sm:modal-middle">
-  <div class="modal-box">
-    <h3 class="text-lg font-bold mb-4">Novo Agendamento</h3>
-    <form method="post" action="{% url 'dashboard:create_event' %}" class="space-y-3">
-      {% csrf_token %}
-      <div>
-        <label>Paciente</label>
-        {{ form.paciente }}
-      </div>
-      <div>
-        <label>Procedimentos</label>
-        {{ form.procedimentos }}
-      </div>
-      <div>
-        <label>Convênio</label>
-        {{ form.convenio }}
-      </div>
-      <div>
-        <label>Observações</label>
-        {{ form.observacoes }}
-      </div>
-      <div>
-        <label>Data de Início</label>
-        {{ form.data_inicio }}
-      </div>
-      <div>
-        <label>Data de Fim</label>
-        {{ form.data_fim }}
-      </div>
-      <button type="submit" class="btn btn-primary w-full">Salvar</button>
+<dialog id="create_modal" class="modal">
+  <div class="modal-box max-w-2xl w-full">
+    <h3 class="text-xl font-semibold mb-6">Novo Agendamento</h3>
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-5">✕</button>
     </form>
-    <div class="modal-action mt-4">
-      <form method="dialog">
-        <button class="btn w-full">Fechar</button>
-      </form>
-    </div>
+    <form method="post" action="{% url 'dashboard:create_event' %}" class="space-y-4">
+      {% csrf_token %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Paciente</label>
+          {{ form.paciente }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Procedimentos</label>
+          {{ form.procedimentos }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Convênio</label>
+          {{ form.convenio }}
+        </div>
+        <div class="sm:col-span-2">
+          <label class="block text-sm font-medium mb-1">Observações</label>
+          {{ form.observacoes }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Data de Início</label>
+          {{ form.data_inicio }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Data de Fim</label>
+          {{ form.data_fim }}
+        </div>
+      </div>
+      <div class="mt-6">
+        <button type="submit" class="btn btn-primary w-full">Salvar</button>
+      </div>
+    </form>
   </div>
 </dialog>
 
-<dialog id="view_modal" class="modal modal-bottom sm:modal-middle">
-  <div class="modal-box">
+<dialog id="view_modal" class="modal">
+  <div class="modal-box max-w-2xl w-full">
+    <h3 class="text-xl font-semibold mb-6">Detalhes do Agendamento</h3>
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-5">✕</button>
+    </form>
     <form method="post">
       {% csrf_token %}
-      <h3 class="text-lg font-bold mb-4">Detalhes do Agendamento</h3>
-      <div class="space-y-2">
-        <div>
-          <label class="block text-sm font-medium">Procedimentos</label>
-          <p id="procedimentos_detalhes" class="text-base"></p>
+      <div class="space-y-4">
+        <div class="flex items-start gap-4">
+          <div id="paciente_avatar" class="shrink-0 w-20 h-20 rounded-full bg-gray-100 overflow-hidden"></div>
+          <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">Nome</label>
+              <p id="paciente_nome" class="text-base text-gray-700"></p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Gênero</label>
+              <p id="paciente_genero" class="text-base text-gray-700"></p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">Data de Nascimento</label>
+              <p id="paciente_data_nascimento" class="text-base text-gray-700"></p>
+            </div>
+          </div>
         </div>
         <div>
-          <label class="block text-sm font-medium">Paciente</label>
-          <p id="paciente_detalhes" class="text-base"></p>
+          <label class="block text-sm font-medium mb-1">Procedimentos</label>
+          <p id="procedimentos_detalhes" class="text-base text-gray-700"></p>
         </div>
         <div>
-          <label class="block text-sm font-medium">Observações</label>
-          <p id="observacoes_detalhes" class="text-base"></p>
+          <label class="block text-sm font-medium mb-1">Observações</label>
+          <p id="observacoes_detalhes" class="text-base text-gray-700"></p>
         </div>
-        <div>
-          <label class="block text-sm font-medium">Data de Início</label>
-          <p id="data_inicio_detalhes" class="text-base"></p>
-        </div>
-        <div>
-          <label class="block text-sm font-medium">Data de Fim</label>
-          <p id="data_fim_detalhes" class="text-base"></p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Data de Início</label>
+            <p id="data_inicio_detalhes" class="text-base text-gray-700"></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Data de Fim</label>
+            <p id="data_fim_detalhes" class="text-base text-gray-700"></p>
+          </div>
         </div>
       </div>
-      <div class="flex gap-2 mt-4">
+      <div class="flex gap-2 mt-6">
         <button id="delete-event-button" data-event-id="" type="button" class="btn btn-error flex-1">Deletar</button>
         <a id="edit-event-button" href="#" class="btn btn-neutral flex-1">Editar</a>
       </div>
     </form>
-    <div class="modal-action mt-4">
-      <form method="dialog">
-        <button class="btn w-full">Fechar</button>
-      </form>
-    </div>
   </div>
 </dialog>
 

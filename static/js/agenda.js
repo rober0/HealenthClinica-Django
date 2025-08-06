@@ -12,7 +12,17 @@ function dataFormat(data) {
 function formatDateTime(date) {
     if (!date) return '';
     const d = new Date(date);
-    return d.toLocaleString('pt-BR');
+    return d.toLocaleString('pt-br');
+}
+
+function formatDateOnly(dataStr) {
+    if (!dataStr) return '';
+    const d = new Date(dataStr);
+    return d.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -43,6 +53,8 @@ document.addEventListener('DOMContentLoaded', function () {
         events: events,
         initialView: 'timeGridWeek',
         locale: 'pt-br',
+        timeZone: 'local',
+        nowIndicator: 'true',
         buttonText: {
             today: 'Hoje',
             timeGridWeek: 'Semana',
@@ -60,22 +72,29 @@ document.addEventListener('DOMContentLoaded', function () {
         },
 
         eventClick: function (arg) {
-            const e = arg.event;
-            const data = e.extendedProps;
+        const e = arg.event;
+        const data = e.extendedProps;
 
-            document.getElementById('procedimentos_detalhes').textContent = data.procedimentos
-            document.getElementById('paciente_detalhes').textContent = data.paciente;
-            document.getElementById('observacoes_detalhes').textContent = data.observacoes;
-            document.getElementById('data_inicio_detalhes').textContent = formatDateTime(e.start);
-            document.getElementById('data_fim_detalhes').textContent = formatDateTime(e.end);
+        const avatarEl = document.getElementById('paciente_avatar');
+            if (avatarEl && data.avatar) {
+                avatarEl.innerHTML = `<img src="${data.avatar}" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%;">`;
+            }
 
+        document.getElementById('paciente_nome').textContent = data.paciente;
+        document.getElementById('paciente_genero').textContent = data.genero;
+        document.getElementById('paciente_data_nascimento').textContent = formatDateOnly(data.data_nascimento);
 
-            deleteBtn.setAttribute("data-event-id", e.id);
-            editBtn.setAttribute("href", `/dashboard/agendamento/edit/${e.id}/`);
+        document.getElementById('procedimentos_detalhes').textContent = data.procedimentos;
+        document.getElementById('observacoes_detalhes').textContent = data.observacoes;
+        document.getElementById('data_inicio_detalhes').textContent = formatDateTime(e.start);
+        document.getElementById('data_fim_detalhes').textContent = formatDateTime(e.end);
 
-            modalView.showModal();
-        },
-    });
+        deleteBtn.setAttribute("data-event-id", e.id);
+        editBtn.setAttribute("href", `/dashboard/agendamento/edit/${e.id}/`);
+
+        modalView.showModal();
+    },
+        });
 
     calendar.render();
 

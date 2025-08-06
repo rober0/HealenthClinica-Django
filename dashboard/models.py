@@ -5,10 +5,7 @@ from users.models import Paciente
 from django.utils import timezone
 
 class GerenciadorEvento(models.Manager):
-
-    def eventos_todos(self, paciente):
-        return self.filter(paciente=paciente, is_active=True, is_deleted=False)
-
+    
     def eventos_andamento(self, paciente):
         today = datetime.now().date()
         return self.filter(
@@ -56,7 +53,7 @@ class AbstratoEvento(models.Model):
         abstract = True
 
 class CriarEvento(AbstratoEvento):
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name="events")
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name="paciente")
     procedimentos = models.CharField(max_length=200)
     convenio = models.CharField(max_length=100)
     observacoes = models.TextField(blank=True, null=True)
@@ -64,17 +61,6 @@ class CriarEvento(AbstratoEvento):
     data_fim = models.DateTimeField()
 
     objects = GerenciadorEvento()
-
-    def __str__(self):
-        return f"{self.paciente.username} - {self.procedimentos} ({self.data_inicio.strftime('%Y-%m-%d %H:%M')})"
-
-    def get_absolute_url(self):
-        return reverse("agendamentos:event-detail", args=(self.id,))
-
-    @property
-    def get_html_url(self):
-        url = reverse("agendamentos:event-detail", args=(self.id,))
-        return f'<a href="{url}"> {self.titulo} </a>'
 
 class MembroEvento(AbstratoEvento):
     eventos = models.ForeignKey(CriarEvento, on_delete=models.CASCADE, related_name="eventos")

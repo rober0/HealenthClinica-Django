@@ -5,6 +5,8 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.utils import timezone
+from zoneinfo import ZoneInfo
+from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users.models import Usuario, Paciente, Medico, Administrador
 from users.decorators import admin_required, medico_required, paciente_required
@@ -131,15 +133,18 @@ def administrador(request):
     eventos = CriarEvento.objects.filter(is_active=True, is_deleted=False)
     eventos_andamento = eventos.filter(data_inicio__lte=timezone.now(), data_fim__gte=timezone.now())
     eventos_completos = eventos.filter(data_fim__lt=timezone.now())
-    eventos_proximos = eventos.filter(data_inicio__gte=timezone.now())
+    eventos_proximos = eventos.filter(data_inicio__gte=timezone.now()).order_by("data_inicio")
     eventos_cancelados = CriarEvento.objects.filter(is_active=False, is_deleted=True)
+    proximo_evento = eventos_proximos.first() if eventos_proximos.exists() else None
+    proxima_data = proximo_evento.data_inicio if proximo_evento else None
 
     context = {
         "eventos_andamento": eventos_andamento,
         "eventos_completos": eventos_completos,
         "eventos_proximos": eventos_proximos,
         "eventos_cancelados": eventos_cancelados,
-        "proxima_data": eventos_proximos.first().data_inicio if eventos_proximos.exists() else None,
+        "proxima_data": proxima_data,
+        "proximo_evento": proximo_evento,
     }
     return render(request, 'dashboard/administradores/dashboard.html', context)
 
@@ -153,14 +158,17 @@ def administrador_agendamentos(request):
     ultimos_eventos = eventos.order_by("-id")[:10]
 
     event_list = [{
-        "id": e.id,
-        "paciente": e.paciente.username,
-        "procedimentos": e.procedimentos,
-        "convenio": e.convenio,
-        "observacoes": e.observacoes,
-        "start": e.data_inicio.strftime("%Y-%m-%dT%H:%M:%S"),
-        "end": e.data_fim.strftime("%Y-%m-%dT%H:%M:%S"),
-    } for e in eventos]
+    "id": e.id,
+    "avatar": e.paciente.avatar.url if e.paciente.avatar else "",
+    "paciente": e.paciente.username,
+    "genero": e.paciente.genero,
+    "data_nascimento": e.paciente.data_nascimento.strftime("%Y-%m-%d") if e.paciente.data_nascimento else "",
+    "procedimentos": e.procedimentos,
+    "convenio": e.convenio,
+    "observacoes": e.observacoes,
+    "start": e.data_inicio.strftime("%Y-%m-%dT%H:%M:%S"),
+    "end": e.data_fim.strftime("%Y-%m-%dT%H:%M:%S"),
+} for e in eventos]
 
     context = {
         "form": AgendamentoForm(),
@@ -204,14 +212,17 @@ class CalendarView(LoginRequiredMixin, generic.View):
     def get(self, request):
         eventos = CriarEvento.objects.filter(is_active=True, is_deleted=False)
         event_list = [{
-            "id": e.id,
-            "paciente": e.paciente.username,
-            "procedimentos": e.procedimentos,
-            "convenio": e.convenio,
-            "observacoes": e.observacoes,
-            "start": e.data_inicio.strftime("%Y-%m-%dT%H:%M:%S"),
-            "end": e.data_fim.strftime("%Y-%m-%dT%H:%M:%S"),
-        } for e in eventos]
+        "id": e.id,
+        "avatar": e.paciente.avatar.url if e.paciente.avatar else "",
+        "paciente": e.paciente.username,
+        "genero": e.paciente.genero,
+        "data_nascimento": e.paciente.data_nascimento.strftime("%Y-%m-%d") if e.paciente.data_nascimento else "",
+        "procedimentos": e.procedimentos,
+        "convenio": e.convenio,
+        "observacoes": e.observacoes,
+        "start": e.data_inicio.strftime("%Y-%m-%dT%H:%M:%S"),
+        "end": e.data_fim.strftime("%Y-%m-%dT%H:%M:%S"),
+} for e in eventos]
 
         ultimos_eventos = eventos.order_by("-id")[:10]
 
@@ -224,12 +235,21 @@ class CalendarView(LoginRequiredMixin, generic.View):
 @login_required
 def create_agendamento(request):
     form = AgendamentoForm(request.POST or None)
+    zona_sp = ZoneInfo("America/Sao_Paulo")
+
     if form.is_valid():
         evento = form.save(commit=False)
+
+        if timezone.is_naive(evento.data_inicio):
+            evento.data_inicio = evento.data_inicio.replace(tzinfo=zona_sp)
+        if timezone.is_naive(evento.data_fim):
+            evento.data_fim = evento.data_fim.replace(tzinfo=zona_sp)
+
         evento.usuario = request.user
         evento.save()
         return redirect("dashboard:calendar")
-    return render(request, "dashboard/administradores/lista/evento.html", {"form": form})
+
+    return render(request, "dashboard/administradores/agendamentos.html", {"form": form})
 
 @login_required
 def delete_agendamento(request, event_id):

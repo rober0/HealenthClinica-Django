@@ -28,12 +28,8 @@ var/
 *.pot
 *.pyc
 *.pyo
-*.db
-*.sqlite3
-*.sqlite
 staticfiles/
 local_settings.py
-db.sqlite3
 
 # VS Code
 .vscode/

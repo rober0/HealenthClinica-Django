@@ -28,6 +28,15 @@ urlpatterns = [
     path('users/', include('users.urls', namespace='users')),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
     path('procedimentos/', views.procedimentos, name='procedimentos'),
+    path('faq/', views.faq, name='faq'),
+    path('quemsomos/', views.quemsomos, name='quemsomos'),
+    path('termos/', views.termos, name='termos'),
+    path('agendamedica/', views.agendamedica, name='agendamedica'),
+    path('gestao/', views.gestao, name='gestao'),
+    path('prontuario/', views.prontuario, name='prontuario'),
+    path('faleconosco/', views.faleconosco, name='faleconosco'),
+    path('sugestoes/', views.sugestoes, name='sugestoes'),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

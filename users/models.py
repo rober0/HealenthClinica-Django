@@ -101,3 +101,13 @@ class Medico(Usuario):
     class Meta:
         verbose_name = "Médico"
         verbose_name_plural = "Médicos"
+
+
+class Contato(models.Model):
+    nomeC = models.CharField(max_length=100)
+    emailC = models.EmailField()
+    categoria = models.CharField(max_length=20)
+    comentarios = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.nomeC

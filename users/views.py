@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Paciente, Medico, Administrador
-from .forms import RegistroForm, LoginForm
+from .models import Paciente, Medico, Administrador, Contato
+from .forms import RegistroForm, LoginForm, ContatoForm
 
 
 def register_view(request):
@@ -80,3 +80,16 @@ def logout_view(request):
     if request.method == "POST":
         logout(request)
     return redirect("users:login")
+
+
+
+def contato_view(request):
+    if request.method == "POST":
+        form = ContatoForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return redirect("templates:contact-us")
+    else:
+        form = ContatoForm()
+
+    return render(request, "templates/faleconosco.html", {"form": form})

@@ -1,26 +1,28 @@
-{% extends "./base.html" %}
+{% extends './base.html' %}
 
 {% block main %}
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="breadcrumbs text-sm mb-2">
-  <ul>
-    <li><a href="{% url "dashboard:administrador" %}">Página Inicial</a></li>
-    <li>Configurações</li>
-  </ul>
-</div>
-  <div class="flex flex-col gap-y-2">
-    <div class="flex items-center gap-4 mb-2">
-  {% if view_config.avatar %}
-    <img src="{{ view_config.avatar.url }}" alt="Avatar" width="80" style="border-radius: 50%;">
-  {% endif %}
-  <div class="flex flex-col gap-0.5">
-    {% if view_config.username %}
-     <p class="text-2xl">{{ view_config.username }}</p>
-    {% endif %}
-    <p class="text-sm text-gray-500">Data de Registro: {{ view_config.date_joined }}</p>
-  </div>
-</div>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="breadcrumbs text-sm mb-2">
+      <ul>
+        <li>
+          <a href="{% url 'dashboard:administrador' %}">Página Inicial</a>
+        </li>
+        <li>Configurações</li>
+      </ul>
+    </div>
+    <div class="flex flex-col gap-y-2 mx-auto">
+      <div class="flex items-center gap-4 mb-2">
+        {% if view_config.avatar %}
+          <img src="{{ view_config.avatar.url }}" alt="Avatar" width="80" style="border-radius: 50%;" />
+        {% endif %}
+        <div class="flex flex-col gap-0.5">
+          {% if view_config.username %}
+            <p class="text-2xl">{{ view_config.username }}</p>
+          {% endif %}
+          <p class="text-sm text-gray-500">Data de Registro: {{ view_config.date_joined }}</p>
+        </div>
+      </div>
       <label>Email:</label>
       {{ form.email }}
       <label>Nome:</label>
@@ -29,24 +31,24 @@
       {{ form.password }}
       <label>Confirmação de Senha:</label>
       {{ form.password_confirm }}
-    {% if form.especialidade %}
-    <label>Especialidade:</label>
-    {{ form.especialidade }}
-  {% endif %}
-    {% if form.data_nascimento %}
-    <label>Data de Nascimento:</label>
-    {{ form.data_nascimento }}
-  {% endif %}
-  {% if form.telefone %}
-    <label>Telefone:</label>
-    {{ form.telefone }}
-  {% endif %}
-  {% if form.genero %}
-    <label>Gênero:</label>
-    {{ form.genero }}
-  {% endif %}
-</div>
-<br>
-<button type="submit" class="btn btn-primary">Salvar</button>
-</form>
+      {% if form.especialidade %}
+        <label>Especialidade:</label>
+        {{ form.especialidade }}
+      {% endif %}
+      {% if form.data_nascimento %}
+        <label>Data de Nascimento:</label>
+        {{ form.data_nascimento }}
+      {% endif %}
+      {% if form.telefone %}
+        <label>Telefone:</label>
+        {{ form.telefone }}
+      {% endif %}
+      {% if form.genero %}
+        <label>Gênero:</label>
+        {{ form.genero }}
+      {% endif %}
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Salvar</button>
+  </form>
 {% endblock %}

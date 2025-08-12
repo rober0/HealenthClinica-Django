@@ -11,18 +11,19 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "vite": "^7.0.6"
+    "vite": "^7.1.1"
   },
   "dependencies": {
-    "@fullcalendar/core": "^6.1.18",
-    "@fullcalendar/daygrid": "^6.1.18",
-    "@fullcalendar/list": "^6.1.18",
-    "@fullcalendar/timegrid": "^6.1.18",
+    "@fullcalendar/core": "^6.1.19",
+    "@fullcalendar/daygrid": "^6.1.19",
+    "@fullcalendar/list": "^6.1.19",
+    "@fullcalendar/timegrid": "^6.1.19",
     "@tailwindcss/vite": "^4.1.11",
+    "chart.js": "^4.5.0",
     "daisyui": "^5.0.50",
     "flowbite": "^3.1.2",
-    "fullcalendar": "^6.1.18",
-    "intl-tel-input": "^25.3.1",
+    "fullcalendar": "^6.1.19",
+    "intl-tel-input": "^25.3.2",
     "jquery": "^3.7.1",
     "simple-datatables": "^10.0.0",
     "tailwindcss": "^4.1.11"

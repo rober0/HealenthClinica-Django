@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 ## Conta
 
-### Email: admin@exemplo.com
+### Email: admin123@exemplo.com
 ### Senha: admin12345
 
 Referências: <br>

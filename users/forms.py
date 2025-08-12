@@ -137,7 +137,6 @@ class LoginForm(forms.Form):
                 "required": "required",
             }
         ),
-        validators=[validate_email],
     )
     password = forms.CharField(
         widget=forms.PasswordInput(
@@ -149,7 +148,6 @@ class LoginForm(forms.Form):
                 "title": "Must be more than 8 characters, including number, lowercase letter, uppercase letter",
             }
         ),
-        validators=[validate_password],
     )
 
     def clean(self):

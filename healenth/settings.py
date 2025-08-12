@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'dashboard.apps.DashboardConfig',
-    'django_vite'
+    'django_vite',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

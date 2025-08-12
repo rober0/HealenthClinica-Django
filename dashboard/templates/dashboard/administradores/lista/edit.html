@@ -1,89 +1,96 @@
-{% extends "../base.html" %}
+{% extends '../base.html' %}
 {% load static %}
 
 {% block head %}
-<script src="{% static 'js/intl.js' %}"></script>
-<link rel="stylesheet" href="{% static '/intl-tel-input/build/css/intlTelInput.css' %}">
-<script src="{% static 'intl-tel-input/build/js/intlTelInputWithUtils.min.js' %}"></script>
+  <script src="{% static 'js/intl.js' %}"></script>
+  <link rel="stylesheet" href="{% static '/intl-tel-input/build/css/intlTelInput.css' %}" />
+  <script src="{% static 'intl-tel-input/build/js/intlTelInputWithUtils.min.js' %}"></script>
 {% endblock %}
 
 {% block main %}
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="md:flex md:flex-col gap-y-2">
-    <div class="breadcrumbs text-sm mb-2">
-  <ul>
-    <li><a href="{% url "dashboard:administrador_listas" %}">Lista de Usuário</a></li>
-    <li>Editar Usuário</li>
-  </ul>
-</div>
-    <div class="flex items-center gap-4 mb-2">
-  {% if edit_user.avatar %}
-    <img src="{{ edit_user.avatar.url }}" alt="Avatar" width="80" style="border-radius: 50%;">
-  {% endif %}
-  <div class="flex flex-col gap-0.5">
-    {% if edit_user.username %}
-     <p class="text-2xl">{{ edit_user.username }}</p>
-    {% endif %}
-    <p class="text-sm text-gray-500">Data de Registro: {{ edit_user.date_joined }}</p>
-  </div>
-</div>
-<div class="container mx-auto flex flex-col md:flex-row gap-4">
-  <div class="flex flex-col items-start w-full md:w-1/2 gap-y-2">
-    <p class="text-xl font-medium mb-1">
-      {% if edit_user.paciente %}Informações do Paciente{% endif %}
-      {% if edit_user.medico %}Informações do Médico{% endif %}
-      {% if edit_user.administrador %}Informações do Administrador{% endif %}</p>
-      <label>Email:</label>
-      {{ form.email }}
-      <label>Nome:</label>
-      {{ form.username }}
-      {% if edit_user.paciente %}
-      <p class="text-xl font-normal mt-6">Alterar Senha</p>
-      <label>Digite uma Senha:</label>
-      {{ form.password }}
-      <label>Confirme a Senha:</label>
-      {{ form.password_confirm }}
-      {% endif %}
-      {% if edit_user.medico %}
-      <p class="text-xl font-normal mt-6">Alterar Senha</p>
-      <label>Digite uma Senha:</label>
-      {{ form.password }}
-      <label>Confirme a Senha:</label>
-      {{ form.password_confirm }}
-      {% endif %}
-  </div>
-  <div class="flex flex-col items-start w-full md:w-1/2 gap-y-2">
-      {% if edit_user.paciente %}<p class="text-xl font-medium mb-1"> Informações Pessoais </p>{% endif %}
-      {% if edit_user.medico %}<p class="text-xl font-medium mb-1"> Informações Pessoais </p>{% endif %}
-      {% if edit_user.administrador %}
-      <p class="text-xl font-normal mb-1">Alterar Senha</p>
-      <label>Digite uma Senha:</label>
-      {{ form.password }}
-      <label>Confirme a Senha:</label>
-      {{ form.password_confirm }}
-      {% endif %}
-      {% if form.telefone %}
-    <label>Telefone:</label>
-    {{ form.telefone }}
-  {% endif %}
-    {% if form.especialidade %}
-    <label>Especialidade:</label>
-    {{ form.especialidade }}
-  {% endif %}
-    {% if form.data_nascimento %}
-    <label>Data de Nascimento:</label>
-    {{ form.data_nascimento }}
-  {% endif %}
-  {% if form.genero %}
-    <label>Gênero:</label>
-    {{ form.genero }}
-  {% endif %}
-  </div>
-</div>
-</div>
-<br>
-<button type="submit" class="btn btn-primary">Salvar</button>
-<a href="{% url 'dashboard:delete' edit_user.id %}" class="btn btn-error">Deletar</a>
-</form>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="flex flex-col mx-auto gap-y-2">
+      <div class="breadcrumbs text-sm mb-2">
+        <ul>
+          <li>
+            <a href="{% url 'dashboard:administrador_listas' %}">Lista de Usuário</a>
+          </li>
+          <li>Editar Usuário</li>
+        </ul>
+      </div>
+      <div class="flex items-center gap-4 mb-2">
+        {% if edit_user.avatar %}
+          <img src="{{ edit_user.avatar.url }}" alt="Avatar" width="80" style="border-radius: 50%;" />
+        {% endif %}
+        <div class="flex flex-col gap-0.5">
+          {% if edit_user.username %}
+            <p class="text-2xl">{{ edit_user.username }}</p>
+          {% endif %}
+          <p class="text-sm text-gray-500">Data de Registro: {{ edit_user.date_joined }}</p>
+        </div>
+      </div>
+      <div class="container flex flex-col md:flex-row gap-4">
+        <div class="flex flex-col items-start w-full md:w-1/2 gap-y-2">
+          <p class="text-xl font-medium mb-1">
+            {% if edit_user.paciente %}Informações do Paciente{% endif %}
+            {% if edit_user.medico %}Informações do Médico{% endif %}
+            {% if edit_user.administrador %}Informações do Administrador{% endif %}
+          </p>
+          <label>Email:</label>
+          {{ form.email }}
+          <label>Nome:</label>
+          {{ form.username }}
+          {% if edit_user.paciente %}
+            <p class="text-xl font-normal mt-6">Alterar Senha</p>
+            <label>Digite uma Senha:</label>
+            {{ form.password }}
+            <label>Confirme a Senha:</label>
+            {{ form.password_confirm }}
+          {% endif %}
+          {% if edit_user.medico %}
+            <p class="text-xl font-normal mt-6">Alterar Senha</p>
+            <label>Digite uma Senha:</label>
+            {{ form.password }}
+            <label>Confirme a Senha:</label>
+            {{ form.password_confirm }}
+          {% endif %}
+        </div>
+        <div class="flex flex-col items-start w-full md:w-1/2 gap-y-2">
+          {% if edit_user.paciente %}
+            <p class="text-xl font-medium mb-1">Informações Pessoais</p>
+          {% endif %}
+          {% if edit_user.medico %}
+            <p class="text-xl font-medium mb-1">Informações Pessoais</p>
+          {% endif %}
+          {% if edit_user.administrador %}
+            <p class="text-xl font-normal mb-1">Alterar Senha</p>
+            <label>Digite uma Senha:</label>
+            {{ form.password }}
+            <label>Confirme a Senha:</label>
+            {{ form.password_confirm }}
+          {% endif %}
+          {% if form.telefone %}
+            <label>Telefone:</label>
+            {{ form.telefone }}
+          {% endif %}
+          {% if form.especialidade %}
+            <label>Especialidade:</label>
+            {{ form.especialidade }}
+          {% endif %}
+          {% if form.data_nascimento %}
+            <label>Data de Nascimento:</label>
+            {{ form.data_nascimento }}
+          {% endif %}
+          {% if form.genero %}
+            <label>Gênero:</label>
+            {{ form.genero }}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a href="{% url 'dashboard:delete' edit_user.id %}" class="btn btn-error">Deletar</a>
+  </form>
 {% endblock %}

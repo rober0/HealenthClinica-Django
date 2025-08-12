@@ -1,0 +1,18 @@
+from django.shortcuts import render, redirect
+from .forms import ContatoForm
+
+
+def faleconosco(request):
+    return render(request, "contato/faleconosco.html")
+
+
+def contato_view(request):
+    if request.method == "POST":
+        form = ContatoForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return redirect("contato:contact-us")
+    else:
+        form = ContatoForm()
+
+    return render(request, "contato/faleconosco.html", {"form": form})

@@ -34,9 +34,5 @@ def prontuario(request):
     return render(request, "prontuario.html")
 
 
-def faleconosco(request):
-    return render(request, "faleconosco.html")
-
-
 def sugestoes(request):
     return render(request, "sugestoes.html")

@@ -162,3 +162,43 @@ class LoginForm(forms.Form):
             else:
                 self.user = user
         return cleaned_data
+
+
+class ResetPasswordForm(forms.Form):
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={
+                "type": "email",
+                "class": "input validator",
+                "placeholder": "exemplo@gmail.com",
+                "required": "required",
+            }
+        ),
+    )
+
+
+class ResetPasswordConfirmForm(forms.Form):
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "type": "password",
+                "required placeholder": "Senha",
+                "class": "input validator",
+                "minlength": "8",
+                "title": "Must be more than 8 characters, including number, lowercase letter, uppercase letter",
+            }
+        ),
+        validators=[validate_password],
+    )
+    password_confirm = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "type": "password",
+                "required placeholder": "Confirme a Senha",
+                "class": "input validator",
+                "minlength": "8",
+                "title": "Must be more than 8 characters, including number, lowercase letter, uppercase letter",
+            }
+        ),
+        validators=[validate_password],
+    )

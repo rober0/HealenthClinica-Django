@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
 from django.contrib import messages
 from .models import Paciente, Medico, Administrador
-from .forms import RegistroForm, LoginForm
+from .forms import RegistroForm, LoginForm, ResetPasswordForm
 
 
 def register_view(request):
@@ -80,3 +84,17 @@ def logout_view(request):
     if request.method == "POST":
         logout(request)
     return redirect("users:login")
+
+
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    form_class = PasswordResetForm
+    template_name = "users/reset_info/password_reset.html"
+    email_template_name = "users/reset_info/password_reset_email.html"
+    subject_template_name = "users/reset_info/password_reset_subject"
+    success_message = (
+        "We've emailed you instructions for setting your password, "
+        "if an account exists with the email you entered. You should receive them shortly."
+        " If you don't receive an email, "
+        "please make sure you've entered the address you registered with, and check your spam folder."
+    )
+    sucess_url = reverse_lazy("users:login")

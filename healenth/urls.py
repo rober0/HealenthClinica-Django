@@ -35,7 +35,7 @@ urlpatterns = [
     path("agendamedica/", views.agendamedica, name="agendamedica"),
     path("gestao/", views.gestao, name="gestao"),
     path("prontuario/", views.prontuario, name="prontuario"),
-    path("faleconosco/", include("contato.urls")),
+    path("contato/", include("contato.urls"), name="contato"),
     path("sugestoes/", views.sugestoes, name="sugestoes"),
 ]
 

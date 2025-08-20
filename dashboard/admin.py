@@ -20,10 +20,3 @@ class AgendamentoAdmin(admin.ModelAdmin):
     ]
     list_filter = ["is_active", "is_deleted"]
     search_fields = ["paciente__username", "procedimentos", "convenio"]
-
-
-@admin.register(models.MembroEvento)
-class MembroEventoAdmin(admin.ModelAdmin):
-    model = models.MembroEvento
-    list_display = ["id", "eventos", "paciente", "created_at", "updated_at"]
-    list_filter = ["eventos", "paciente"]

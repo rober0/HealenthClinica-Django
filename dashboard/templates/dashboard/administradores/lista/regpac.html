@@ -10,8 +10,8 @@
 {% block main %}
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="flex flex-col mx-auto gap-y-2">
-      <div class="breadcrumbs text-sm mb-2">
+    <div class="container mx-auto px-4 py-6">
+      <div class="breadcrumbs text-sm mb-4">
         <ul>
           <li>
             <a href="{% url 'dashboard:administrador_listas' %}">Lista de Usuários</a>
@@ -19,11 +19,12 @@
           <li>Registrar Paciente</li>
         </ul>
       </div>
+       <div class="bg-white rounded-lg shadow p-6">
       <div class="flex items-center gap-4 mb-2">
         <img src="/media/avatars/default.png" alt="Avatar" width="80" class="float-left" style="border-radius: 50%;" fallback-src="/static/avatars/default.png" />
         <div>{{ form.avatar }}</div>
       </div>
-      <div class="container flex flex-col md:flex-row gap-4">
+<div class="container flex flex-col md:flex-row mt-4 gap-4">
         <div class="flex flex-col items-start w-full md:w-1/2 gap-y-2">
           <p class="text-xl font-medium mb-1">Informações do Paciente</p>
           <label>Email:</label>
@@ -46,8 +47,24 @@
         </div>
       </div>
     </div>
-    <br />
+        <div class="flex justify-end gap-2 mt-6">
     <button class="btn btn-neutral" type="submit">Registrar</button>
     <button class="btn btn-error"><a href="{% url 'dashboard:administrador_listas' %}">Cancelar</a></button>
+    </div>
+    </div>
   </form>
+{% if form.errors %}
+<div role="alert" class="alert alert-error mt-4">
+    <ul>
+    {% for field in form %}
+        {% for error in field.errors %}
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+            <span>{{ error }}</span>
+        {% endfor %}
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
 {% endblock %}

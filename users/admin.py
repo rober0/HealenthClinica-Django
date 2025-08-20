@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from .models import Usuario, Paciente, Medico, Administrador
 
 
@@ -80,6 +79,8 @@ class MedicoAdmin(CustomUserAdmin):
         "email",
         "avatar",
         "especialidade",
+        "crm_estado",
+        "crm_numero",
         "data_nascimento",
         "telefone",
         "genero",
@@ -94,6 +95,8 @@ class MedicoAdmin(CustomUserAdmin):
                     "username",
                     "avatar",
                     "especialidade",
+                    "crm_estado",
+                    "crm_numero",
                     "data_nascimento",
                     "telefone",
                     "genero",
@@ -112,6 +115,8 @@ class MedicoAdmin(CustomUserAdmin):
                     "username",
                     "avatar",
                     "especialidade",
+                    "crm_estado",
+                    "crm_numero",
                     "data_nascimento",
                     "telefone",
                     "genero",

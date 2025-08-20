@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from dashboard import views
 from django.conf.urls.static import static
 from django.conf import settings
@@ -17,7 +17,11 @@ urlpatterns = [
     path(
         "administrador/agendamentos/novo", views.create_agendamento, name="create_event"
     ),
-    path("administrador/agendamentos/editar/<int:pk>", views.edit_agendamento, name="edit_event"),
+    path(
+        "administrador/agendamentos/editar/<int:pk>",
+        views.edit_agendamento,
+        name="edit_event",
+    ),
     path(
         "administrador/agendamentos/deletar/<int:event_id>",
         views.delete_agendamento,

@@ -3,52 +3,61 @@
 {% block main %}
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="breadcrumbs text-sm mb-2">
-      <ul>
-        <li>
-          <a href="{% url 'dashboard:administrador' %}">Página Inicial</a>
-        </li>
-        <li>Configurações</li>
-      </ul>
-    </div>
-    <div class="flex flex-col gap-y-2 mx-auto">
-      <div class="flex items-center gap-4 mb-2">
-        {% if view_config.avatar %}
-          <img src="{{ view_config.avatar.url }}" alt="Avatar" width="80" style="border-radius: 50%;" />
-        {% endif %}
-        <div class="flex flex-col gap-0.5">
-          {% if view_config.username %}
-            <p class="text-2xl">{{ view_config.username }}</p>
+    <div class="container mx-auto px-4 py-6">
+      <div class="breadcrumbs text-sm mb-2">
+        <ul>
+          <li>
+            <a href="{% url 'dashboard:administrador' %}">Página Inicial</a>
+          </li>
+          <li>Configurações</li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center gap-4 mb-2">
+          {% if view_config.avatar %}
+            <img src="{{ view_config.avatar.url }}" alt="Avatar" width="80" style="border-radius: 50%;" />
           {% endif %}
-          <p class="text-sm text-gray-500">Data de Registro: {{ view_config.date_joined }}</p>
+          <div class="flex flex-col gap-0.5">
+            {% if view_config.username %}
+              <p class="text-2xl">{{ view_config.username }}</p>
+            {% endif %}
+            <p class="text-sm text-gray-500">Data de Registro: {{ view_config.date_joined }}</p>
+          </div>
+        </div>
+        <div class="container flex flex-col md:flex-row mt-4 gap-4">
+          <div class="flex flex-col items-start w-full md:w-1/2 gap-y-2">
+            <p class="text-xl font-medium mb-1">Configurações do Perfil</p>
+            <label>Email:</label>
+            {{ form.email }}
+            <label>Nome:</label>
+            {{ form.username }}
+            <label>Senha:</label>
+            {{ form.password }}
+            <label>Confirmação de Senha:</label>
+            {{ form.password_confirm }}
+            {% if form.especialidade %}
+              <label>Especialidade:</label>
+              {{ form.especialidade }}
+            {% endif %}
+            {% if form.data_nascimento %}
+              <label>Data de Nascimento:</label>
+              {{ form.data_nascimento }}
+            {% endif %}
+            {% if form.telefone %}
+              <label>Telefone:</label>
+              {{ form.telefone }}
+            {% endif %}
+            {% if form.genero %}
+              <label>Gênero:</label>
+              {{ form.genero }}
+            {% endif %}
+          </div>
         </div>
       </div>
-      <label>Email:</label>
-      {{ form.email }}
-      <label>Nome:</label>
-      {{ form.username }}
-      <label>Senha:</label>
-      {{ form.password }}
-      <label>Confirmação de Senha:</label>
-      {{ form.password_confirm }}
-      {% if form.especialidade %}
-        <label>Especialidade:</label>
-        {{ form.especialidade }}
-      {% endif %}
-      {% if form.data_nascimento %}
-        <label>Data de Nascimento:</label>
-        {{ form.data_nascimento }}
-      {% endif %}
-      {% if form.telefone %}
-        <label>Telefone:</label>
-        {{ form.telefone }}
-      {% endif %}
-      {% if form.genero %}
-        <label>Gênero:</label>
-        {{ form.genero }}
-      {% endif %}
+      <div class="flex justify-end gap-2 mt-6">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <button class="btn btn-error"><a href="{% url 'dashboard:administrador' %}">Cancelar</a></button>
+      </div>
     </div>
-    <br />
-    <button type="submit" class="btn btn-primary">Salvar</button>
   </form>
 {% endblock %}

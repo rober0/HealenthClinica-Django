@@ -1,11 +1,9 @@
 from django import forms
 from django.forms import ModelForm, DateInput
-from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from users.models import Paciente, Medico, Administrador, Usuario
-from dashboard.models import CriarEvento, MembroEvento
-from django.conf import settings
+from dashboard.models import CriarEvento
 
 
 class PacienteForm(forms.ModelForm):
@@ -183,6 +181,8 @@ class MedicoForm(forms.ModelForm):
             "email",
             "username",
             "especialidade",
+            "crm_estado",
+            "crm_numero",
             "data_nascimento",
             "telefone",
             "genero",
@@ -217,6 +217,50 @@ class MedicoForm(forms.ModelForm):
                     ("Coloproctologia", "Coloproctologia"),
                     ("Dermatologia", "Dermatologia"),
                 ],
+            ),
+            "crm_estado": forms.Select(
+                attrs={"class": "select", "required": "required"},
+                choices=[
+                    ("Selecione", ""),
+                    ("CRM/AC", "CRM/AC"),
+                    ("CRM/AL", "CRM/AL"),
+                    ("CRM/AM", "CRM/AM"),
+                    ("CRM/AP", "CRM/AP"),
+                    ("CRM/BA", "CRM/BA"),
+                    ("CRM/CE", "CRM/CE"),
+                    ("CRM/DF", "CRM/DF"),
+                    ("CRM/ES", "CRM/ES"),
+                    ("CRM/GO", "CRM/GO"),
+                    ("CRM/MA", "CRM/MA"),
+                    ("CRM/MG", "CRM/MG"),
+                    ("CRM/MS", "CRM/MS"),
+                    ("CRM/MT", "CRM/MT"),
+                    ("CRM/PA", "CRM/PA"),
+                    ("CRM/PB", "CRM/PB"),
+                    ("CRM/PE", "CRM/PE"),
+                    ("CRM/PI", "CRM/PI"),
+                    ("CRM/RJ", "CRM/RJ"),
+                    ("CRM/RN", "CRM/RN"),
+                    ("CRM/RO", "CRM/RO"),
+                    ("CRM/RR", "CRM/RR"),
+                    ("CRM/RS", "CRM/RS"),
+                    ("CRM/SC", "CRM/SC"),
+                    ("CRM/SP", "CRM/SP"),
+                    ("CRM/SE", "CRM/SE"),
+                    ("CRM/TO", "CRM/TO"),
+                ],
+            ),
+            "crm_numero": forms.TextInput(
+                attrs={
+                    "type": "text",
+                    "inputmode": "numeric",
+                    "class": "input validator",
+                    "pattern": "[0-9]{6}",
+                    "placeholder": "Número",
+                    "required": "required",
+                    "maxlength": "6",
+                    "title": "Digite o número do CRM",
+                }
             ),
             "data_nascimento": forms.DateInput(
                 attrs={
@@ -291,12 +335,26 @@ class MedicoForm(forms.ModelForm):
             raise forms.ValidationError("Este email já está em uso.")
         return email
 
+    def clean_crm(self):
+        crm_numero = self.cleaned_data.get("crm_numero")
+        crm_estado = self.cleaned_data.get("crm_estado")
+        if not crm_numero or not crm_estado:
+            raise forms.ValidationError("CRM Número e Estado são obrigatórios.")
+
+        qs = Medico.objects.filter(crm_numero=crm_numero, crm_estado=crm_estado)
+        if self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise forms.ValidationError("Este CRM já está em uso.")
+        return crm_numero
+
     def __str__(self):
         return f"Dr(a). {self.username}"
 
     def save(self, commit=True):
         user = super().save(commit=False)
         password = self.cleaned_data.get("password")
+
         if password:
             user.set_password(password)
         if commit:
@@ -430,7 +488,11 @@ class AgendamentoForm(ModelForm):
                 ],
             ),
             "observacoes": forms.Textarea(
-                attrs={"class": "textarea", "placeholder": "Observações", "style": "height: 15px;"}
+                attrs={
+                    "class": "textarea",
+                    "placeholder": "Observações",
+                    "style": "height: 15px;",
+                }
             ),
             "status": forms.Select(
                 attrs={"class": "select validator", "required": "required"}
@@ -444,7 +506,7 @@ class AgendamentoForm(ModelForm):
                 format="%Y-%m-%dT%H:%M",
             ),
         }
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["data_inicio"].input_formats = ("%Y-%m-%dT%H:%M",)
@@ -458,9 +520,3 @@ class AgendamentoForm(ModelForm):
         if fim and inicio and fim < inicio:
             raise ValidationError("Data final não pode ser anterior à data inicial")
         return cleaned_data
-
-
-class MembroForm(forms.ModelForm):
-    class Meta:
-        model = MembroEvento
-        fields = ["paciente"]

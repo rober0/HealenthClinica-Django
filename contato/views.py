@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import ContatoForm
+from .forms import ContatoForm, SugestoesForm
 
 
 def faleconosco(request):
@@ -16,3 +16,17 @@ def contato_view(request):
         form = ContatoForm()
 
     return render(request, "contato/faleconosco.html", {"form": form})
+
+
+#def sugestoes(request):
+#    return render(request, "contato/sugestoes.html")
+
+def sugestao_view(request):
+    if request.method == "POST":
+        form = SugestoesForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return redirect("contato:review-us")
+    else:
+        form = SugestoesForm()
+    return render(request, "contato/sugestoes.html", {"form": form})

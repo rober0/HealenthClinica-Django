@@ -1,202 +1,259 @@
 {% extends './base.html' %}
 {% block head %}
-{% load static %}
+  {% load static %}
+
   <title>Página Inicial</title>
 {% endblock %}
 {% block main %}
-  <h1>Bem-vindo, {{ user.username }}!</h1>
-  <p>Você está vendo está página como um administrador.</p>
+  <div class="md:grid grid-cols-2 md:grid-cols-2 bg-base-200 border-1 border-gray-300 rounded-md p-6 gap-2">
+    <div class="flex flex-col text-left gap-y-2 w-full">
+      <p class="text-4xl font-normal">Bem-vindo, {{ user.username }}!</p>
+      <p class="text-xl font-normal">Você está vendo está página como um administrador.</p>
+    </div>
+    <div class="flex flex-col text-right gap-y-2 w-full">
+      <p class="text-3xl font-normal" id="realtime"></p>
+      <p class="text-xl font-normal">{{ data_atual }}</p>
+    </div>
+  </div>
   <br />
   <div class="flex flex-row gap-x-2 justify-center">
-    <div class="card w-full bg-base-200 card-md shadow-sm/30">
+    <div class="card w-full card-md bg-base-200 border-1 border-gray-300">
       <div class="card-body">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
-        </svg>
-        <h2 class="card-title">Próxima Data</h2>
-        <p>
+        <div class="flex flex-row w-full">
+          <h2 class="card-title w-full">Próxima Data</h2>
+          <div class="flex flex-row w-full justify-end">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
+            </svg>
+          </div>
+        </div>
+        <p class="text-2xl mt-4">
           {% if proxima_data %}
-            Data: {{ proxima_data|date:'d/m/Y H:i' }}
+            {{ proxima_data|date:'d/m/Y H:i' }}
           {% else %}
             Nenhuma próxima data
           {% endif %}
         </p>
-        <div class="justify-end card-actions"></div>
       </div>
     </div>
-    <div class="card w-full bg-base-200 card-md shadow-sm/30">
+    <div class="card w-full card-md bg-base-200 border-1 border-gray-300">
       <div class="card-body">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-          <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd" />
-        </svg>
-
-        <h2 class="card-title">Agendados</h2>
-        <p>{{ eventos_agendados }}</p>
-        <div class="justify-end card-actions"></div>
+        <div class="flex flex-row w-full">
+          <h2 class="card-title w-full">Agendados</h2>
+          <div class="flex flex-row w-full justify-end">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+              <path fill-rule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <p class="text-2xl mt-4">{{ eventos_agendados }}</p>
       </div>
     </div>
-    <div class="card w-full bg-base-200 card-md shadow-sm/30">
+    <div class="card w-full card-md bg-base-200 border-1 border-gray-300">
       <div class="card-body">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-          <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
-        </svg>
-
-        <h2 class="card-title">Confirmados</h2>
-        <p>{{ eventos_confirmados }}</p>
-        <div class="justify-end card-actions"></div>
+        <div class="flex flex-row w-full">
+          <h2 class="card-title w-full">Confirmados</h2>
+          <div class="flex flex-row w-full justify-end">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+              <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <p class="text-2xl mt-4">{{ eventos_confirmados }}</p>
       </div>
     </div>
 
-    <div class="card w-full bg-base-200 card-md shadow-sm/30">
+    <div class="card w-full card-md bg-base-200 border-1 border-gray-300">
       <div class="card-body">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-  <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-</svg>
-
-
-
-        <h2 class="card-title">Cancelados</h2>
-        <p>{{ eventos_cancelados }}</p>
-        <div class="justify-end card-actions"></div>
+        <div class="flex flex-row w-full">
+          <h2 class="card-title w-full">Cancelados</h2>
+          <div class="flex flex-row w-full justify-end">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+              <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <p class="text-2xl mt-4">{{ eventos_cancelados }}</p>
       </div>
     </div>
   </div>
 
   <div class="grid grid-cols-4 gap-4 mt-4">
     <div class="col-span-3 overflow-x-auto">
-  <table class="table bg-base-200 shadow-sm" id="pagination-table">
-    <thead>
-      <tr>
-        <th><span class="flex items-center">Nome</span></th>
-        <th><span class="flex items-center">Data</span></th>
-        <th><span class="flex items-center">Status</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for eventos in eventos_lista %}
-      <tr>
-        <td>
-          <div class="flex items-center gap-3">
-            <div class="avatar">
-              <div class="mask mask-squircle h-12 w-12">
-                {% if eventos.paciente.avatar %}
-                  <img src="{{ eventos.paciente.avatar.url }}" alt="Avatar" />
+      <div class="flex md:flex-col items-start bg-base-200 border-t-1 border-r-1 border-l-1 border-gray-300 p-3">
+        <h2 class="text-lg font-semibold">Próximos Agendamentos</h2>
+      </div>
+      <table class="table bg-base-200 border-1 border-gray-300" id="pagination-table">
+        <thead>
+          <tr>
+            <th>
+              <span class="flex items-center">Nome</span>
+            </th>
+            <th>
+              <span class="flex items-center">Data</span>
+            </th>
+            <th>
+              <span class="flex items-center">Status</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for eventos in eventos_lista %}
+            <tr>
+              <td>
+                <div class="flex items-center gap-3">
+                  <div class="avatar">
+                    <div class="mask mask-squircle h-12 w-12">
+                      {% if eventos.paciente.avatar %}
+                        <img src="{{ eventos.paciente.avatar.url }}" alt="Avatar" />
+                      {% else %}
+                        <img src="{% static 'default-avatar.png' %}" alt="Avatar Padrão" />
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div>
+                    <div class="font-medium">
+                      {% if eventos.paciente.username %}
+                        {{ eventos.paciente.username }}
+                      {% else %}
+                        Nenhum agendamento
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                {% if eventos.data_inicio %}
+                  {{ eventos.data_inicio|date:'d/m/Y H:i' }}
                 {% else %}
-                  <img src="{% static 'default-avatar.png' %}" alt="Avatar Padrão" />
+                  Sem data
                 {% endif %}
-              </div>
-            </div>
-            <div>
-              <div class="font-medium">
-                {% if eventos.paciente.username %}
-                  {{ eventos.paciente.username }}
-                {% else %}
-                  Nenhum agendamento
-                {% endif %} 
-              </div>
-            </div>
-          </div>
-        </td>
-        <td>
-          {% if eventos.data_inicio %}
-            {{ eventos.data_inicio|date:'d/m/Y H:i' }}
-          {% else %}
-            Sem data
-          {% endif %}
-        </td>
-        <td>
-          <div class="flex items-center">
-          {% if eventos.status == 'AGENDADO' %}
-            <span class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-200/40 px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-500/10">
-              <svg class="h-1.5 w-1.5 fill-blue-500" viewBox="0 0 6 6" aria-hidden="true"> <circle cx="3" cy="3" r="3" /> </svg> Agendado </span>
-          {% elif eventos.status == 'CONFIRMADO' %}
-            <span class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-200/40 px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-500/10">
-              <svg class="h-1.5 w-1.5 fill-green-500" viewBox="0 0 6 6" aria-hidden="true"> <circle cx="3" cy="3" r="3" /> </svg> Confirmado </span>
-          {% elif eventos.status == 'CANCELADO' %}
-            <span class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-200/40 px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-500/10">
-              <svg class="h-1.5 w-1.5 fill-red-500" viewBox="0 0 6 6" aria-hidden="true"> <circle cx="3" cy="3" r="3" /> </svg> Cancelado </span>
-          {% else %}
-            <span class="badge badge-ghost">Sem Status</span>
-          {% endif %}
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="4" class="text-center">Nenhum agendamento encontrado</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+              </td>
+              <td>
+                <div class="flex items-center">
+                  {% if eventos.status == 'AGENDADO' %}
+                    <span class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-200/40 px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-500/10">
+                      <svg class="h-1.5 w-1.5 fill-blue-500" viewBox="0 0 6 6" aria-hidden="true">
+                        <circle cx="3" cy="3" r="3" />
+                      </svg>Agendado
+                    </span>
+                  {% elif eventos.status == 'CONFIRMADO' %}
+                    <span class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-200/40 px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-500/10">
+                      <svg class="h-1.5 w-1.5 fill-green-500" viewBox="0 0 6 6" aria-hidden="true">
+                        <circle cx="3" cy="3" r="3" />
+                      </svg>Confirmado
+                    </span>
+                  {% elif eventos.status == 'CANCELADO' %}
+                    <span class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-200/40 px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-500/10">
+                      <svg class="h-1.5 w-1.5 fill-red-500" viewBox="0 0 6 6" aria-hidden="true">
+                        <circle cx="3" cy="3" r="3" />
+                      </svg>Cancelado
+                    </span>
+                  {% else %}
+                    <span class="badge badge-ghost">Sem Status</span>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" class="text-center">Nenhum agendamento encontrado</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
 
-<div class="col-span-1 overflow-x-auto">
-  <table class="table bg-base-200 shadow-sm" id="pagination-table-2">
-    <thead>
-      <tr>
-        <th><span class="flex items-center">Nome</span></th>
-        <th><span class="flex items-center">Data</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for eventos in eventos_lista_concluidos %}
-      <tr>
-        <td>
-          <div class="flex items-center gap-3">
-            <div class="avatar">
-              <div class="mask mask-squircle h-12 w-12">
-                {% if eventos.paciente.avatar %}
-                  <img src="{{ eventos.paciente.avatar.url }}" alt="Avatar" />
+    <div class="col-span-1 overflow-x-auto">
+      <div class="flex md:flex-col items-start bg-base-200 border-t-1 border-r-1 border-l-1 border-gray-300 p-3">
+        <h2 class="text-lg font-semibold">Agendamentos Concluídos</h2>
+      </div>
+      <table class="table bg-base-200 border-1 border-gray-300" id="pagination-table-2">
+        <thead>
+          <tr>
+            <th>
+              <span class="flex items-center">Nome</span>
+            </th>
+            <th>
+              <span class="flex items-center">Data</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for eventos in eventos_lista_concluidos %}
+            <tr>
+              <td>
+                <div class="flex items-center gap-3">
+                  <div class="avatar">
+                    <div class="mask mask-squircle h-12 w-12">
+                      {% if eventos.paciente.avatar %}
+                        <img src="{{ eventos.paciente.avatar.url }}" alt="Avatar" />
+                      {% else %}
+                        <img src="{% static 'default-avatar.png' %}" alt="Avatar Padrão" />
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div>
+                    <div class="font-medium">
+                      {% if eventos.paciente.username %}
+                        {{ eventos.paciente.username }}
+                      {% else %}
+                        Nenhum agendamento
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                {% if eventos.data_inicio %}
+                  {{ eventos.data_inicio|date:'d/m/Y H:i' }}
                 {% else %}
-                  <img src="{% static 'default-avatar.png' %}" alt="Avatar Padrão" />
+                  Sem data
                 {% endif %}
-              </div>
-            </div>
-            <div>
-              <div class="font-medium">
-                {% if eventos.paciente.username %}
-                  {{ eventos.paciente.username }}
-                {% else %}
-                  Nenhum agendamento
-                {% endif %} 
-              </div>
-            </div>
-          </div>
-        </td>
-        <td>
-          {% if eventos.data_inicio %}
-            {{ eventos.data_inicio|date:'d/m/Y H:i' }}
-          {% else %}
-            Sem data
-          {% endif %}
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="4" class="text-center">Nenhum agendamento encontrado</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-</div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" class="text-center">Nenhum agendamento encontrado</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-<script>
+  <script>
   
+function updateClock() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
+    const realtimeElement = document.getElementById('realtime');
+    if (realtimeElement) {
+        realtimeElement.textContent = timeString;
+    }
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+
 if (document.getElementById("pagination-table") && typeof simpleDatatables.DataTable !== 'undefined') {
     const dataTable = new simpleDatatables.DataTable("#pagination-table", {
         paging: true,
         searchable: false,
         sortable: true,
         perPage: 5,
-        template: (options, dom) => {
-            return `
-</div>
-<div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
-<div class='${options.classes.bottom}'>
-    <nav class='${options.classes.pagination}'></nav>
-</div>`
-
-        },
+        template: (options, dom) => `
+            <div class="${options.classes.container}"${options.scrollY.length ? ` style="height: ${options.scrollY}; overflow-Y: auto;"` : ""}>
+            </div>
+            <div class='${options.classes.bottom}'>
+                <nav class='${options.classes.pagination}'></nav>
+            </div>
+        `
     });
 
     const dataTable2 = new simpleDatatables.DataTable("#pagination-table-2", {
@@ -204,16 +261,16 @@ if (document.getElementById("pagination-table") && typeof simpleDatatables.DataT
         searchable: false,
         sortable: true,
         perPage: 5,
-        template: (options, dom) => {
-            return `
-</div>
-<div class='${options.classes.container}'${options.scrollY.length ? ` style='height: ${options.scrollY}; overflow-Y: auto;'` : ""}></div>
-<div class='${options.classes.bottom}'>
-    <nav class='${options.classes.pagination}'></nav>
-</div>`
-
-        },
+        template: (options, dom) => `
+            <div class="${options.classes.container}"${options.scrollY.length ? ` style="height: ${options.scrollY}; overflow-Y: auto;"` : ""}>
+            </div>
+            <div class='${options.classes.bottom}'>
+                <nav class="${options.classes.pagination}"></nav>
+            </div>
+        `
     });
 }
+
 </script>
+
 {% endblock %}

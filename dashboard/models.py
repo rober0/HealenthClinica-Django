@@ -1,7 +1,6 @@
 from datetime import datetime
 from django.db import models
-from django.urls import reverse
-from users.models import Paciente
+from users.models import Paciente, Medico
 from django.utils import timezone
 
 
@@ -48,39 +47,53 @@ class AbstratoEvento(models.Model):
 
 class CriarEvento(AbstratoEvento):
     STATUS_CHOICES = [
-        ('AGENDADO', 'Agendado'),
-        ('CONFIRMADO', 'Confirmado'),
-        ('CANCELADO', 'Cancelado'),
-        ('CONCLUIDO', 'Concluido'),
-        ('AUSENTE', 'Ausente'),
+        ("AGENDADO", "Agendado"),
+        ("CONFIRMADO", "Confirmado"),
+        ("CANCELADO", "Cancelado"),
+        ("CONCLUIDO", "Concluido"),
+        ("AUSENTE", "Ausente"),
     ]
-    
+
     paciente = models.ForeignKey(
         Paciente, on_delete=models.CASCADE, related_name="paciente"
     )
     procedimentos = models.CharField(max_length=200)
     convenio = models.CharField(max_length=100)
     observacoes = models.TextField(blank=True, null=True)
-    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='AGENDADO', null=True, blank=True)
+    status = models.CharField(
+        max_length=30, choices=STATUS_CHOICES, default="AGENDADO", null=True, blank=True
+    )
     data_inicio = models.DateTimeField()
     data_fim = models.DateTimeField()
 
     objects = GerenciadorEvento()
-    
+
     class Meta:
         verbose_name = "Agendamento"
         verbose_name_plural = "Agendamentos"
 
-class MembroEvento(AbstratoEvento):
-    eventos = models.ForeignKey(
-        CriarEvento, on_delete=models.CASCADE, related_name="eventos"
-    )
+
+class CriarEventoPaciente(AbstratoEvento):
+    STATUS_CHOICES = [
+        ("PEDIDO", "Pedido"),
+        ("AGENDADO", "Agendado"),
+        ("CONFIRMADO", "Confirmado"),
+        ("CANCELADO", "Cancelado"),
+        ("CONCLUIDO", "Concluido"),
+    ]
+
     paciente = models.ForeignKey(
-        Paciente, on_delete=models.CASCADE, related_name="membro_evento"
+        Paciente,
+        primary_key=True,
+        on_delete=models.CASCADE,
+        related_name="paciente_evento",
     )
-
-    class Meta:
-        unique_together = ["eventos", "paciente"]
-
-    def __str__(self):
-        return str(self.paciente)
+    medico = models.ForeignKey(
+        Medico, on_delete=models.CASCADE, related_name="medico_evento"
+    )
+    status = models.CharField(
+        max_length=30, choices=STATUS_CHOICES, default="PEDIDO", null=True, blank=True
+    )
+    queixa = models.TextField(blank=True, null=True)
+    data_inicio = models.DateTimeField(null=True, blank=True)
+    data_fim = models.DateTimeField(null=True, blank=True)

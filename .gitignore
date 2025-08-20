@@ -19,6 +19,7 @@ lib64/
 parts/
 sdist/
 var/
+node_modules/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -28,6 +29,7 @@ var/
 *.pot
 *.pyc
 *.pyo
+assets/
 staticfiles/
 local_settings.py
 
@@ -72,11 +74,3 @@ Pipfile.lock
 .mypy_cache/
 .dmypy.json
 dmypy.json
-
-# node_modules
-
-node_modules/
-
-# vite files
-
-assets/

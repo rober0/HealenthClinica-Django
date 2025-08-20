@@ -1,4 +1,3 @@
-from django.shortcuts import redirect
 from functools import wraps
 from django.core.exceptions import PermissionDenied
 from users.models import Administrador, Medico, Paciente

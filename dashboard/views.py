@@ -1,11 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import update_session_auth_hash, get_user_model
-from django.http import JsonResponse, HttpResponseRedirect
-from django.urls import reverse, reverse_lazy
+from django.contrib.auth import update_session_auth_hash
+from django.http import JsonResponse
 from django.views import generic
-from django.utils import timezone
-from zoneinfo import ZoneInfo
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users.models import Usuario, Paciente, Medico, Administrador
@@ -171,6 +168,9 @@ def administrador(request):
         data_fim__lt=timezone.now(),
     ).order_by("data_fim")
 
+    horario_atual = timezone.now().strftime("%H:%M:%S")
+    data_atual = timezone.now().strftime("%Y/%m/%d")
+
     context = {
         "eventos_agendados": eventos_agendados,
         "eventos_confirmados": eventos_confirmados,
@@ -181,6 +181,8 @@ def administrador(request):
         "eventos_lista_concluidos": eventos_lista_concluidos,
         "proxima_data": proxima_data,
         "proximo_agendamento": proximo_agendamento,
+        "horario_atual": horario_atual,
+        "data_atual": data_atual,
     }
     return render(request, "dashboard/administradores/dashboard.html", context)
 
@@ -262,6 +264,9 @@ def administrador_lista(request):
 @login_required
 @medico_required
 def medico(request):
+    if hasattr(request.user, "medico"):
+        pacientes = request.user.medico.pacientes.all()
+    eventos = CriarEvento.objects.filter(paciente__in=pacientes, is_active=True)
     return render(request, "dashboard/medicos/dashboard.html")
 
 

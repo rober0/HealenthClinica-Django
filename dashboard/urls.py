@@ -9,11 +9,25 @@ urlpatterns = [
     path("pacientes/", views.paciente, name="pacientes"),
     path("pacientes/agendamentos", views.paciente_agenda, name="agendapacientes"),
     path("pacientes/settings", views.view_config, name="view_config"),
-    # path('pacientes/medicos', views.pacientes_agendamedico, name='agendapacientesmed'),
     path("medicos/", views.medico, name="medicos"),
-    # path('medicos/agendamentos', views.medicos_agenda, name='agendamedicos'),
+    path("medicos/agendamentos", views.CalendarView.as_view(), name="agenda_adm"),
+    path(
+        "medicos/agendamentos/novo", views.create_agendamento, name="create_event"
+    ),
+    path(
+        "medicos/agendamentos/editar/<int:pk>",
+        views.edit_agendamento,
+        name="edit_event",
+    ),
+    path(
+        "medicos/agendamentos/deletar/<int:event_id>",
+        views.delete_agendamento,
+        name="delete_event",
+    ),
+    path("medicos/prontuario", views.medicos_prontuario, name="medicos_prontuario"),
+    path("medicos/settings", views.view_config, name="view_config"),
     path("administrador/", views.administrador, name="administrador"),
-    path("administrador/agendamentos", views.CalendarView.as_view(), name="calendar"),
+    path("administrador/agendamentos", views.CalendarView.as_view(), name="agenda_adm"),
     path(
         "administrador/agendamentos/novo", views.create_agendamento, name="create_event"
     ),
@@ -27,7 +41,7 @@ urlpatterns = [
         views.delete_agendamento,
         name="delete_event",
     ),
-    path("administrador/lista", views.administrador_lista, name="administrador_listas"),
+    path("administrador/prontuario", views.administrador_prontuario, name="administrador_listas"),
     path("administrador/settings", views.view_config, name="view_config"),
     path("administrador/edit/<int:user_id>/", views.edit_user, name="edit"),
     path("administrador/delete/<int:user_id>/", views.delete_user, name="delete"),

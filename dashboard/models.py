@@ -48,6 +48,7 @@ class AbstratoEvento(models.Model):
 class CriarEvento(AbstratoEvento):
     STATUS_CHOICES = [
         ("AGENDADO", "Agendado"),
+        ("PEDIDO", "Pedido"),
         ("CONFIRMADO", "Confirmado"),
         ("CANCELADO", "Cancelado"),
         ("CONCLUIDO", "Concluido"),
@@ -75,11 +76,12 @@ class CriarEvento(AbstratoEvento):
 
 class CriarEventoPaciente(AbstratoEvento):
     STATUS_CHOICES = [
-        ("PEDIDO", "Pedido"),
         ("AGENDADO", "Agendado"),
+        ("PEDIDO", "Pedido"),
         ("CONFIRMADO", "Confirmado"),
         ("CANCELADO", "Cancelado"),
         ("CONCLUIDO", "Concluido"),
+        ("AUSENTE", "Ausente"),
     ]
 
     paciente = models.ForeignKey(

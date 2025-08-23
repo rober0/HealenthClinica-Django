@@ -1,0 +1,73 @@
+{% load django_vite %}
+{% load static %}
+<!DOCTYPE html>
+<html data-theme="healenth" lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="{% static 'flowbite/dist/flowbite.min.js' %}"></script>
+    <script src="{% static 'simple-datatables/dist/umd/simple-datatables.js' %}"></script>
+    {% block head %}
+
+    {% endblock %}
+    {% vite_hmr_client %}
+    {% vite_asset 'static/css/dashboard.css' %}
+  </head>
+  <body>
+    <header class="navbar bg-base-100 shadow-sm">
+      <div class="navbar-start">
+        <a href="/" class="btn-ghost inline-flex"><img src="/media/logo1.webp" alt="Healenth" width="110" /></a>
+        <div class="hidden flex-none lg:flex">
+          <ul class="flex flex-row mx-1 mb-1 gap-3 menu-horizontal underline underline-offset-2 decoration-gray-600/40 text-base font-normal uppercase px-2">
+            <li>
+              <a href="/dashboard/medicos" class="btn-ghost text-gray-800/80 hover:text-gray-400">Inicio</a>
+            </li>
+            <li>
+              <a href="/dashboard/medicos/agendamentos" class="btn-ghost text-gray-800/80 hover:text-gray-400">Agenda</a>
+            </li>
+            <li>
+              <a href="/dashboard/medicos/lista" class="btn-ghost text-gray-800/80 hover:text-gray-400">Prontuário</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="navbar-end">
+        <div class="dropdown dropdown-end">
+          <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+            <div class="w-10 rounded-full overflow-hidden bg-gray-100">
+              {% if user.avatar %}
+                <img src="{{ user.avatar.url }}" alt="Avatar" width="80" />
+              {% endif %}
+            </div>
+          </div>
+          <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box border-1 border-gray-300 z-1 w-52 p-2 shadow">
+            <div class="flex flex-col border-b-2 border-gray-200 pb-2 mb-2">
+              <p class="text-[12px] font-normal indent-2.5">{{ user.username }}</p>
+              <p class="text-[12px] font-semibold indent-2.5">{{ user.email }}</p>
+            </div>
+            <li>
+              <a href="/dashboard/medicos">Dashboard</a>
+            </li>
+            <li>
+              <a href="/dashboard/medicos">Minha Agenda</a>
+              <a href="/dashboard/medicos/lista">Página de Prontuário</a>
+            </li>
+            <div class="flex flex-col border-t-2 border-gray-200 pt-2 mt-2">
+              <form method="post" action="{% url 'users:logout' %}">
+                {% csrf_token %} <li>
+                  <a href="/dashboard/medicos/settings">Configurações</a>
+                  <button type="submit">Sair</button>
+                </li>
+              </form>
+            </div>
+          </ul>
+        </div>
+      </div>
+    </header>
+    <main class="p-4 flex-grow">
+      {% block main %}
+
+      {% endblock %}
+    </main>
+  </body>
+</html>

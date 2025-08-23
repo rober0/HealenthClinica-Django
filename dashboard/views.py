@@ -148,6 +148,7 @@ def dashboard_view(request):
 def administrador(request):
     eventos = CriarEvento.objects.filter(is_active=True, is_deleted=False)
     eventos_agendados = eventos.filter(status="AGENDADO").count()
+    eventos_pedidos = eventos.filter(status="PEDIDOS").count()
     eventos_confirmados = eventos.filter(status="CONFIRMADO").count()
     eventos_cancelados = eventos.filter(status="CANCELADO").count()
     eventos_concluidos = eventos.filter(status="CONCLUIDO").count()
@@ -159,13 +160,12 @@ def administrador(request):
     proxima_data = proximo_agendamento.data_inicio if proximo_agendamento else None
 
     eventos_lista = eventos.filter(
-        status__in=["AGENDADO", "CONFIRMADO", "CANCELADO"],
+        status__in=["AGENDADO", "PEDIDOS", "CONFIRMADO", "CANCELADO", "AUSENTE"],
         data_inicio__gte=timezone.now(),
     ).order_by("data_inicio")
 
     eventos_lista_concluidos = eventos.filter(
         status__in=["CONCLUIDO"],
-        data_fim__lt=timezone.now(),
     ).order_by("data_fim")
 
     horario_atual = timezone.now().strftime("%H:%M:%S")
@@ -173,6 +173,7 @@ def administrador(request):
 
     context = {
         "eventos_agendados": eventos_agendados,
+        "eventos_agendados": eventos_pedidos,
         "eventos_confirmados": eventos_confirmados,
         "eventos_cancelados": eventos_cancelados,
         "eventos_concluidos": eventos_concluidos,
@@ -252,7 +253,7 @@ def edit_agendamento(request, pk):
 
 @login_required
 @admin_required
-def administrador_lista(request):
+def administrador_prontuario(request):
     context = {
         "pacientes": Paciente.objects.all(),
         "medicos": Medico.objects.all(),
@@ -264,10 +265,46 @@ def administrador_lista(request):
 @login_required
 @medico_required
 def medico(request):
-    if hasattr(request.user, "medico"):
-        pacientes = request.user.medico.pacientes.all()
-    eventos = CriarEvento.objects.filter(paciente__in=pacientes, is_active=True)
-    return render(request, "dashboard/medicos/dashboard.html")
+    eventos = CriarEvento.objects.filter(is_active=True, is_deleted=False)
+    eventos_agendados = eventos.filter(status="AGENDADO").count()
+    eventos_pedidos = eventos.filter(status="PEDIDOS").count()
+    eventos_confirmados = eventos.filter(status="CONFIRMADO").count()
+    eventos_cancelados = eventos.filter(status="CANCELADO").count()
+    eventos_concluidos = eventos.filter(status="CONCLUIDO").count()
+    eventos_ausentes = eventos.filter(status="AUSENTE").count()
+    eventos_proximos = eventos.filter(
+        status__in=["AGENDADO", "CONFIRMADO"], data_inicio__gte=timezone.now()
+    ).order_by("data_inicio")
+    proximo_agendamento = eventos_proximos.first()
+    proxima_data = proximo_agendamento.data_inicio if proximo_agendamento else None
+
+    eventos_lista = eventos.filter(
+        status__in=["AGENDADO", "PEDIDOS", "CONFIRMADO", "CANCELADO", "AUSENTE"],
+        data_inicio__gte=timezone.now(),
+    ).order_by("data_inicio")
+
+    eventos_lista_concluidos = eventos.filter(
+        status__in=["CONCLUIDO"],
+    ).order_by("data_fim")
+
+    horario_atual = timezone.now().strftime("%H:%M:%S")
+    data_atual = timezone.now().strftime("%Y/%m/%d")
+
+    context = {
+        "eventos_agendados": eventos_agendados,
+        "eventos_agendados": eventos_pedidos,
+        "eventos_confirmados": eventos_confirmados,
+        "eventos_cancelados": eventos_cancelados,
+        "eventos_concluidos": eventos_concluidos,
+        "eventos_ausentes": eventos_ausentes,
+        "eventos_lista": eventos_lista,
+        "eventos_lista_concluidos": eventos_lista_concluidos,
+        "proxima_data": proxima_data,
+        "proximo_agendamento": proximo_agendamento,
+        "horario_atual": horario_atual,
+        "data_atual": data_atual,
+    }
+    return render(request, "dashboard/medicos/dashboard.html", context)
 
 
 @login_required
@@ -284,7 +321,8 @@ def paciente_agenda(request):
 
 class CalendarView(LoginRequiredMixin, generic.View):
     login_url = "users:login"
-    template_name = "dashboard/administradores/agendamentos.html"
+    template_name = {
+    }
 
     def get(self, request):
         eventos = CriarEvento.objects.filter(is_active=True, is_deleted=False)
@@ -312,7 +350,7 @@ class CalendarView(LoginRequiredMixin, generic.View):
 
         return render(
             request,
-            self.template_name,
+            template_name,
             {
                 "form": AgendamentoForm(),
                 "eventos": json.dumps(event_list, default=str),

@@ -73,8 +73,8 @@ document.addEventListener('DOMContentLoaded', function () {
         observacoes: event.observacoes,
         status: event.status
     },
-    backgroundColor: event.status === 'Agendado' ? '#071eed' : event.status === 'Confirmado' ? '#34D399' : event.status === 'Pendente' ? '#FBBF24' : '#F87171',
-    borderColor: event.status === 'Agendado' ? '#071eed' : event.status === 'Confirmado' ? '#34D399' : event.status === 'Pendente' ? '#FBBF24' : '#F87171',
+    backgroundColor: event.status === 'Agendado' ? '#2035ecff' : event.status === 'Confirmado' ? '#34D399' : event.status === 'Cancelado' ? '#F87171' : event.status === 'Concluido' ? '#006b44ff' : '#ffffffff',
+    borderColor: event.status === 'Agendado' ? '#2035ecff' : event.status === 'Confirmado' ? '#34D399' : event.status === 'Cancelado' ? '#F87171' : event.status === 'Concluido' ? '#006b44ff' : '#ffffffff',
     textColor: '#FFFFFF',
 })),
         initialView: 'timeGridWeek',

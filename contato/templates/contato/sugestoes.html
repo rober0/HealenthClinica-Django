@@ -1,9 +1,9 @@
-{% extends 'contato/base.html' %}
+{% extends "contato/base.html" %}  
 {% load static %}
 {% load django_vite %}
 
 {% block article %}
-  <article>
+    <article>
     <head>
       <script src="{% static 'js/intl.js' %}"></script>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,15 +18,15 @@
           {% csrf_token %}
           <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
             <label class="label">solicitante</label>
-            {{ form.solicitanteC }}
-            {% if form.solicitanteC.errors %}
+            {{ form.solicitanteS }}
+            {% if form.solicitanteS.errors %}
               <div class="text-error">
-                {% for error in form.solicitanteC.errors %}
+                {% for error in form.solicitanteS.errors %}
                   <p>{{ error }}</p>
                 {% endfor %}
               </div>
             {% endif %}
-            
+
             <label class="label">
               <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
@@ -35,14 +35,15 @@
                 </g>
               </svg>Nome
             </label>
-            {{ form.nomeC }}
-            {% if form.nomeC.errors %}
+            {{ form.nomeS }}
+            {% if form.nomeS.errors %}
               <div class="text-error">
-                {% for error in form.nomeC.errors %}
+                {% for error in form.nomeS.errors %}
                   <p>{{ error }}</p>
                 {% endfor %}
               </div>
             {% endif %}
+
             <label class="label">
               <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
@@ -51,30 +52,41 @@
                 </g>
               </svg>Email
             </label>
-            {{ form.emailC }}
-            {% if form.emailC.errors %}
+            {{ form.emailS }}
+            {% if form.emailS.errors %}
               <div class="text-error">
-                {% for error in form.emailC.errors %}
+                {% for error in form.emailS.errors %}
                   <p>{{ error }}</p>
                 {% endfor %}
               </div>
             {% endif %}
 
-            <label class="label">Categoria</label>
-            {{ form.categoria }}
-            {% if form.categoria.errors %}
+            <label class="label">Procedimentos</label>
+            {{ form.procedimentosS }}
+            {% if form.procedimentosS.errors %}
               <div class="text-error">
-                {% for error in form.categoria.errors %}
+                {% for error in form.procedimentosS.errors %}
                   <p>{{ error }}</p>
                 {% endfor %}
               </div>
             {% endif %}
+
+            <label class="label">Convênio</label>
+            {{ form.convenio }}
+            {% if form.convenio.errors %}
+              <div class="text-error">
+                {% for error in form.convenio.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+
             <div class="form-group">
-              <label class="label">Assunto</label>
-              {{ form.comentarios }}
-              {% if form.comentarios.errors %}
+              <label class="label">Observações</label>
+              {{ form.observacoes }}
+              {% if form.observacoes.errors %}
                 <div class="text-error">
-                  {% for error in form.comentarios.errors %}
+                  {% for error in form.observacoes.errors %}
                     <p>{{ error }}</p>
                   {% endfor %}
                 </div>

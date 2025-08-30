@@ -1,8 +1,9 @@
 {% extends './base.html' %}
+{% load static %}
 {% block head %}
-  {% load static %}
-
   <title>Página Inicial</title>
+  <script type="module" src="{% vite_asset_url 'static/js/datatables.js' %}"></script>
+  <link rel="stylesheet" href="{% vite_asset_url 'static/css/datatables.css' %}" />
 {% endblock %}
 {% block main %}
   <div class="md:grid grid-cols-2 md:grid-cols-2 bg-base-200 border-1 border-gray-300 rounded-md p-6 gap-2">
@@ -137,7 +138,7 @@
                         <circle cx="3" cy="3" r="3" />
                       </svg>Agendado
                     </span>
-                    {% elif eventos.status == 'PEDIDO' %}
+                  {% elif eventos.status == 'PEDIDO' %}
                     <span class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-200/40 px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-500/10">
                       <svg class="h-1.5 w-1.5 fill-orange-500" viewBox="0 0 6 6" aria-hidden="true">
                         <circle cx="3" cy="3" r="3" />
@@ -155,7 +156,7 @@
                         <circle cx="3" cy="3" r="3" />
                       </svg>Cancelado
                     </span>
-                    {% elif eventos.status == 'AUSENTE' %}
+                  {% elif eventos.status == 'AUSENTE' %}
                     <span class="inline-flex items-center gap-x-1.5 rounded-md bg-gray-200/40 px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-500/10">
                       <svg class="h-1.5 w-1.5 fill-gray-500" viewBox="0 0 6 6" aria-hidden="true">
                         <circle cx="3" cy="3" r="3" />
@@ -235,54 +236,21 @@
   </div>
 
   <script>
-  
-function updateClock() {
-    const now = new Date();
-    const timeString = now.toLocaleTimeString('pt-BR', {
+    function updateClock() {
+      const now = new Date()
+      const timeString = now.toLocaleTimeString('pt-BR', {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
         hour12: false
-    });
-    const realtimeElement = document.getElementById('realtime');
-    if (realtimeElement) {
-        realtimeElement.textContent = timeString;
+      })
+      const realtimeElement = document.getElementById('realtime')
+      if (realtimeElement) {
+        realtimeElement.textContent = timeString
+      }
     }
-}
-
-updateClock();
-setInterval(updateClock, 1000);
-
-if (document.getElementById("pagination-table") && typeof simpleDatatables.DataTable !== 'undefined') {
-    const dataTable = new simpleDatatables.DataTable("#pagination-table", {
-        paging: true,
-        searchable: false,
-        sortable: true,
-        perPage: 5,
-        template: (options, dom) => `
-            <div class="${options.classes.container}"${options.scrollY.length ? ` style="height: ${options.scrollY}; overflow-Y: auto;"` : ""}>
-            </div>
-            <div class='${options.classes.bottom}'>
-                <nav class='${options.classes.pagination}'></nav>
-            </div>
-        `
-    });
-
-    const dataTable2 = new simpleDatatables.DataTable("#pagination-table-2", {
-        paging: true,
-        searchable: false,
-        sortable: true,
-        perPage: 5,
-        template: (options, dom) => `
-            <div class="${options.classes.container}"${options.scrollY.length ? ` style="height: ${options.scrollY}; overflow-Y: auto;"` : ""}>
-            </div>
-            <div class='${options.classes.bottom}'>
-                <nav class="${options.classes.pagination}"></nav>
-            </div>
-        `
-    });
-}
-
-</script>
-
+    
+    updateClock()
+    setInterval(updateClock, 1000)
+  </script>
 {% endblock %}

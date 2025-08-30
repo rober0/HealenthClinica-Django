@@ -1,4 +1,9 @@
 {% extends './base.html' %}
+{% load django_vite %}
+
+{% block head %}
+  <title>Configurações</title>
+{% endblock %}
 
 {% block main %}
   <form method="post" enctype="multipart/form-data">
@@ -7,7 +12,7 @@
       <div class="breadcrumbs text-sm mb-2">
         <ul>
           <li>
-            <a href="{% url 'dashboard:administrador' %}">Página Inicial</a>
+            <a href="{% url 'dashboard:administradores' %}">Página Inicial</a>
           </li>
           <li>Configurações</li>
         </ul>
@@ -35,28 +40,12 @@
             {{ form.password }}
             <label>Confirmação de Senha:</label>
             {{ form.password_confirm }}
-            {% if form.especialidade %}
-              <label>Especialidade:</label>
-              {{ form.especialidade }}
-            {% endif %}
-            {% if form.data_nascimento %}
-              <label>Data de Nascimento:</label>
-              {{ form.data_nascimento }}
-            {% endif %}
-            {% if form.telefone %}
-              <label>Telefone:</label>
-              {{ form.telefone }}
-            {% endif %}
-            {% if form.genero %}
-              <label>Gênero:</label>
-              {{ form.genero }}
-            {% endif %}
           </div>
         </div>
       </div>
       <div class="flex justify-end gap-2 mt-6">
         <button type="submit" class="btn btn-primary">Salvar</button>
-        <button class="btn btn-error"><a href="{% url 'dashboard:administrador' %}">Cancelar</a></button>
+        <button class="btn btn-error"><a href="{% url 'dashboard:administradores' %}">Cancelar</a></button>
       </div>
     </div>
   </form>

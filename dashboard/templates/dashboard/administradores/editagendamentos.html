@@ -1,4 +1,5 @@
 {% extends './base.html' %}
+{% load django_vite %}
 {% load static %}
 
 {% block head %}
@@ -10,7 +11,7 @@
     <div class="breadcrumbs text-sm mb-4">
       <ul>
         <li>
-          <a href="{% url 'dashboard:calendar' %}">Agenda</a>
+          <a href="{% url 'dashboard:agenda_adm' %}">Agenda</a>
         </li>
         <li>Editar Agendamento</li>
       </ul>
@@ -48,7 +49,7 @@
           </div>
         </div>
         <div class="flex justify-end gap-4 mt-6">
-          <a href="{% url 'dashboard:calendar' %}" class="btn btn-ghost">Cancelar</a>
+          <a href="{% url 'dashboard:agenda_adm' %}" class="btn btn-ghost">Cancelar</a>
           <button type="submit" class="btn btn-primary">Salvar Alterações</button>
         </div>
       </form>

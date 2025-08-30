@@ -18,8 +18,9 @@ def contato_view(request):
     return render(request, "contato/faleconosco.html", {"form": form})
 
 
-#def sugestoes(request):
+# def sugestoes(request):
 #    return render(request, "contato/sugestoes.html")
+
 
 def sugestao_view(request):
     if request.method == "POST":

@@ -5,10 +5,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Página Inicial</title>
+    {% block head %}
+
+    {% endblock %}
     {% vite_hmr_client %}
 
-    {% vite_asset 'static/css/index.css' %}
+    <link rel="stylesheet" href="{% vite_asset_url 'static/css/global.css' %}" />
   </head>
   <body>
     <section class="header">
@@ -27,16 +29,16 @@
               </li>
               <li>
                 <details>
-                  <summary>Serviços</summary>
-                  <ul class="p-2 border-1 border-gray-300">
+                  <summary>Conteúdos</summary>
+                  <ul class="p-2 border-1 border-gray-300 w-52">
                     <li>
-                      <a href="/procedimentos">Procedimentos</a>
+                      <a href="">Agenda Médica</a>
                     </li>
                     <li>
-                      <a>Telemedicina</a>
+                      <a>Gestão da Clínica</a>
                     </li>
                     <li>
-                      <a>Vacinas</a>
+                      <a>Prontuário Eletrônico</a>
                     </li>
                   </ul>
                 </details>
@@ -60,32 +62,46 @@
                   </div>
                   <li>
                     {% if user.administrador %}
-                      <a href="/dashboard/administrador">Página Inicial</a>
+                      <a href="{% url 'dashboard:administradores' %}">Dashboard</a>
                     {% endif %}
                     {% if user.medico %}
-                      <a href="/dashboard/medicos">Página Inicial</a>
+                      <a href="{% url 'dashboard:medicos' %}">Dashboard</a>
                     {% endif %}
                     {% if user.paciente %}
-                      <a href="/dashboard/paciente">Página Inicial</a>
+                      <a href="{% url 'dashboard:pacientes' %}">Dashboard</a>
                     {% endif %}
                   </li>
                   <li>
                     {% if user.administrador %}
-                      <a href="/dashboard/administrador">Minhas Consultas</a>
+                      <a href="{% url 'dashboard:agenda_adm' %}">Minha Agenda</a>
                     {% endif %}
                     {% if user.medico %}
-                      <a href="/dashboard/medicos">Minhas Consultas</a>
+                      <a href="{% url 'dashboard:agenda_med' %}">Minha Agenda</a>
                     {% endif %}
                     {% if user.paciente %}
-                      <a href="/dashboard/paciente">Minhas Consultas</a>
+                      <a href="{% url 'dashboard:agenda_pac' %}">Minha Agenda</a>
                     {% endif %}
-                    <a href="/dashboard/administrador/settings">Configurações</a>
+                    {% if user.medico %}
+                      <a href="{% url 'dashboard:prontuarios_med' %}">Página de Prontuário</a>
+                    {% endif %}
+                    {% if user.paciente %}
+                      <a href="{% url 'dashboard:prontuarios_pac' %}">Página de Prontuário</a>
+                    {% endif %}
+                    {% if user.administrador %}
+                      <a href="/admin">Página de Admin</a>
+                    {% endif %}
                   </li>
                   <div class="flex flex-col border-t-2 border-gray-200 pt-2 mt-2">
                     <form method="post" action="{% url 'users:logout' %}">
                       {% csrf_token %} <li>
                         {% if user.administrador %}
-                          <a href="/admin">Página de Admin</a>
+                          <a href="{% url 'dashboard:view_config_adm' %}">Configurações</a>
+                        {% endif %}
+                        {% if user.medico %}
+                          <a href="{% url 'dashboard:view_config_med' %}">Configurações</a>
+                        {% endif %}
+                        {% if user.paciente %}
+                          <a href="{% url 'dashboard:view_config_pac' %}">Configurações</a>
                         {% endif %}
                         <button type="submit">Sair</button>
                       </li>

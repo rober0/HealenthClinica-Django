@@ -5,13 +5,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="{% static 'flowbite/dist/flowbite.min.js' %}"></script>
-    <script src="{% static 'simple-datatables/dist/umd/simple-datatables.js' %}"></script>
     {% block head %}
 
     {% endblock %}
     {% vite_hmr_client %}
-    {% vite_asset 'static/css/dashboard.css' %}
+    <link rel="stylesheet" href="{% vite_asset_url 'static/css/global.css' %}" />
   </head>
   <body>
     <header class="navbar bg-base-100 shadow-sm">
@@ -20,13 +18,13 @@
         <div class="hidden flex-none lg:flex">
           <ul class="flex flex-row mx-1 mb-1 gap-3 menu-horizontal underline underline-offset-2 decoration-gray-600/40 text-base font-normal uppercase px-2">
             <li>
-              <a href="/dashboard/medicos" class="btn-ghost text-gray-800/80 hover:text-gray-400">Inicio</a>
+              <a href="{% url 'dashboard:pacientes' %}" class="btn-ghost text-gray-800/80 hover:text-gray-400">Inicio</a>
             </li>
             <li>
-              <a href="/dashboard/medicos/agendamentos" class="btn-ghost text-gray-800/80 hover:text-gray-400">Agenda</a>
+              <a href="{% url 'dashboard:agenda_pac' %}" class="btn-ghost text-gray-800/80 hover:text-gray-400">Agenda</a>
             </li>
             <li>
-              <a href="/dashboard/medicos/lista" class="btn-ghost text-gray-800/80 hover:text-gray-400">Prontuário</a>
+              <a href="{% url 'dashboard:prontuarios_pac' %}" class="btn-ghost text-gray-800/80 hover:text-gray-400">Prontuário</a>
             </li>
           </ul>
         </div>
@@ -46,16 +44,18 @@
               <p class="text-[12px] font-semibold indent-2.5">{{ user.email }}</p>
             </div>
             <li>
-              <a href="/dashboard/medicos">Dashboard</a>
+              <a href="{% url 'dashboard:pacientes' %}">Dashboard</a>
             </li>
             <li>
-              <a href="/dashboard/medicos">Minha Agenda</a>
-              <a href="/dashboard/medicos/lista">Página de Prontuário</a>
+              <a href="{% url 'dashboard:agenda_pac' %}">Minha Agenda</a>
+            </li>
+            <li>
+              <a href="{% url 'dashboard:prontuarios_pac' %}">Página de Prontuário</a>
             </li>
             <div class="flex flex-col border-t-2 border-gray-200 pt-2 mt-2">
               <form method="post" action="{% url 'users:logout' %}">
                 {% csrf_token %} <li>
-                  <a href="/dashboard/medicos/settings">Configurações</a>
+                  <a href="{% url 'dashboard:view_config_pac' %}">Configurações</a>
                   <button type="submit">Sair</button>
                 </li>
               </form>

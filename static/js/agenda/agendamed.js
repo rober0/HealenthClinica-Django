@@ -1,3 +1,8 @@
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
 function dataFormat(data) {
     const dataJS = new Date(data);
     dataJS.setMinutes(dataJS.getMinutes() - dataJS.getTimezoneOffset());
@@ -41,7 +46,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const eventsJson = document.getElementById('events-data').textContent.trim() || '[]';
     const events = JSON.parse(eventsJson);
 
-    let calendar = new FullCalendar.Calendar(calendarEl, {
+    let calendar = new Calendar(calendarEl, {
+        plugins: [
+            dayGridPlugin,
+            timeGridPlugin,
+            interactionPlugin
+        ],
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
@@ -119,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('data_fim_detalhes').textContent = formatDateTime(e.end) || '';
 
             deleteBtn.setAttribute("data-event-id", e.id);
-            editBtn.setAttribute("href", `/dashboard/administrador/agendamentos/editar/${e.id}`);
+            editBtn.setAttribute("href", `/dashboard/medicos/agendamentos/editar/${e.id}`);
 
             modalView.showModal();
         },
@@ -132,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!eventId) return;
 
         if (confirm('Tem certeza que deseja deletar este evento?')) {
-            fetch(`/dashboard/administrador/agendamentos/deletar/${eventId}`, {
+            fetch(`/dashboard/medicos/agendamentos/deletar/${eventId}`, {
               method: 'POST',
               headers: {
                 'X-CSRFToken': getCookie('csrftoken'),

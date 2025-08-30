@@ -9,7 +9,7 @@ from .forms import RegistroForm, LoginForm
 def register_view(request):
     if request.user.is_authenticated:
         if request.user.is_superuser or isinstance(request.user, Administrador):
-            return redirect("dashboard:administrador")
+            return redirect("dashboard:administradores")
         elif isinstance(request.user, Medico):
             return redirect("dashboard:medicos")
         elif isinstance(request.user, Paciente):
@@ -33,8 +33,8 @@ def register_view(request):
 
 def login_view(request):
     if request.user.is_authenticated:
-        if request.user.is_superuser or isinstance(request.user, Administrador):
-            return redirect("dashboard:administrador")
+        if isinstance(request.user, Administrador):
+            return redirect("dashboard:administradores")
         elif isinstance(request.user, Medico):
             return redirect("dashboard:medicos")
         elif isinstance(request.user, Paciente):
@@ -52,11 +52,11 @@ def login_view(request):
                 login(request, user)
 
                 if user.is_superuser:
-                    return redirect("dashboard:administrador")
+                    return redirect("dashboard:administradores")
 
                 try:
                     admin = Administrador.objects.get(email=email)
-                    return redirect("dashboard:administrador")
+                    return redirect("dashboard:administradores")
                 except Administrador.DoesNotExist:
                     try:
                         medico = Medico.objects.get(email=email)

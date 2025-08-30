@@ -5,113 +5,112 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Registrar</title>
-    <script src="{% static 'js/intl.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/forms.css' %}" />
-    <link rel="stylesheet" href="{% static '/intl-tel-input/build/css/intlTelInput.css' %}" />
-    <script src="{% static 'intl-tel-input/build/js/intlTelInputWithUtils.min.js' %}"></script>
+    <title>Página de Registro</title>
+    <script type="module" src="{% vite_asset_url 'static/js/intl.js' %}"></script>
     {% vite_hmr_client %}
 
-    {% vite_asset 'static/css/index.css' %}
+    <link rel="stylesheet" href="{% vite_asset_url 'static/css/global.css' %}" />
   </head>
   <body>
     <form method="post">
       {% csrf_token %}
-      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-        <legend class="fieldset-legend">Registre-se</legend>
-        <label class="label">
-          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
-              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </g>
-          </svg>Nome
-        </label>
-        {{ form.username }}
-        {% if form.username.errors %}
-          <div class="text-error">
-            {% for error in form.username.errors %}
-              <p>{{ error }}</p>
-            {% endfor %}
-          </div>
-        {% endif %}
-        <label class="label">
-          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
-              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-            </g>
-          </svg>Email
-        </label>
-        {{ form.email }}
-        {% if form.email.errors %}
-          <div class="text-error">
-            {% for error in form.email.errors %}
-              <p>{{ error }}</p>
-            {% endfor %}
-          </div>
-        {% endif %}
-        <label class="label">Data de Aniversario</label>
-        {{ form.data_nascimento }}
-        {% if form.data_nascimento.errors %}
-          <div class="text-error">
-            {% for error in form.nascimento.errors %}
-              <p>{{ error }}</p>
-            {% endfor %}
-          </div>
-        {% endif %}
-        <label class="label">Número de Telefone</label>
-        {{ form.telefone }}
-        {% if form.telefone.errors %}
-          <div class="text-error">
-            {% for error in form.telefone.errors %}
-              <p>{{ error }}</p>
-            {% endfor %}
-          </div>
-        {% endif %}
-        <label class="label">Gênero</label>
-        {{ form.genero }}
-        {% if form.genero.errors %}
-          <div class="text-error">
-            {% for error in form.genero.errors %}
-              <p>{{ error }}</p>
-            {% endfor %}
-          </div>
-        {% endif %}
-        <label class="label">
-          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
-              <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
-              <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
-            </g>
-          </svg>Senha
-        </label>
-        {{ form.password }}
-        {% if form.password.errors %}
-          <div class="text-error">
-            {% for error in form.password.errors %}
-              <p>{{ error }}</p>
-            {% endfor %}
-          </div>
-        {% endif %}
-        <label class="label">
-          <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
-              <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
-              <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
-            </g>
-          </svg>Confirme a Senha
-        </label>
-        {{ form.password_confirm }}
-        {% if form.password_confirm.errors %}
-          <div class="text-error">
-            {% for error in form.password_confirm.errors %}
-              <p>{{ error }}</p>
-            {% endfor %}
-          </div>
-        {% endif %}
-        <button class="btn btn-neutral mt-4">Registrar</button>
-      </fieldset>
+      <div class="flex justify-center items-center h-screen">
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+          <legend class="fieldset-legend">Registre-se</legend>
+          <label class="label">
+            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </g>
+            </svg>Nome
+          </label>
+          {{ form.username }}
+          {% if form.username.errors %}
+            <div class="text-error">
+              {% for error in form.username.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+          <label class="label">
+            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+                <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+              </g>
+            </svg>Email
+          </label>
+          {{ form.email }}
+          {% if form.email.errors %}
+            <div class="text-error">
+              {% for error in form.email.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+          <label class="label">Data de Aniversario</label>
+          {{ form.data_nascimento }}
+          {% if form.data_nascimento.errors %}
+            <div class="text-error">
+              {% for error in form.nascimento.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+          <label class="label">Número de Telefone</label>
+          {{ form.telefone }}
+          {% if form.telefone.errors %}
+            <div class="text-error">
+              {% for error in form.telefone.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+          <label class="label">Gênero</label>
+          {{ form.genero }}
+          {% if form.genero.errors %}
+            <div class="text-error">
+              {% for error in form.genero.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+          <label class="label">
+            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+                <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
+                <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
+              </g>
+            </svg>Senha
+          </label>
+          {{ form.password }}
+          {% if form.password.errors %}
+            <div class="text-error">
+              {% for error in form.password.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+          <label class="label">
+            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor">
+                <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
+                <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
+              </g>
+            </svg>Confirme a Senha
+          </label>
+          {{ form.password_confirm }}
+          {% if form.password_confirm.errors %}
+            <div class="text-error">
+              {% for error in form.password_confirm.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+          <button class="btn btn-neutral mt-4">Registrar</button>
+        </fieldset>
+      </div>
     </form>
   </body>
 </html>

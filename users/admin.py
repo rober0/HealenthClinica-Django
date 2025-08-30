@@ -65,8 +65,6 @@ class PacienteAdmin(CustomUserAdmin):
                     "data_nascimento",
                     "telefone",
                     "genero",
-                    "password",
-                    "password_confirm",
                 ),
             },
         ),
@@ -120,8 +118,6 @@ class MedicoAdmin(CustomUserAdmin):
                     "data_nascimento",
                     "telefone",
                     "genero",
-                    "password",
-                    "password_confirm",
                 ),
             },
         ),
@@ -132,7 +128,7 @@ class AdministradorAdmin(CustomUserAdmin):
     list_display = ("username", "email", "avatar", "is_staff", "is_superuser")
 
     fieldsets = (
-        (None, {"fields": ("username", "email", "avatar", "password")}),
+        (None, {"fields": ("username", "email", "avatar")}),
         (
             "Permissões",
             {
@@ -155,8 +151,6 @@ class AdministradorAdmin(CustomUserAdmin):
                     "email",
                     "username",
                     "avatar",
-                    "password",
-                    "password_confirm",
                     "is_staff",
                     "is_superuser",
                 ),

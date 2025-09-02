@@ -14,11 +14,21 @@ npm install
 pip install -r requirements.txt
 ```
 
-## Conta
+## Administrador
 
 ### Email: admin@exemplo.com
 ### Senha: admin12345
 
+## Médico
+
+### Email: medico@exemplo.com
+### Senha: medico12345
+
+## Paciente
+
+### Email: paciente@exemplo.com
+### Senha: paciente12345
+<br>
 Referências: <br>
 https://github.com/sajib1066/event-calendar <br>
 https://github.com/eduardoplnascimento/medmazza <br>

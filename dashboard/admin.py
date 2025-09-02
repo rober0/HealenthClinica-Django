@@ -8,6 +8,7 @@ class AgendamentoAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "paciente",
+        "medico",
         "procedimentos",
         "convenio",
         "observacoes",
@@ -19,4 +20,9 @@ class AgendamentoAdmin(admin.ModelAdmin):
         "updated_at",
     ]
     list_filter = ["is_active", "is_deleted"]
-    search_fields = ["paciente__username", "procedimentos", "convenio"]
+    search_fields = [
+        "paciente__username",
+        "medico__username",
+        "procedimentos",
+        "convenio",
+    ]

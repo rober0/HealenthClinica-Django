@@ -78,11 +78,14 @@ class Administrador(Usuario):
         verbose_name = "Administrador"
         verbose_name_plural = "Administradores"
 
+    def __str__(self):
+        return f"{self.username}"
+
 
 class Paciente(Usuario):
     data_nascimento = models.DateField(null=False, blank=False)
-    telefone = models.CharField(max_length=15)
-    genero = models.CharField(max_length=20)
+    telefone = models.CharField(max_length=15, null=False, blank=False)
+    genero = models.CharField(max_length=20, null=False, blank=False, default="Outro")
 
     class Meta:
         verbose_name = "Paciente"
@@ -93,13 +96,25 @@ class Paciente(Usuario):
 
 
 class Medico(Usuario):
-    especialidade = models.CharField(max_length=100)
-    crm_estado = models.CharField(null=False, blank=False)
-    crm_numero = models.CharField(unique=True)
+    especialidade = models.CharField(max_length=100, null=False, blank=False)
+    crm_estado = models.CharField(
+        null=False,
+        blank=False,
+        default="",
+    )
+    crm_numero = models.CharField(
+        null=False,
+        blank=False,
+        unique=True,
+        default="",
+    )
     data_nascimento = models.DateField(null=False, blank=False)
-    telefone = models.CharField(max_length=15)
-    genero = models.CharField(max_length=20)
+    telefone = models.CharField(max_length=15, null=False, blank=False)
+    genero = models.CharField(max_length=20, null=False, blank=False, default="Outro")
 
     class Meta:
         verbose_name = "Médico"
         verbose_name_plural = "Médicos"
+
+    def __str__(self):
+        return f"Dr(A). {self.username}"

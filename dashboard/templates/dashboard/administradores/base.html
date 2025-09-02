@@ -5,13 +5,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="{% static 'flowbite/dist/flowbite.min.js' %}"></script>
-    <script src="{% static 'simple-datatables/dist/umd/simple-datatables.js' %}"></script>
     {% block head %}
 
     {% endblock %}
-    {% vite_hmr_client %}
-    {% vite_asset 'static/css/dashboard.css' %}
+    <link rel="stylesheet" href="{% vite_asset_url 'static/css/global.css' %}" />
   </head>
   <body>
     <header class="navbar bg-base-100 shadow-sm">
@@ -20,13 +17,13 @@
         <div class="hidden flex-none lg:flex">
           <ul class="flex flex-row mx-1 mb-1 gap-3 menu-horizontal underline underline-offset-2 decoration-gray-600/40 text-base font-normal uppercase px-2">
             <li>
-              <a href="/dashboard/administrador" class="btn-ghost text-gray-800/80 hover:text-gray-400">Inicio</a>
+              <a href="{% url 'dashboard:administradores' %}" class="btn-ghost text-gray-800/80 hover:text-gray-400">Inicio</a>
             </li>
             <li>
-              <a href="/dashboard/administrador/agendamentos" class="btn-ghost text-gray-800/80 hover:text-gray-400">Agenda</a>
+              <a href="{% url 'dashboard:agenda_adm' %}" class="btn-ghost text-gray-800/80 hover:text-gray-400">Agenda</a>
             </li>
             <li>
-              <a href="/dashboard/administrador/lista" class="btn-ghost text-gray-800/80 hover:text-gray-400">Prontuário</a>
+              <a href="{% url 'dashboard:prontuarios_adm' %}" class="btn-ghost text-gray-800/80 hover:text-gray-400">Prontuário</a>
             </li>
           </ul>
         </div>
@@ -46,16 +43,16 @@
               <p class="text-[12px] font-semibold indent-2.5">{{ user.email }}</p>
             </div>
             <li>
-              <a href="/dashboard/administrador">Dashboard</a>
+              <a href="{% url 'dashboard:administradores' %}">Dashboard</a>
             </li>
             <li>
-              <a href="/dashboard/administrador">Minha Agenda</a>
+              <a href="{% url 'dashboard:agenda_adm' %}">Minha Agenda</a>
               <a href="/admin">Página de Admin</a>
             </li>
             <div class="flex flex-col border-t-2 border-gray-200 pt-2 mt-2">
               <form method="post" action="{% url 'users:logout' %}">
                 {% csrf_token %} <li>
-                  <a href="/dashboard/administrador/settings">Configurações</a>
+                  <a href="{% url 'dashboard:view_config_adm' %}">Configurações</a>
                   <button type="submit">Sair</button>
                 </li>
               </form>

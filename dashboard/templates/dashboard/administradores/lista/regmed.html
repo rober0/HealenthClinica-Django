@@ -1,10 +1,10 @@
 {% extends '../base.html' %}
+{% load django_vite %}
 {% load static %}
 
 {% block head %}
-  <script src="{% static 'js/intl.js' %}"></script>
-  <link rel="stylesheet" href="{% static '/intl-tel-input/build/css/intlTelInput.css' %}" />
-  <script src="{% static 'intl-tel-input/build/js/intlTelInputWithUtils.min.js' %}"></script>
+  <title>Registrar Médico</title>
+  <script type="module" src="{% vite_asset_url 'static/js/intl.js' %}"></script>
 {% endblock %}
 
 {% block main %}
@@ -14,7 +14,7 @@
       <div class="breadcrumbs text-sm mb-4">
         <ul>
           <li>
-            <a href="{% url 'dashboard:administrador_listas' %}">Lista de Usuários</a>
+            <a href="{% url 'dashboard:prontuarios_adm' %}">Lista de Usuários</a>
           </li>
           <li>Registrar Médico</li>
         </ul>
@@ -47,16 +47,14 @@
             <label>Especialidade:</label>
             {{ form.especialidade }}
             <label>CRM:</label>
-            <div class="flex flex-row w-1/2">
-              {{ form.crm_estado }}
-              {{ form.crm_numero }}
-            </div>
+            <div class="flex flex-row w-1/2">{{ form.crm_estado }}
+              {{ form.crm_numero }}</div>
           </div>
         </div>
       </div>
       <div class="flex justify-end gap-2 mt-6">
         <button class="btn btn-neutral" type="submit">Registrar</button>
-        <button class="btn btn-error"><a href="{% url 'dashboard:administrador_listas' %}">Cancelar</a></button>
+        <button class="btn btn-error"><a href="{% url 'dashboard:prontuarios_adm' %}">Cancelar</a></button>
       </div>
     </div>
   </form>

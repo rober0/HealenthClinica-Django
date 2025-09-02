@@ -1,0 +1,20 @@
+{% extends './base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+  <title>Sua Agenda</title>
+  <script type="module" src="{% vite_asset_url 'static/js/agenda/agendapac.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+  <div class="container mx-auto">
+    <div class="flex flex-col gap-6">
+      <div id="calendar" class="bg-white rounded-lg shadow p-4"></div>
+    </div>
+  </div>
+
+  <script id="events-data" type="application/json">
+    {{ eventos | safe }}
+  </script>
+{% endblock %}

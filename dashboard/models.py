@@ -48,6 +48,7 @@ class AbstratoEvento(models.Model):
 class CriarEvento(AbstratoEvento):
     STATUS_CHOICES = [
         ("AGENDADO", "Agendado"),
+        ("PEDIDO", "Pedido"),
         ("CONFIRMADO", "Confirmado"),
         ("CANCELADO", "Cancelado"),
         ("CONCLUIDO", "Concluido"),
@@ -56,6 +57,13 @@ class CriarEvento(AbstratoEvento):
 
     paciente = models.ForeignKey(
         Paciente, on_delete=models.CASCADE, related_name="paciente"
+    )
+    medico = models.ForeignKey(
+        Medico,
+        on_delete=models.CASCADE,
+        related_name="eventos_medico",
+        null=True,
+        blank=True,
     )
     procedimentos = models.CharField(max_length=200)
     convenio = models.CharField(max_length=100)
@@ -76,13 +84,13 @@ class CriarEvento(AbstratoEvento):
 class CriarEventoPaciente(AbstratoEvento):
     STATUS_CHOICES = [
         ("PEDIDO", "Pedido"),
-        ("AGENDADO", "Agendado"),
         ("CONFIRMADO", "Confirmado"),
         ("CANCELADO", "Cancelado"),
         ("CONCLUIDO", "Concluido"),
+        ("AUSENTE", "Ausente"),
     ]
 
-    paciente = models.ForeignKey(
+    paciente = models.OneToOneField(
         Paciente,
         primary_key=True,
         on_delete=models.CASCADE,

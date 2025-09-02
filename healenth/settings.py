@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -126,7 +127,6 @@ STATIC_URL = "static/"
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    os.path.join(BASE_DIR, "node_modules"),
     os.path.join(BASE_DIR, "assets"),
 ]
 
@@ -147,7 +147,12 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-DJANGO_VITE = {"default": {"dev_mode": DEBUG}}
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": False,
+        "manifest_path": os.path.join(BASE_DIR, "assets", "manifest.json"),
+    }
+}
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"

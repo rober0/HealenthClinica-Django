@@ -1,0 +1,59 @@
+{% extends './base.html' %} {% load django_vite %} {% load static %}
+
+{% block head %}
+  <title>Lista de Prontuários</title>
+  <script type="module" src="{% vite_asset_url 'static/js/datatables.js' %}"></script>
+  <link rel="stylesheet" href="{% vite_asset_url 'static/css/datatables.css' %}" />
+{% endblock %}
+
+{% block main %}
+  <div class="flex flex-row w-full bg-base-200 border-1 border-gray-300 rounded-md p-2">
+    <p class="text-3xl font-normal w-full">Lista de Prontuários</p>
+  </div>
+  <br />
+  <table id="sorting-table">
+    <thead>
+      <tr>
+        <th data-sortable="true">
+          <span class="flex items-center">
+            ID<svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+            </svg>
+          </span>
+        </th>
+        <th>
+          <span class="flex items-center">
+            Nome<svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+            </svg>
+          </span>
+        </th>
+        <th>
+          <span class="flex items-center">
+            Email<svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+            </svg>
+          </span>
+        </th>
+        <th>
+          <span class="flex items-center">
+            Grupo<svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+            </svg>
+          </span>
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for paciente in pacientes %}
+        <tr>
+          <td>{{ paciente.usuario_ptr_id }}</td>
+          <td>{{ paciente.username }}</td>
+          <td>{{ paciente.email }}</td>
+          <td>Paciente</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -6,9 +6,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Página Inicial</title>
+    {% block head %}
+    {% endblock head %}
     {% vite_hmr_client %}
-
-    {% vite_asset 'static/css/index.css' %}
+    <link rel="stylesheet" href="{% vite_asset_url 'static/css/index.css' %}">
   </head>
   <body>
     <section class="header">

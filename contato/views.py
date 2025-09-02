@@ -2,10 +2,6 @@ from django.shortcuts import render, redirect
 from .forms import ContatoForm, SugestoesForm
 
 
-def faleconosco(request):
-    return render(request, "contato/faleconosco.html")
-
-
 def contato_view(request):
     if request.method == "POST":
         form = ContatoForm(request.POST)
@@ -17,9 +13,6 @@ def contato_view(request):
 
     return render(request, "contato/faleconosco.html", {"form": form})
 
-
-#def sugestoes(request):
-#    return render(request, "contato/sugestoes.html")
 
 def sugestao_view(request):
     if request.method == "POST":

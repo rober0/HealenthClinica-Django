@@ -1,8 +1,73 @@
 {% extends "base.html" %}  
+{% load static %}
+{% load django_vite %}
+
+      {% block head %}
+    {% vite_asset 'static/css/contact.css' %}
+    <script src="{% static 'js/intl.js' %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+
+    {% endblock head %}
 
 {% block article %}
     <article>
-      
+
+  <body>
+
+    <form method="post"> 
+<div class="text-balance">
+  <div class="p-7">
+    <div class="terms-container">
+        <header class="terms-header">
+            <h1 class="terms-title">TERMOS DE USO - Healenth</h1>
+        </header>
+        
+        <main class="terms-content">
+            <div class="text-balance">
+                <section>
+                    <p class="section-content">
+                        Bem-vindo(a) aos Termos de Uso da plataforma Healenth.
+                    </p>
+                    
+                    <div class="warning-box">
+                        <p>
+                            AO ACESSAR, NAVEGAR, REGISTRAR-SE OU UTILIZAR NOSSA PLATAFORMA, VOCÊ DECLARA QUE LEU, COMPREENDEU E CONCORDA EXPRESSAMENTE COM ESTES TERMOS DE USO,
+                            QUE POSSUEM NATUREZA OBRIGATÓRIA E VINCULANTE. SE VOCÊ NÃO CONCORDAR COM QUALQUER DISPOSIÇÃO DESTE DOCUMENTO, VOCÊ NÃO DEVE E NÃO ESTÁ AUTORIZADO(A) A UTILIZAR NOSSOS SERVIÇOS.
+                        </p>
+                    </div>
+                </section>
+                
+                <h2 class="section-title">Definições e Direitos</h2>
+                <p class="section-content">
+                    Todo o conteúdo presente na Plataforma (logos, marcas, software, layout, textos, gráficos) é de propriedade nossa ou de nossos licenciadores e está protegido por leis de propriedade intelectual. É expressamente vedada a sua cópia, modificação, distribuição ou uso comercial sem autorização prévia por escrito.
+                </p>
+                
+                <h2 class="section-title">Procedimentos</h2>
+                <p class="section-content">
+                    Para utilizar as funcionalidades de agendamento, o Usuário deverá criar uma conta fornecendo informações completas, accuratas e verdadeiras, como nome, e-mail, telefone e data de nascimento.
+                    O Usuário é o único e exclusivo responsável por manter a confidencialidade de sua senha e por toda e qualquer atividade que ocorra em sua conta.
+                    É vedado o cadastro por menores de 18 anos. O agendamento para menores deve ser realizado por seu responsável legal.
+                </p>
+                
+                <h2 class="section-title">Telemedicina</h2>
+                <p class="section-content">
+                    Usuário/Paciente: Pessoa física que acessa a Plataforma para buscar profissionais de saúde e agendar consultas.
+                    Profissional de Saúde/Clínica/Estabelecimento: Pessoa física ou jurídica, devidamente registrada em seu conselho de classe, que utiliza a Plataforma para disponibilizar seus serviços e gerenciar sua agenda.
+                    Serviço: Refere-se à funcionalidade de intermediação de agendamento de consultas e demais ferramentas oferecidas pela Plataforma.
+                </p>
+                
+                <h2 class="section-title">Vacinas</h2>
+                <p class="section-content">
+                    Todo o conteúdo presente na Plataforma (logos, marcas, software, layout, textos, gráficos) é de propriedade nossa ou de nossos licenciadores e está protegido por leis de propriedade intelectual. É expressamente vedada a sua cópia, modificação, distribuição ou uso comercial sem autorização prévia por escrito.
+                </p>
+            </div>
+            
+
+
+    </div>
+  </div>
+
   </article>
 {% endblock %}
   </body>

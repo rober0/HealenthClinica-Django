@@ -1,4 +1,5 @@
 {% extends './base.html' %}
+{% load django_vite %}
 {% load static %}
 
 {% block head %}
@@ -20,7 +21,7 @@
   </div>
   <br />
 
-  <div class="flex-row w-full">
+  <div class="grid grid-cols-4 gap-4">
     <div class="col-span-3 overflow-x-auto">
       <div class="flex md:flex-col items-start bg-base-200 border-t-1 border-r-1 border-l-1 border-gray-300 p-3">
         <h2 class="text-lg font-semibold">Seus Agendamentos</h2>
@@ -117,7 +118,71 @@
         </tbody>
       </table>
     </div>
+
+    <div class="col-span-1 overflow-x-auto">
+      <div class="flex md:flex-col items-start bg-base-200 border-t-1 border-r-1 border-l-1 border-gray-300 p-3">
+        <h2 class="text-lg font-semibold">Suas Consultas</h2>
+      </div>
+      <table class="table bg-base-200 border-1 border-gray-300" id="pagination-table-2">
+        <thead>
+          <tr>
+            <th>
+              <span class="flex items-center">Nome</span>
+            </th>
+            <th>
+              <span class="flex items-center">Data</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for eventos in eventos_lista_pedidos %}
+            <tr>
+              <td>
+                <div class="flex items-center gap-3">
+                  <div class="avatar">
+                    <div class="mask mask-squircle h-12 w-12">
+                      {% if eventos.paciente.avatar %}
+                        <img src="{{ eventos.paciente.avatar.url }}" alt="Avatar" />
+                      {% else %}
+                        <img src="{% static 'default-avatar.png' %}" alt="Avatar Padrão" />
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div>
+                    <div class="font-medium">
+                      {% if eventos.paciente.username %}
+                        {{ eventos.paciente.username }}
+                      {% else %}
+                        Nenhum agendamento
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                {% if eventos.data_fim %}
+                  {{ eventos.data_fim|date:'d/m/Y H:i' }}
+                {% else %}
+                  Sem data
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" class="text-center">Nenhum agendamento encontrado</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+        <div class="flex md:flex-col items-center bg-base-200 border-r-1 border-b-1 border-l-1 border-gray-300 p-3">
+        <a href="{% url "dashboard:create_agenda_pac" %}"><button class="btn btn-sm btn-outline btn-primary">Marcar Consulta</button></a>
+      </div>
+    </div>
   </div>
+
+
+  </div>
+</div>
 
   <script>
     function updateClock() {

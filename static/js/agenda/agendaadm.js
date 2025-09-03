@@ -16,7 +16,6 @@ function dataFormat(data) {
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
-
 function formatDateTime(date) {
     if (!date) return '';
     const d = new Date(date);
@@ -34,19 +33,25 @@ function formatDateOnly(dataStr) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-
     const calendarEl = document.getElementById('calendar');
     const modalCreate = document.getElementById('create_modal');
     const modalView = document.getElementById('view_modal');
+    const modalBlock = document.getElementById('block_modal');
     const deleteBtn = document.getElementById('delete-event-button');
     const editBtn = document.getElementById('edit-event-button');
 
     const startInput = document.getElementById('id_data_inicio');
     const endInput = document.getElementById('id_data_fim');
 
-    const eventsJson = document.getElementById('events-data').textContent.trim() || '[]';
-    const events = JSON.parse(eventsJson);
-    
+    const eventsJsonEl = document.getElementById('events-data');
+    const eventsJson = eventsJsonEl ? eventsJsonEl.textContent.trim() : '[]';
+    let combinedEvents;
+    try {
+        combinedEvents = JSON.parse(eventsJson);
+    } catch (e) {
+        console.error("Erro ao parsear eventos JSON: ", e);
+        combinedEvents = [];
+    }
 
     let calendar = new Calendar(calendarEl, {
         plugins: [
@@ -54,8 +59,16 @@ document.addEventListener('DOMContentLoaded', function () {
             timeGridPlugin,
             interactionPlugin
         ],
+        customButtons: {
+            blockButton: {
+                text: 'Bloquear Dia',
+                click: function() {
+                    modalBlock.showModal();
+                }
+            }
+        },
         headerToolbar: {
-            left: 'prev,next today',
+            left: 'prev,next,today blockButton',
             center: 'title',
             right: 'timeGridWeek,timeGridDay'
         },
@@ -65,30 +78,12 @@ document.addEventListener('DOMContentLoaded', function () {
         selectMirror: true,
         editable: false,
         dayMaxEvents: true,
-        timeZone: 'local', 
+        timeZone: 'local',
         slotMinTime: '07:00:00',
         slotMaxTime: '18:30:00',
         allDaySlot: false,
         displayEventTime: true,
-        events: events.map(event => ({
-        id: event.id,
-        title: event.paciente,
-        start: event.start,
-        end: event.end,
-        extendedProps: {
-            avatar: event.avatar,
-            paciente: event.paciente,
-            genero: event.genero,
-            data_nascimento: event.data_nascimento,
-            procedimentos: event.procedimentos,
-            convenio: event.convenio,
-            observacoes: event.observacoes,
-            status: event.status
-        },
-        backgroundColor: event.status === 'Agendado' ? '#2035ecff' : event.status === 'Confirmado' ? '#34D399' : event.status === 'Cancelado' ? '#F87171' : event.status === 'Concluido' ? '#006b44ff' : '#ffffffff',
-        borderColor: event.status === 'Agendado' ? '#2035ecff' : event.status === 'Confirmado' ? '#34D399' : event.status === 'Cancelado' ? '#F87171' : event.status === 'Concluido' ? '#006b44ff' : '#ffffffff',
-        textColor: '#FFFFFF',
-        })),
+        events: combinedEvents,
         initialView: 'timeGridWeek',
         locale: 'pt-br',
         nowIndicator: 'true',
@@ -96,27 +91,38 @@ document.addEventListener('DOMContentLoaded', function () {
             today: 'Hoje',
             timeGridWeek: 'Semana',
             timeGridDay: 'Dia',
-            allDay: 'Dia Inteiro'
         },
-        allDayText: 'Dia Inteiro',
+        eventOverlap: false,
+        
+selectOverlap: function(event) {
+      return event.display !== 'background';
+    },
 
-        select: function (arg) {
-            if (startInput) startInput.value = arg.startStr.slice(0,16);
-            if (endInput && arg.end) endInput.value = arg.endStr.slice(0,16);
-            modalCreate.showModal();
+    select: function (arg) {
+        if (arg.allDay) {
             calendar.unselect();
-        },
+            return;
+        }
 
+        if (startInput) startInput.value = arg.startStr.slice(0, 16);
+        if (endInput && arg.end) endInput.value = arg.endStr.slice(0, 16);
+        modalCreate.showModal();
+        calendar.unselect();
+    },
         eventClick: function (arg) {
-        const e = arg.event;
-        const data = e._def.extendedProps;
+            const e = arg.event;
+            const data = e._def.extendedProps;
+            const eventId = e.id;
 
-        const avatarEl = document.getElementById('paciente_avatar');
+            if (typeof eventId === 'string' && eventId.startsWith('bloqueio-')) {
+                return;
+            }
+            const avatarEl = document.getElementById('paciente_avatar');
             if (avatarEl) {
                 if (data.avatar) {
                     avatarEl.innerHTML = `<img src="${data.avatar}" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%;">`;
                 } else {
-                    avatarEl.innerHTML = ''; 
+                    avatarEl.innerHTML = '';
                 }
             }
 
@@ -129,12 +135,12 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('data_inicio_detalhes').textContent = formatDateTime(e.start) || '';
             document.getElementById('data_fim_detalhes').textContent = formatDateTime(e.end) || '';
 
-            deleteBtn.setAttribute("data-event-id", e.id);
-            editBtn.setAttribute("href", `/dashboard/administradores/agendamentos/editar/${e.id}`);
+            deleteBtn.setAttribute("data-event-id", eventId);
+            editBtn.setAttribute("href", `/dashboard/administradores/agendamentos/editar/${eventId}`);
 
             modalView.showModal();
         },
-        });
+    });
 
     calendar.render();
 
@@ -144,14 +150,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (confirm('Tem certeza que deseja deletar este evento?')) {
             fetch(`/dashboard/administradores/agendamentos/deletar/${eventId}`, {
-              method: 'POST',
-              headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-                'Content-Type': 'application/json'
-            }
-              })
-              location.reload()
-            .then(response => response.json())
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            location.reload()
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao deletar o evento.');
+                }
+                return response.json();
+            })
             .then(data => {
                 alert(data.message);
                 modalView.close();

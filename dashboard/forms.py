@@ -3,7 +3,7 @@ from django.forms import ModelForm, DateInput
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from users.models import Paciente, Medico, Administrador, Usuario
-from dashboard.models import CriarEvento
+from dashboard.models import CriarEvento, MarcarEvento, BloquearDia
 
 
 class PacienteForm(forms.ModelForm):
@@ -520,3 +520,39 @@ class AgendamentoForm(ModelForm):
         if fim and inicio and fim < inicio:
             raise ValidationError("Data final não pode ser anterior à data inicial")
         return cleaned_data
+
+
+class MarcarAgendamentoForm(ModelForm):
+    class Meta:
+        model = MarcarEvento
+        fields = [
+            "medico",
+            "status",
+            "queixa",
+        ]
+        widgets = {
+            "medico": forms.Select(
+                attrs={"class": "select validator", "required": "required"}
+            ),
+            "status": forms.Select(
+                attrs={"class": "select validator", "required": "required"}
+            ),
+            "queixa": forms.Textarea(
+                attrs={
+                    "class": "textarea",
+                    "placeholder": "Observações",
+                    "style": "height: 15px;",
+                }
+            ),
+        }
+
+
+class BloquearDiaForm(ModelForm):
+    class Meta:
+        model = BloquearDia
+        fields = ["dia_escolhido"]
+        widgets = {
+            "dia_escolhido": forms.Select(
+                attrs={"class": "select validator", "required": "required"},
+            ),
+        }

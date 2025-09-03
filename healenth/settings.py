@@ -149,7 +149,7 @@ AUTHENTICATION_BACKENDS = [
 
 DJANGO_VITE = {
     "default": {
-        "dev_mode": False,
+        "dev_mode": True,
         "manifest_path": os.path.join(BASE_DIR, "assets", "manifest.json"),
     }
 }

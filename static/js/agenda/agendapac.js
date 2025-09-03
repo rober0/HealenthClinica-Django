@@ -1,5 +1,5 @@
 import { Calendar } from '@fullcalendar/core';
-import listWeekPlugin from '@fullcalendar/list';
+import listPlugin from '@fullcalendar/list';
 
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let calendar = new Calendar(calendarEl, {
         plugins: [
-            listWeekPlugin
+            listPlugin
         ],
         initialDate: new Date(),
         selectable: true,

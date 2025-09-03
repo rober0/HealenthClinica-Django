@@ -8,10 +8,13 @@ app_name = "dashboard"
 urlpatterns = [
     path("pacientes/", views.paciente, name="pacientes"),
     path("pacientes/agendamentos", views.paciente_agenda, name="agenda_pac"),
+    path(
+        "pacientes/agendamentos/novo", views.create_consulta, name="create_agenda_pac"
+    ),
     path("pacientes/prontuario", views.paciente_prontuario, name="prontuarios_pac"),
     path("pacientes/settings", views.view_config, name="view_config_pac"),
     path("medicos/", views.medico, name="medicos"),
-    path("medicos/agendamentos", views.CalendarView.as_view(), name="agenda_med"),
+    path("medicos/agendamentos", views.medico_agendamentos, name="agenda_med"),
     path(
         "medicos/agendamentos/novo", views.create_agendamento, name="create_agenda_med"
     ),
@@ -25,11 +28,18 @@ urlpatterns = [
         views.delete_agendamento,
         name="delete_agenda_med",
     ),
+    path(
+        "medicos/bloquear-dia/",
+        views.create_bloqueio,
+        name="create_bloqueio_med",
+    ),
     path("medicos/prontuario", views.medico_prontuario, name="prontuarios_med"),
     path("medicos/settings", views.view_config, name="view_config_med"),
     path("administradores/", views.administrador, name="administradores"),
     path(
-        "administradores/agendamentos", views.CalendarView.as_view(), name="agenda_adm"
+        "administradores/agendamentos",
+        views.administrador_agendamentos,
+        name="agenda_adm",
     ),
     path(
         "administradores/agendamentos/novo",
@@ -45,6 +55,11 @@ urlpatterns = [
         "administradores/agendamentos/deletar/<int:event_id>",
         views.delete_agendamento,
         name="delete_agenda_adm",
+    ),
+    path(
+        "administradores/bloquear-dia/",
+        views.create_bloqueio,
+        name="create_bloqueio_adm",
     ),
     path(
         "administradores/prontuario",

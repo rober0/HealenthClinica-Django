@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.db import models
-from users.models import Paciente, Medico
+from users.models import Paciente, Medico, Usuario
 from django.utils import timezone
 
 
@@ -56,7 +56,7 @@ class CriarEvento(AbstratoEvento):
     ]
 
     paciente = models.ForeignKey(
-        Paciente, on_delete=models.CASCADE, related_name="paciente"
+        Paciente, on_delete=models.CASCADE, related_name="eventos_paciente"
     )
     medico = models.ForeignKey(
         Medico,
@@ -81,15 +81,7 @@ class CriarEvento(AbstratoEvento):
         verbose_name_plural = "Agendamentos"
 
 
-class CriarEventoPaciente(AbstratoEvento):
-    STATUS_CHOICES = [
-        ("PEDIDO", "Pedido"),
-        ("CONFIRMADO", "Confirmado"),
-        ("CANCELADO", "Cancelado"),
-        ("CONCLUIDO", "Concluido"),
-        ("AUSENTE", "Ausente"),
-    ]
-
+class MarcarEvento(AbstratoEvento):
     paciente = models.OneToOneField(
         Paciente,
         primary_key=True,
@@ -97,11 +89,41 @@ class CriarEventoPaciente(AbstratoEvento):
         related_name="paciente_evento",
     )
     medico = models.ForeignKey(
-        Medico, on_delete=models.CASCADE, related_name="medico_evento"
+        Medico,
+        on_delete=models.CASCADE,
+        related_name="consulta_medico",
+        null=True,
+        blank=True,
     )
     status = models.CharField(
-        max_length=30, choices=STATUS_CHOICES, default="PEDIDO", null=True, blank=True
+        max_length=30,
+        choices=CriarEvento.STATUS_CHOICES,
+        default="PEDIDO",
+        null=True,
+        blank=True,
     )
     queixa = models.TextField(blank=True, null=True)
-    data_inicio = models.DateTimeField(null=True, blank=True)
-    data_fim = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Consulta"
+        verbose_name_plural = "Consultas"
+
+
+class BloquearDia(AbstratoEvento):
+    DIAS_CHOICES = [
+        (0, "Domingo"),
+        (1, "Segunda-Feira"),
+        (2, "Terça-Feira"),
+        (3, "Quarta-Feira"),
+        (4, "Quinta-Feira"),
+        (5, "Sexta-Feira"),
+        (6, "Sábado"),
+    ]
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="dia_bloqueado_user")
+    dia_escolhido = models.IntegerField(
+        choices=DIAS_CHOICES, verbose_name="Dia da Semana", unique=True
+    )
+
+    class Meta:
+        verbose_name = "Dia Bloqueado"
+        verbose_name_plural = "Dias Bloqueados"

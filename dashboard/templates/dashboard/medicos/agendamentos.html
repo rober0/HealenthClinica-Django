@@ -1,4 +1,5 @@
 {% extends './base.html' %}
+{% load django_vite %}
 {% load static %}
 {% load widget_tweaks %}
 
@@ -151,6 +152,27 @@
       </form>
     </div>
   </dialog>
+
+  <dialog id="block_modal" class="modal">
+  <div class="modal-box max-w-2xl w-full">
+    <h3 class="text-xl font-semibold mb-6">Bloquear Dia</h3>
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-5">✕</button>
+    </form>
+    <form method="post" action="{% url 'dashboard:create_bloqueio_med' %}" class="space-y-4">
+      {% csrf_token %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Dia Escolhido</label>
+          {{ form_2.dia_escolhido }}
+        </div>
+      </div>
+      <div class="mt-6">
+        <button type="submit" class="btn btn-primary w-full">Salvar</button>
+      </div>
+    </form>
+  </div>
+</dialog>
 
   <script id="events-data" type="application/json">
     {{ eventos | safe }}

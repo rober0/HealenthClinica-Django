@@ -26,3 +26,21 @@ class AgendamentoAdmin(admin.ModelAdmin):
         "procedimentos",
         "convenio",
     ]
+
+@admin.register(models.BloquearDia)
+class BloqueamentoAdmin(admin.ModelAdmin):
+    model = models.BloquearDia
+    list_display = [
+        "id",
+        "usuario",
+        "dia_escolhido",
+        "is_active",
+        "is_deleted",
+        "created_at",
+        "updated_at",
+    ]
+    list_filter = ["is_active", "is_deleted"]
+    search_fields = [
+        "usuario__username",
+        "dia_escolhido",
+    ]

@@ -2,13 +2,18 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
-from django.views import View
 from django.utils import timezone
-from django.contrib.auth.mixins import LoginRequiredMixin
 from users.models import Usuario, Paciente, Medico, Administrador
 from users.decorators import admin_required, medico_required, paciente_required
-from dashboard.forms import PacienteForm, MedicoForm, AdministradorForm, AgendamentoForm
-from dashboard.models import CriarEvento
+from dashboard.forms import (
+    PacienteForm,
+    MedicoForm,
+    AdministradorForm,
+    AgendamentoForm,
+    MarcarAgendamentoForm,
+    BloquearDiaForm,
+)
+from dashboard.models import CriarEvento, MarcarEvento, BloquearDia
 import json
 
 
@@ -216,68 +221,45 @@ def administrador_agendamentos(request):
     for e in eventos:
         event_dict = {
             "id": e.id,
+            "title": f"{e.paciente.username}",
             "avatar": e.paciente.avatar.url if e.paciente.avatar else "",
             "paciente": e.paciente.username,
             "genero": e.paciente.genero,
-            "data_nascimento": (
-                e.paciente.data_nascimento.strftime("%Y-%m-%d")
-                if e.paciente.data_nascimento
-                else ""
-            ),
+            "data_nascimento": (e.paciente.data_nascimento.strftime("%Y-%m-%d") if e.paciente.data_nascimento else ""),
             "procedimentos": e.procedimentos,
             "convenio": e.convenio,
             "observacoes": e.observacoes,
             "status": e.get_status_display(),
             "start": timezone.localtime(e.data_inicio).isoformat(),
             "end": timezone.localtime(e.data_fim).isoformat(),
+            "overlap": False,
         }
         event_list.append(event_dict)
+    
+    dias_bloqueados = BloquearDia.objects.filter(usuario=request.user)
+    for dia in dias_bloqueados:
+        bloqueio_dict = {
+            "id": f"bloqueio-{dia.id}",
+            "title": f"Dia Bloqueado - {dia.get_dia_escolhido_display()}",
+            "daysOfWeek": [dia.dia_escolhido],
+            "display": "background",
+            "rendering": "background",
+            "backgroundColor": "#D1D5DB",
+            "allDay": True,
+            "overlap": False,
+        }
+        event_list.append(bloqueio_dict)
 
     context = {
         "form": AgendamentoForm(),
+        "form_2": BloquearDiaForm(),
         "ultimos_eventos": ultimos_eventos,
         "eventos_andamento": eventos_andamento,
-        "eventos_completos": eventos_completos.count(),
-        "eventos_proximos": eventos_proximos.count(),
-        "eventos": json.dumps(event_list),
+        "eventos_completos": eventos_completos,
+        "eventos_proximos": eventos_proximos,
+        "eventos": json.dumps(event_list, default=str),
     }
     return render(request, "dashboard/administradores/agendamentos.html", context)
-
-
-@login_required
-def edit_agendamento(request, pk):
-    user = request.user
-
-    if hasattr(user, "paciente"):
-        evento = get_object_or_404(CriarEvento, pk=pk, paciente=user.paciente)
-    elif hasattr(user, "medico"):
-        evento = get_object_or_404(CriarEvento, pk=pk, medico=user.medico)
-    elif hasattr(user, "administrador"):
-        evento = get_object_or_404(CriarEvento, pk=pk)
-
-    def get_template():
-        user = request.user
-        if hasattr(user, "administrador"):
-            return "dashboard/administradores/editagendamentos.html"
-        elif hasattr(user, "medico"):
-            return "dashboard/medicos/editagendamentos.html"
-
-    if request.method == "POST":
-        form = AgendamentoForm(request.POST, instance=evento)
-        if form.is_valid():
-            form.save()
-            if hasattr(request.user, "administrador"):
-                return redirect("dashboard:agenda_adm")
-            elif hasattr(request.user, "medico"):
-                return redirect("dashboard:agenda_med")
-    else:
-        form = AgendamentoForm(instance=evento)
-
-    context = {
-        "form": form,
-        "evento": evento,
-    }
-    return render(request, get_template(), context)
 
 
 @login_required
@@ -338,6 +320,51 @@ def medico(request):
 
 @login_required
 @medico_required
+def medico_agendamentos(request):
+    eventos = eventos_filtrados(request.user)
+    eventos_andamento = eventos.filter(
+        data_inicio__lte=timezone.now(), data_fim__gte=timezone.now()
+    )
+    eventos_completos = eventos.filter(data_fim__lt=timezone.now())
+    eventos_proximos = eventos.filter(data_inicio__gte=timezone.now())
+    ultimos_eventos = eventos.order_by("-id")[:10]
+
+    event_list = []
+    for e in eventos:
+        event_dict = {
+            "id": e.id,
+            "title": f"{e.paciente.username}",
+            "avatar": e.paciente.avatar.url if e.paciente.avatar else "",
+            "paciente": e.paciente.username,
+            "genero": e.paciente.genero,
+            "data_nascimento": (
+                e.paciente.data_nascimento.strftime("%Y-%m-%d")
+                if e.paciente.data_nascimento
+                else ""
+            ),
+            "procedimentos": e.procedimentos,
+            "convenio": e.convenio,
+            "observacoes": e.observacoes,
+            "status": e.get_status_display(),
+            "start": timezone.localtime(e.data_inicio).isoformat(),
+            "end": timezone.localtime(e.data_fim).isoformat(),
+        }
+        event_list.append(event_dict)
+
+    context = {
+        "form": AgendamentoForm(),
+        "form_2": BloquearDiaForm(),
+        "ultimos_eventos": ultimos_eventos,
+        "eventos_andamento": eventos_andamento,
+        "eventos_completos": eventos_completos.count(),
+        "eventos_proximos": eventos_proximos.count(),
+        "eventos": json.dumps(event_list, default=str),
+    }
+    return render(request, "dashboard/medicos/agendamentos.html", context)
+
+
+@login_required
+@medico_required
 def medico_prontuario(request):
     context = {
         "pacientes": Paciente.objects.all(),
@@ -368,8 +395,8 @@ def paciente(request):
         data_inicio__gte=timezone.now(),
     ).order_by("data_inicio")
 
-    eventos_lista_concluidos = eventos.filter(
-        status__in=["CONCLUIDO"],
+    eventos_lista_pedidos = eventos.filter(
+        status__in=["PEDIDOS"],
     ).order_by("data_fim")
 
     horario_atual = timezone.now().strftime("%H:%M:%S")
@@ -383,7 +410,7 @@ def paciente(request):
         "eventos_concluidos": eventos_concluidos,
         "eventos_ausentes": eventos_ausentes,
         "eventos_lista": eventos_lista,
-        "eventos_lista_concluidos": eventos_lista_concluidos,
+        "eventos_lista_concluidos": eventos_lista_pedidos,
         "proxima_data": proxima_data,
         "proximo_agendamento": proximo_agendamento,
         "horario_atual": horario_atual,
@@ -409,7 +436,6 @@ def paciente_agenda(request):
             "id": e.id,
             "avatar": e.paciente.avatar.url if e.paciente.avatar else "",
             "paciente": e.paciente.username,
-            "medico": e.medico.username,
             "genero": e.paciente.genero,
             "data_nascimento": (
                 e.paciente.data_nascimento.strftime("%Y-%m-%d")
@@ -440,50 +466,6 @@ def paciente_prontuario(request):
     return render(request, "dashboard/pacientes/prontuario.html")
 
 
-class CalendarView(LoginRequiredMixin, View):
-    login_url = "users:login"
-
-    def get_template_names(self):
-        user = self.request.user
-        if hasattr(user, "administrador"):
-            return "dashboard/administradores/agendamentos.html"
-        elif hasattr(user, "medico"):
-            return "dashboard/medicos/agendamentos.html"
-        elif hasattr(user, "paciente"):
-            return "dashboard/pacientes/agendamentos.html"
-
-    def get(self, request, *args, **kwargs):
-        eventos = eventos_filtrados(request.user)
-        event_list = []
-        for e in eventos:
-            event_dict = {
-                "id": e.id,
-                "title": f"{e.paciente.username}",
-                "avatar": e.paciente.avatar.url if e.paciente.avatar else "",
-                "paciente": e.paciente.username,
-                "genero": e.paciente.genero,
-                "data_nascimento": (
-                    e.paciente.data_nascimento.strftime("%Y-%m-%d")
-                    if e.paciente.data_nascimento
-                    else ""
-                ),
-                "procedimentos": e.procedimentos,
-                "convenio": e.convenio,
-                "observacoes": e.observacoes,
-                "status": e.get_status_display(),
-                "start": timezone.localtime(e.data_inicio).isoformat(),
-                "end": timezone.localtime(e.data_fim).isoformat(),
-            }
-            event_list.append(event_dict)
-
-        context = {
-            "form": AgendamentoForm(),
-            "eventos": json.dumps(event_list, default=str),
-            "ultimos_eventos": eventos.order_by("-id")[:10],
-        }
-        return render(request, self.get_template_names(), context)
-
-
 @login_required
 def create_agendamento(request):
     if request.method == "POST":
@@ -508,6 +490,58 @@ def create_agendamento(request):
 
 
 @login_required
+def create_consulta(request):
+    if request.method == "POST":
+        form = MarcarAgendamentoForm(request.POST)
+
+        if form.is_valid():
+            evento = form.save(commit=False)
+            evento.save()
+
+            return redirect("dashboard:pacientes")
+    else:
+        form = MarcarAgendamentoForm()
+
+    return render(request, "dashboard/pacientes/createconsultas.html", {"form": form})
+
+
+@login_required
+def edit_agendamento(request, pk):
+    user = request.user
+
+    if hasattr(user, "paciente"):
+        evento = get_object_or_404(CriarEvento, pk=pk, paciente=user.paciente)
+    elif hasattr(user, "medico"):
+        evento = get_object_or_404(CriarEvento, pk=pk, medico=user.medico)
+    elif hasattr(user, "administrador"):
+        evento = get_object_or_404(CriarEvento, pk=pk)
+
+    def get_template():
+        user = request.user
+        if hasattr(user, "administrador"):
+            return "dashboard/administradores/editagendamentos.html"
+        elif hasattr(user, "medico"):
+            return "dashboard/medicos/editagendamentos.html"
+
+    if request.method == "POST":
+        form = AgendamentoForm(request.POST, instance=evento)
+        if form.is_valid():
+            form.save()
+            if hasattr(request.user, "administrador"):
+                return redirect("dashboard:agenda_adm")
+            elif hasattr(request.user, "medico"):
+                return redirect("dashboard:agenda_med")
+    else:
+        form = AgendamentoForm(instance=evento)
+
+    context = {
+        "form": form,
+        "evento": evento,
+    }
+    return render(request, get_template(), context)
+
+
+@login_required
 def delete_agendamento(request, event_id):
     user = request.user
 
@@ -524,3 +558,24 @@ def delete_agendamento(request, event_id):
         eventos.delete()
         return JsonResponse({"message": "Agendamento deletado com sucesso."})
     return JsonResponse({"message": "Erro!"}, status=400)
+
+@login_required
+def create_bloqueio(request):
+    if request.method == "POST":
+        form = BloquearDiaForm(request.POST)
+        if form.is_valid():
+            bloqueio = form.save(commit=False)
+            bloqueio.usuario = request.user
+            bloqueio.save()
+            
+            if hasattr(request.user, "administrador"):
+                return redirect("dashboard:agenda_adm")
+            elif hasattr(request.user, "medico"):
+                return redirect("dashboard:agenda_med")
+        else:
+            if hasattr(request.user, "administrador"):
+                return redirect("dashboard:agenda_adm")
+            elif hasattr(request.user, "medico"):
+                return redirect("dashboard:agenda_med")
+
+    return redirect("users:login")

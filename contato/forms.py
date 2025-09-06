@@ -25,6 +25,7 @@ class ContatoForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "exemplo@email.com",
+                    "class": "input validator",
                     "autocomplete": "email",
                     "required": "required",
                 }

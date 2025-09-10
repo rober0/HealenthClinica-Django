@@ -412,8 +412,6 @@ def medico_agendamentos(request):
 def medico_prontuario(request):
     context = {
         "pacientes": Paciente.objects.all(),
-        "medicos": Medico.objects.all(),
-        "administradores": Administrador.objects.all(),
     }
     return render(request, "dashboard/medicos/listas.html", context)
 
@@ -507,7 +505,10 @@ def paciente_agenda(request):
 
 
 def paciente_prontuario(request):
-    return render(request, "dashboard/pacientes/prontuario.html")
+    context = {
+        "medicos": Medico.objects.all()
+    }
+    return render(request, "dashboard/pacientes/listas.html", context)
 
 
 @login_required

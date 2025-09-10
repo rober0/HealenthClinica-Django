@@ -28,12 +28,40 @@
             <p class="text-xl font-medium mb-1">Informações do Administrador</p>
             <label>Email:</label>
             {{ form.email }}
+            {% if form.email.errors %}
+            <div class="text-error">
+              {% for error in form.email.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
             <label>Nome:</label>
             {{ form.username }}
+            {% if form.username.errors %}
+            <div class="text-error">
+              {% for error in form.username.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
             <label>Senha:</label>
             {{ form.password }}
+            {% if form.password.errors %}
+            <div class="text-error">
+              {% for error in form.password.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
             <label>Confirmação de Senha:</label>
             {{ form.password_confirm }}
+            {% if form.password_confirm.errors %}
+            <div class="text-error">
+              {% for error in form.password_confirm.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
           </div>
         </div>
       </div>
@@ -44,16 +72,4 @@
     </div>
   </form>
 
-  {% if form.errors %}
-    <div role="alert" class="alert alert-error mt-4">
-      {% for field in form %}
-        {% for error in field.errors %}
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>{{ error }}</span>
-        {% endfor %}
-      {% endfor %}
-    </div>
-  {% endif %}
 {% endblock %}

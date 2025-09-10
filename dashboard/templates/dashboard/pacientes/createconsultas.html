@@ -1,6 +1,7 @@
 {% extends './base.html' %}
 {% load django_vite %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block head %}
   <title>Marcar Consulta</title>
@@ -31,8 +32,10 @@
             {{ form.queixa }}
           </div>
           <div class="flex flex-col gap-y-2 w-1/2">
-            <label class="label"><span class="label-text">Status</span></label>
-            {{ form.status }}
+            <label class="label"><span class="label-text">Data Início</span></label>
+            {{ form.data_inicio }}
+            <label class="label"><span class="label-text">Data Fim</span></label>
+            {{ form.data_fim }}
           </div>
         </div>
         <div class="flex justify-end gap-4 mt-6">

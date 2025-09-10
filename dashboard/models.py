@@ -2,6 +2,7 @@ from datetime import datetime
 from django.db import models
 from users.models import Paciente, Medico, Usuario
 from django.utils import timezone
+import datetime
 
 
 class GerenciadorEvento(models.Manager):
@@ -35,17 +36,7 @@ class GerenciadorEvento(models.Manager):
         ).order_by("data_inicio")
 
 
-class AbstratoEvento(models.Model):
-    is_active = models.BooleanField(default=True)
-    is_deleted = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
-
-
-class CriarEvento(AbstratoEvento):
+class CriarEvento(models.Model):
     STATUS_CHOICES = [
         ("AGENDADO", "Agendado"),
         ("PEDIDO", "Pedido"),
@@ -54,62 +45,68 @@ class CriarEvento(AbstratoEvento):
         ("CONCLUIDO", "Concluido"),
         ("AUSENTE", "Ausente"),
     ]
+    
+    PROCEDIMENTOS_CHOICES = [
+        ("", "Selecione um Procedimento"),
+        ("Consulta", "Consulta"),
+        ("Exame", "Exame"),
+        ("Retorno", "Retorno"),
+    ]
+    
+    CONVENIO_CHOICES = [
+        ("", "Selecione um Convênio"),
+        ("Publico", "Público"),
+        ("Particular", "Particular"),
+    ]
 
     paciente = models.ForeignKey(
-        Paciente, on_delete=models.CASCADE, related_name="eventos_paciente"
+        Paciente, on_delete=models.CASCADE, related_name="agendamentos_paciente"
     )
     medico = models.ForeignKey(
         Medico,
         on_delete=models.CASCADE,
-        related_name="eventos_medico",
-        null=True,
-        blank=True,
+        related_name="agendamentos_medico",
     )
-    procedimentos = models.CharField(max_length=200)
-    convenio = models.CharField(max_length=100)
+    procedimentos = models.CharField(max_length=200, choices=PROCEDIMENTOS_CHOICES, default="Consulta")
+    convenio = models.CharField(max_length=100, choices=CONVENIO_CHOICES, default="", null=True, blank=True)
     observacoes = models.TextField(blank=True, null=True)
+    queixa = models.TextField(blank=True, null=True)
     status = models.CharField(
-        max_length=30, choices=STATUS_CHOICES, default="AGENDADO", null=True, blank=True
+        max_length=30, choices=STATUS_CHOICES, default="AGENDADO"
     )
+    disponivel = models.BooleanField(default=True)
     data_inicio = models.DateTimeField()
     data_fim = models.DateTimeField()
-
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
     objects = GerenciadorEvento()
 
     class Meta:
         verbose_name = "Agendamento"
         verbose_name_plural = "Agendamentos"
 
-
-class MarcarEvento(AbstratoEvento):
-    paciente = models.OneToOneField(
-        Paciente,
-        primary_key=True,
-        on_delete=models.CASCADE,
-        related_name="paciente_evento",
-    )
-    medico = models.ForeignKey(
-        Medico,
-        on_delete=models.CASCADE,
-        related_name="consulta_medico",
-        null=True,
+class ListaEspera(models.Model):
+    medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
+    data_inicio = models.DateTimeField()
+    data_fim = models.DateTimeField()
+    observacoes = models.TextField(blank=True, null=True)
+    motivo = models.TextField(
+        verbose_name="Motivo",
         blank=True,
-    )
-    status = models.CharField(
-        max_length=30,
-        choices=CriarEvento.STATUS_CHOICES,
-        default="PEDIDO",
         null=True,
-        blank=True,
+        help_text="Motivo pelo qual o agendamento não pôde ser realizado.",
     )
-    queixa = models.TextField(blank=True, null=True)
 
     class Meta:
-        verbose_name = "Consulta"
-        verbose_name_plural = "Consultas"
+        verbose_name = "Lista de Espera"
+        verbose_name_plural = "Listas de Espera"
+        ordering = ["data_inicio"]
 
-
-class BloquearDia(AbstratoEvento):
+class BloquearDia(models.Model):
     DIAS_CHOICES = [
         (0, "Domingo"),
         (1, "Segunda-Feira"),
@@ -119,11 +116,26 @@ class BloquearDia(AbstratoEvento):
         (5, "Sexta-Feira"),
         (6, "Sábado"),
     ]
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="dia_bloqueado_user")
+    usuario = models.ForeignKey(
+        Usuario, on_delete=models.CASCADE, related_name="dia_bloqueado_user"
+    )
     dia_escolhido = models.IntegerField(
-        choices=DIAS_CHOICES, verbose_name="Dia da Semana", unique=True
+        choices=DIAS_CHOICES, verbose_name="Dia da Semana"
+    )
+    horario_inicio = models.TimeField(
+        verbose_name="Horário de Início do Bloqueio",
+        default=datetime.time(0, 0),
+        null=True,
+        blank=True,
+    )
+    horario_fim = models.TimeField(
+        verbose_name="Horário de Fim do Bloqueio",
+        default=datetime.time(0, 0),
+        null=True,
+        blank=True,
     )
 
     class Meta:
         verbose_name = "Dia Bloqueado"
         verbose_name_plural = "Dias Bloqueados"
+        unique_together = ("dia_escolhido", "usuario")

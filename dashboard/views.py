@@ -13,7 +13,7 @@ from dashboard.forms import (
     MarcarAgendamentoForm,
     BloquearDiaForm,
 )
-from dashboard.models import CriarEvento, MarcarEvento, BloquearDia
+from dashboard.models import CriarEvento, BloquearDia
 import json
 
 
@@ -213,12 +213,23 @@ def administrador_agendamentos(request):
     eventos_andamento = eventos.filter(
         data_inicio__lte=timezone.now(), data_fim__gte=timezone.now()
     )
+
     eventos_completos = eventos.filter(data_fim__lt=timezone.now())
     eventos_proximos = eventos.filter(data_inicio__gte=timezone.now())
     ultimos_eventos = eventos.order_by("-id")[:10]
 
     event_list = []
     for e in eventos:
+        colors = {
+            "Agendado": {"backgroundColor": "#2c5ee9ff", "borderColor": "#2c5ee9ff"},
+            "Pedido": {"backgroundColor": "#eeae00ff", "borderColor": "#eeae00ff"},
+            "Confirmado": {"backgroundColor": "#34D399", "borderColor": "#34D399"},
+            "Cancelado": {"backgroundColor": "#EB2F2F", "borderColor": "#EB2F2F"},
+            "Concluido": {"backgroundColor": "#3fa17dff", "borderColor": "#3fa17dff"},
+            "Ausente": {"backgroundColor": "#b8b6b4ff", "borderColor": "#b8b6b4ff"},
+        }
+        
+        status_display = e.get_status_display()
         event_dict = {
             "id": e.id,
             "title": f"{e.paciente.username}",
@@ -229,24 +240,29 @@ def administrador_agendamentos(request):
             "procedimentos": e.procedimentos,
             "convenio": e.convenio,
             "observacoes": e.observacoes,
-            "status": e.get_status_display(),
+            "status": status_display,
             "start": timezone.localtime(e.data_inicio).isoformat(),
             "end": timezone.localtime(e.data_fim).isoformat(),
             "overlap": False,
+            **colors.get(status_display, {"backgroundColor": "#808080", "borderColor": "#808080"}),
+            "textColor": "#FFFFFF",
         }
         event_list.append(event_dict)
-    
+
     dias_bloqueados = BloquearDia.objects.filter(usuario=request.user)
+    
     for dia in dias_bloqueados:
         bloqueio_dict = {
             "id": f"bloqueio-{dia.id}",
-            "title": f"Dia Bloqueado - {dia.get_dia_escolhido_display()}",
+            "title": f"Horário Bloqueado - {dia.get_dia_escolhido_display()}",
             "daysOfWeek": [dia.dia_escolhido],
             "display": "background",
             "rendering": "background",
             "backgroundColor": "#D1D5DB",
-            "allDay": True,
+            "allDay": False,
             "overlap": False,
+            "startTime": dia.horario_inicio.strftime("%H:%M:%S"),
+            "endTime": dia.horario_fim.strftime("%H:%M:%S"),
         }
         event_list.append(bloqueio_dict)
 
@@ -255,8 +271,8 @@ def administrador_agendamentos(request):
         "form_2": BloquearDiaForm(),
         "ultimos_eventos": ultimos_eventos,
         "eventos_andamento": eventos_andamento,
-        "eventos_completos": eventos_completos,
-        "eventos_proximos": eventos_proximos,
+        "eventos_completos": eventos_completos.count(),
+        "eventos_proximos": eventos_proximos.count(),
         "eventos": json.dumps(event_list, default=str),
     }
     return render(request, "dashboard/administradores/agendamentos.html", context)
@@ -325,31 +341,58 @@ def medico_agendamentos(request):
     eventos_andamento = eventos.filter(
         data_inicio__lte=timezone.now(), data_fim__gte=timezone.now()
     )
+
     eventos_completos = eventos.filter(data_fim__lt=timezone.now())
     eventos_proximos = eventos.filter(data_inicio__gte=timezone.now())
     ultimos_eventos = eventos.order_by("-id")[:10]
 
     event_list = []
     for e in eventos:
+        colors = {
+            "Agendado": {"backgroundColor": "#2c5ee9ff", "borderColor": "#2c5ee9ff"},
+            "Pedido": {"backgroundColor": "#eeae00ff", "borderColor": "#eeae00ff"},
+            "Confirmado": {"backgroundColor": "#34D399", "borderColor": "#34D399"},
+            "Cancelado": {"backgroundColor": "#EB2F2F", "borderColor": "#EB2F2F"},
+            "Concluido": {"backgroundColor": "#3fa17dff", "borderColor": "#3fa17dff"},
+            "Ausente": {"backgroundColor": "#b8b6b4ff", "borderColor": "#b8b6b4ff"},
+        }
+        
+        status_display = e.get_status_display()
         event_dict = {
             "id": e.id,
             "title": f"{e.paciente.username}",
             "avatar": e.paciente.avatar.url if e.paciente.avatar else "",
             "paciente": e.paciente.username,
             "genero": e.paciente.genero,
-            "data_nascimento": (
-                e.paciente.data_nascimento.strftime("%Y-%m-%d")
-                if e.paciente.data_nascimento
-                else ""
-            ),
+            "data_nascimento": (e.paciente.data_nascimento.strftime("%Y-%m-%d") if e.paciente.data_nascimento else ""),
             "procedimentos": e.procedimentos,
             "convenio": e.convenio,
             "observacoes": e.observacoes,
-            "status": e.get_status_display(),
+            "status": status_display,
             "start": timezone.localtime(e.data_inicio).isoformat(),
             "end": timezone.localtime(e.data_fim).isoformat(),
+            "overlap": False,
+            **colors.get(status_display, {"backgroundColor": "#808080", "borderColor": "#808080"}),
+            "textColor": "#FFFFFF",
         }
         event_list.append(event_dict)
+
+    dias_bloqueados = BloquearDia.objects.filter(usuario=request.user)
+    
+    for dia in dias_bloqueados:
+        bloqueio_dict = {
+            "id": f"bloqueio-{dia.id}",
+            "title": f"Horário Bloqueado - {dia.get_dia_escolhido_display()}",
+            "daysOfWeek": [dia.dia_escolhido],
+            "display": "background",
+            "rendering": "background",
+            "backgroundColor": "#D1D5DB",
+            "allDay": False,
+            "overlap": False,
+            "startTime": dia.horario_inicio.strftime("%H:%M:%S"),
+            "endTime": dia.horario_fim.strftime("%H:%M:%S"),
+        }
+        event_list.append(bloqueio_dict)
 
     context = {
         "form": AgendamentoForm(),
@@ -360,6 +403,7 @@ def medico_agendamentos(request):
         "eventos_proximos": eventos_proximos.count(),
         "eventos": json.dumps(event_list, default=str),
     }
+
     return render(request, "dashboard/medicos/agendamentos.html", context)
 
 
@@ -485,19 +529,29 @@ def create_agendamento(request):
                 return redirect("dashboard:agenda_adm")
             elif hasattr(user, "medico"):
                 return redirect("dashboard:agenda_med")
-            elif hasattr(user, "paciente"):
-                return redirect("dashboard:agenda_pac")
-
+            else:
+                if hasattr(request.user, "administrador"):
+                    return redirect("dashboard:agenda_adm")
+                elif hasattr(request.user, "medico"):
+                    return redirect("dashboard:agenda_med")
 
 @login_required
+@paciente_required
 def create_consulta(request):
     if request.method == "POST":
         form = MarcarAgendamentoForm(request.POST)
 
         if form.is_valid():
             evento = form.save(commit=False)
-            evento.save()
+            
+            evento.paciente = request.user.paciente
+            
+            evento.status = "PEDIDO"
+            
+            evento.procedimentos = "Consulta" 
 
+            evento.save()
+            
             return redirect("dashboard:pacientes")
     else:
         form = MarcarAgendamentoForm()
@@ -567,15 +621,17 @@ def create_bloqueio(request):
             bloqueio = form.save(commit=False)
             bloqueio.usuario = request.user
             bloqueio.save()
-            
+
             if hasattr(request.user, "administrador"):
                 return redirect("dashboard:agenda_adm")
             elif hasattr(request.user, "medico"):
                 return redirect("dashboard:agenda_med")
         else:
             if hasattr(request.user, "administrador"):
-                return redirect("dashboard:agenda_adm")
+                contexto = {"form_2": form}
+                return render(request, "dashboard/administradores/agendamentos.html", contexto)
             elif hasattr(request.user, "medico"):
-                return redirect("dashboard:agenda_med")
-
+                contexto = {"form_2": form}
+                return render(request, "dashboard/medicos/agendamentos.html", contexto)
+    
     return redirect("users:login")

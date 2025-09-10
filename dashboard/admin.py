@@ -27,6 +27,7 @@ class AgendamentoAdmin(admin.ModelAdmin):
         "convenio",
     ]
 
+
 @admin.register(models.BloquearDia)
 class BloqueamentoAdmin(admin.ModelAdmin):
     model = models.BloquearDia
@@ -34,12 +35,10 @@ class BloqueamentoAdmin(admin.ModelAdmin):
         "id",
         "usuario",
         "dia_escolhido",
-        "is_active",
-        "is_deleted",
-        "created_at",
-        "updated_at",
+        "horario_inicio",
+        "horario_fim",
     ]
-    list_filter = ["is_active", "is_deleted"]
+    list_filter = ["usuario", "dia_escolhido"]
     search_fields = [
         "usuario__username",
         "dia_escolhido",

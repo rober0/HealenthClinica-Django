@@ -75,7 +75,7 @@ class RegistroForm(forms.ModelForm):
             "genero": forms.Select(
                 attrs={"class": "select validator", "required": "required"},
                 choices=[
-                    ("", ""),
+                    ("", "Selecione"),
                     ("Masculino", "Masculino"),
                     ("Feminino", "Feminino"),
                     ("Outro", "Outro"),

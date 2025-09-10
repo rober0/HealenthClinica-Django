@@ -3,7 +3,7 @@ from django.forms import ModelForm, DateInput
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from users.models import Paciente, Medico, Administrador, Usuario
-from dashboard.models import CriarEvento, MarcarEvento, BloquearDia
+from dashboard.models import CriarEvento, BloquearDia
 
 
 class PacienteForm(forms.ModelForm):
@@ -85,7 +85,7 @@ class PacienteForm(forms.ModelForm):
             "genero": forms.Select(
                 attrs={"class": "select validator", "required": "required"},
                 choices=[
-                    ("", ""),
+                    ("", "Selecione"),
                     ("Masculino", "Masculino"),
                     ("Feminino", "Feminino"),
                     ("Outro", "Outro"),
@@ -114,12 +114,18 @@ class PacienteForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data.get("username")
+        if not username:
+            raise forms.ValidationError("Nome de usuário é obrigatório.")
 
-        qs = Usuario.objects.filter(username=username)
-        if self.instance.pk:
-            qs = qs.exclude(pk=self.instance.pk)
-        if qs.exists():
-            raise forms.ValidationError("Este nome já está em uso.")
+        upper_username = username.upper()
+
+        if (
+            Usuario.objects.filter(username=upper_username)
+            .exclude(pk=self.instance.pk)
+            .exists()
+        ):
+            raise forms.ValidationError("Este nome de usuário já está em uso.")
+
         return username
 
     def clean_telefone(self):
@@ -210,7 +216,7 @@ class MedicoForm(forms.ModelForm):
             "especialidade": forms.Select(
                 attrs={"class": "select validator", "required": "required"},
                 choices=[
-                    ("Selecione", ""),
+                    ("", "Selecione"),
                     ("Anestesiologia", "Anestesiologia"),
                     ("Angiologia", "Angiologia"),
                     ("Cardiologia", "Cardiologia"),
@@ -219,9 +225,9 @@ class MedicoForm(forms.ModelForm):
                 ],
             ),
             "crm_estado": forms.Select(
-                attrs={"class": "select", "required": "required"},
+                attrs={"class": "select validator", "required": "required"},
                 choices=[
-                    ("Selecione", ""),
+                    ("", "Selecione"),
                     ("CRM/AC", "CRM/AC"),
                     ("CRM/AL", "CRM/AL"),
                     ("CRM/AM", "CRM/AM"),
@@ -283,7 +289,7 @@ class MedicoForm(forms.ModelForm):
             "genero": forms.Select(
                 attrs={"class": "select validator", "required": "required"},
                 choices=[
-                    ("", ""),
+                    ("", "Selecione"),
                     ("Masculino", "Masculino"),
                     ("Feminino", "Feminino"),
                     ("Outro", "Outro"),
@@ -312,12 +318,18 @@ class MedicoForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data.get("username")
+        if not username:
+            raise forms.ValidationError("Nome de usuário é obrigatório.")
 
-        qs = Usuario.objects.filter(username=username)
-        if self.instance.pk:
-            qs = qs.exclude(pk=self.instance.pk)
-        if qs.exists():
-            raise forms.ValidationError("Este nome já está em uso.")
+        upper_username = username.upper()
+
+        if (
+            Usuario.objects.filter(username=upper_username)
+            .exclude(pk=self.instance.pk)
+            .exists()
+        ):
+            raise forms.ValidationError("Este nome de usuário já está em uso.")
+
         return username
 
     def clean_telefone(self):
@@ -429,6 +441,22 @@ class AdministradorForm(forms.ModelForm):
                 self.add_error("password_confirm", "As senhas não coincidem")
         return cleaned_data
 
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
+        if not username:
+            raise forms.ValidationError("Nome de usuário é obrigatório.")
+
+        upper_username = username.upper()
+
+        if (
+            Usuario.objects.filter(username=upper_username)
+            .exclude(pk=self.instance.pk)
+            .exists()
+        ):
+            raise forms.ValidationError("Este nome de usuário já está em uso.")
+
+        return username
+
     def clean_email(self):
         email = self.cleaned_data.get("email")
         qs = Usuario.objects.filter(email=email)
@@ -471,21 +499,10 @@ class AgendamentoForm(ModelForm):
                     "class": "select validator",
                     "required": "required",
                     "placeholder": "Procedimentos",
-                },
-                choices=[
-                    ("", "Selecione um Procedimento"),
-                    ("Consulta", "Consulta"),
-                    ("Exame", "Exame"),
-                    ("Retorno", "Retorno"),
-                ],
+                }
             ),
             "convenio": forms.Select(
                 attrs={"class": "select validator", "required": "required"},
-                choices=[
-                    ("", "Selecione um Convênio"),
-                    ("Publico", "Público"),
-                    ("Particular", "Particular"),
-                ],
             ),
             "observacoes": forms.Textarea(
                 attrs={
@@ -524,17 +541,15 @@ class AgendamentoForm(ModelForm):
 
 class MarcarAgendamentoForm(ModelForm):
     class Meta:
-        model = MarcarEvento
+        model = CriarEvento
         fields = [
             "medico",
-            "status",
             "queixa",
+            "data_inicio",
+            "data_fim",
         ]
         widgets = {
             "medico": forms.Select(
-                attrs={"class": "select validator", "required": "required"}
-            ),
-            "status": forms.Select(
                 attrs={"class": "select validator", "required": "required"}
             ),
             "queixa": forms.Textarea(
@@ -544,15 +559,37 @@ class MarcarAgendamentoForm(ModelForm):
                     "style": "height: 15px;",
                 }
             ),
+            "data_inicio": DateInput(
+                attrs={"type": "datetime-local", "class": "input validator"},
+                format="%Y-%m-%dT%H:%M",
+            ),
+            "data_fim": DateInput(
+                attrs={"type": "datetime-local", "class": "input validator"},
+                format="%Y-%m-%dT%H:%M",
+            ),
         }
 
 
 class BloquearDiaForm(ModelForm):
     class Meta:
         model = BloquearDia
-        fields = ["dia_escolhido"]
+        fields = ["dia_escolhido", "horario_inicio", "horario_fim"]
         widgets = {
             "dia_escolhido": forms.Select(
                 attrs={"class": "select validator", "required": "required"},
+            ),
+            "horario_inicio": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "input validator",
+                    "required": "required",
+                },
+            ),
+            "horario_fim": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "input validator",
+                    "required": "required",
+                },
             ),
         }

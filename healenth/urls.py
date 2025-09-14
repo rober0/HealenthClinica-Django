@@ -30,11 +30,9 @@ urlpatterns = [
     path("dashboard/", include("dashboard.urls", namespace="dashboard")),
     path("procedimentos/", views.procedimentos, name="procedimentos"),
     path("faq/", views.faq, name="faq"),
-    path("quemsomos/", views.quemsomos, name="quemsomos"),
     path("termos/", views.termos, name="termos"),
     path("agendamedica/", views.agendamedica, name="agendamedica"),
     path("gestao/", views.gestao, name="gestao"),
-    path("prontuario/", views.prontuario, name="prontuario"),
     path("contato/", include("contato.urls"), name="contato"),
     path("sugestoes/", views.sugestoes, name="sugestoes"),
 ]

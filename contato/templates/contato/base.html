@@ -61,32 +61,46 @@
                   </div>
                   <li>
                     {% if user.administrador %}
-                      <a href="/dashboard/administrador">Página Inicial</a>
+                      <a href="{% url 'dashboard:administradores' %}">Dashboard</a>
                     {% endif %}
                     {% if user.medico %}
-                      <a href="/dashboard/medicos">Página Inicial</a>
+                      <a href="{% url 'dashboard:medicos' %}">Dashboard</a>
                     {% endif %}
                     {% if user.paciente %}
-                      <a href="/dashboard/paciente">Página Inicial</a>
+                      <a href="{% url 'dashboard:pacientes' %}">Dashboard</a>
                     {% endif %}
                   </li>
                   <li>
                     {% if user.administrador %}
-                      <a href="/dashboard/administrador">Minhas Consultas</a>
+                      <a href="{% url 'dashboard:agenda_adm' %}">Minha Agenda</a>
                     {% endif %}
                     {% if user.medico %}
-                      <a href="/dashboard/medicos">Minhas Consultas</a>
+                      <a href="{% url 'dashboard:agenda_med' %}">Minha Agenda</a>
                     {% endif %}
                     {% if user.paciente %}
-                      <a href="/dashboard/paciente">Minhas Consultas</a>
+                      <a href="{% url 'dashboard:agenda_pac' %}">Minha Agenda</a>
                     {% endif %}
-                    <a href="/dashboard/administrador/settings">Configurações</a>
+                    {% if user.medico %}
+                      <a href="{% url 'dashboard:prontuarios_med' %}">Página de Prontuário</a>
+                    {% endif %}
+                    {% if user.paciente %}
+                      <a href="{% url 'dashboard:prontuarios_pac' %}">Página de Prontuário</a>
+                    {% endif %}
+                    {% if user.administrador %}
+                      <a href="/admin">Página de Admin</a>
+                    {% endif %}
                   </li>
                   <div class="flex flex-col border-t-2 border-gray-200 pt-2 mt-2">
                     <form method="post" action="{% url 'users:logout' %}">
                       {% csrf_token %} <li>
                         {% if user.administrador %}
-                          <a href="/admin">Página de Admin</a>
+                          <a href="{% url 'dashboard:view_config_adm' %}">Configurações</a>
+                        {% endif %}
+                        {% if user.medico %}
+                          <a href="{% url 'dashboard:view_config_med' %}">Configurações</a>
+                        {% endif %}
+                        {% if user.paciente %}
+                          <a href="{% url 'dashboard:view_config_pac' %}">Configurações</a>
                         {% endif %}
                         <button type="submit">Sair</button>
                       </li>
@@ -137,14 +151,12 @@
       <nav>
         <h6 class="footer-title">Suporte</h6>
         <a class="link link-hover" href="/faq">FAQ</a>
-        <a class="link link-hover" href="/quemsomos">Quem Somos</a>
         <a class="link link-hover" href="/termos">Termos de Uso</a>
       </nav>
       <nav>
         <h6 class="footer-title">Conteúdo</h6>
         <a class="link link-hover" href="/agendamedica">Agenda Médica</a>
         <a class="link link-hover" href="/gestao">Gestão da Clínica</a>
-        <a class="link link-hover" href="/prontuario">Prontuário Eletrônico</a>
       </nav>
       <nav>
         <h6 class="footer-title">Contato</h6>

@@ -13,10 +13,6 @@ def faq(request):
     return render(request, "faq.html")
 
 
-def quemsomos(request):
-    return render(request, "quemsomos.html")
-
-
 def termos(request):
     return render(request, "termos.html")
 
@@ -27,10 +23,6 @@ def agendamedica(request):
 
 def gestao(request):
     return render(request, "gestao.html")
-
-
-def prontuario(request):
-    return render(request, "prontuario.html")
 
 
 def sugestoes(request):

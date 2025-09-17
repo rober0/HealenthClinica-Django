@@ -3,14 +3,14 @@
 {% load static %}
 
 {% block head %}
-  <title>Lista de Prontuários</title>
+  <title>Lista de Médicos</title>
   <script type="module" src="{% vite_asset_url 'static/js/datatables.js' %}"></script>
   <link rel="stylesheet" href="{% vite_asset_url 'static/css/datatables.css' %}" />
 {% endblock %}
 
 {% block main %}
   <div class="flex flex-row w-full bg-base-200 border-1 border-gray-300 rounded-md p-2">
-    <p class="text-3xl font-normal w-full">Lista de Prontuários</p>
+    <p class="text-3xl font-normal w-full">Lista de Médicos</p>
   </div>
   <br />
   <table id="sorting-table">

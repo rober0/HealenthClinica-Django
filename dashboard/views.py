@@ -438,11 +438,21 @@ def paciente_agenda(request):
 
     event_list = []
     for e in eventos:
+        colors = {
+            "Agendado": {"backgroundColor": "#2c5ee9ff", "borderColor": "#2c5ee9ff"},
+            "Pedido": {"backgroundColor": "#eeae00ff", "borderColor": "#eeae00ff"},
+            "Confirmado": {"backgroundColor": "#34D399", "borderColor": "#34D399"},
+            "Cancelado": {"backgroundColor": "#EB2F2F", "borderColor": "#EB2F2F"},
+            "Concluido": {"backgroundColor": "#3fa17dff", "borderColor": "#3fa17dff"},
+            "Ausente": {"backgroundColor": "#b8b6b4ff", "borderColor": "#b8b6b4ff"},
+        }
+        status_display = e.get_status_display()
         event_dict = {
             "id": e.id,
+            "title": f"{e.paciente.username} - {e.medico}",
             "avatar": e.paciente.avatar.url if e.paciente.avatar else "",
-            "medico": e.medico.username,
             "paciente": e.paciente.username,
+            "medico": f"Dr.(A) {e.medico.username}",
             "genero": e.paciente.genero,
             "data_nascimento": (
                 e.paciente.data_nascimento.strftime("%Y-%m-%d")
@@ -452,11 +462,15 @@ def paciente_agenda(request):
             "procedimentos": e.procedimentos,
             "convenio": e.convenio,
             "observacoes": e.observacoes,
-            "status": e.get_status_display(),
+            "status": status_display,
             "start": timezone.localtime(e.data_inicio).isoformat(),
             "end": timezone.localtime(e.data_fim).isoformat(),
+            "overlap": False,
+            **colors.get(status_display, {}),
+            "textColor": "#FFFFFF",
         }
         event_list.append(event_dict)
+
 
     context = {
         "form": AgendamentoForm(),

@@ -63,6 +63,8 @@
           {% endif %}
           </div>
           <div class="flex flex-col gap-y-2 w-1/2">
+            <label class="label"><span class="label-text">Médico</span></label>
+            {{ form.medico }}
             <label class="label"><span class="label-text">Status</span></label>
             {{ form.status }}
             {% if form.status.errors %}

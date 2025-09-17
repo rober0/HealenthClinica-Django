@@ -477,12 +477,12 @@ class AdministradorForm(forms.ModelForm):
             user.save()
         return user
 
-
 class AgendamentoForm(ModelForm):
     class Meta:
         model = CriarEvento
         fields = [
             "paciente",
+            "medico",
             "procedimentos",
             "convenio",
             "observacoes",
@@ -491,65 +491,66 @@ class AgendamentoForm(ModelForm):
             "data_fim",
         ]
         widgets = {
-            "paciente": forms.Select(
-                attrs={"class": "select validator", "required": "required"}
-            ),
-            "procedimentos": forms.Select(
-                attrs={
-                    "class": "select validator",
-                    "required": "required",
-                    "placeholder": "Procedimentos",
-                }
-            ),
-            "convenio": forms.Select(
-                attrs={"class": "select validator", "required": "required"},
-            ),
-            "observacoes": forms.Textarea(
-                attrs={
-                    "class": "textarea",
-                    "placeholder": "Observações",
-                    "style": "height: 15px;",
-                }
-            ),
-            "status": forms.Select(
-                attrs={"class": "select validator", "required": "required"}
-            ),
-            "data_inicio": DateInput(
-                attrs={"type": "datetime-local", "class": "input validator"},
-                format="%Y-%m-%dT%H:%M",
-            ),
-            "data_fim": DateInput(
-                attrs={"type": "datetime-local", "class": "input validator"},
-                format="%Y-%m-%dT%H:%M",
-            ),
+            "paciente": forms.Select(attrs={"class": "select validator", "required": "required"}),
+            "medico": forms.Select(attrs={"class": "select validator"}),
+            "procedimentos": forms.Select(attrs={"class": "select validator", "required": "required"}),
+            "convenio": forms.Select(attrs={"class": "select validator", "required": "required"}),
+            "observacoes": forms.Textarea(attrs={"class": "textarea", "placeholder": "Observações", "style": "height: 15px;"}),
+            "status": forms.Select(attrs={"class": "select validator", "required": "required"}),
+            "data_inicio": DateInput(attrs={"type": "datetime-local", "class": "input validator"}, format="%Y-%m-%dT%H:%M"),
+            "data_fim": DateInput(attrs={"type": "datetime-local", "class": "input validator"}, format="%Y-%m-%dT%H:%M"),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['medico'].required = False
+        self.fields['status'].required = False
         self.fields["data_inicio"].input_formats = ("%Y-%m-%dT%H:%M",)
         self.fields["data_fim"].input_formats = ("%Y-%m-%dT%H:%M",)
 
     def clean(self):
         cleaned_data = super().clean()
-        inicio = cleaned_data.get("data_inicio")
-        fim = cleaned_data.get("data_fim")
+        data_inicio = cleaned_data.get("data_inicio")
+        data_fim = cleaned_data.get("data_fim")
+        medico = cleaned_data.get("medico")
 
-        if fim and inicio and fim < inicio:
-            raise ValidationError("Data final não pode ser anterior à data inicial")
+        if not medico:
+            raise ValidationError("O médico responsável precisa ser especificado.")
+
+        if data_inicio and data_fim:
+            if data_fim <= data_inicio:
+                raise ValidationError("A data final deve ser posterior à data inicial.")
+
+            conflitos = CriarEvento.objects.filter(
+                medico=medico,
+                data_inicio__lt=data_fim,
+                data_fim__gt=data_inicio,
+                is_deleted=False
+            )
+            if self.instance and self.instance.pk:
+                conflitos = conflitos.exclude(pk=self.instance.pk)
+
+            if conflitos.exists():
+                self._is_conflict = True
+                raise ValidationError("Conflito de horário! Este período já está agendado.")
+        
         return cleaned_data
-
 
 class MarcarAgendamentoForm(ModelForm):
     class Meta:
         model = CriarEvento
         fields = [
             "medico",
+            "convenio",
             "queixa",
             "data_inicio",
             "data_fim",
         ]
         widgets = {
             "medico": forms.Select(
+                attrs={"class": "select validator", "required": "required"}
+            ),
+            "convenio": forms.Select(
                 attrs={"class": "select validator", "required": "required"}
             ),
             "queixa": forms.Textarea(

@@ -68,11 +68,11 @@ class CriarEvento(models.Model):
         related_name="agendamentos_medico",
     )
     procedimentos = models.CharField(max_length=200, choices=PROCEDIMENTOS_CHOICES, default="Consulta")
-    convenio = models.CharField(max_length=100, choices=CONVENIO_CHOICES, default="", null=True, blank=True)
+    convenio = models.CharField(max_length=100, choices=CONVENIO_CHOICES, default="")
     observacoes = models.TextField(blank=True, null=True)
     queixa = models.TextField(blank=True, null=True)
     status = models.CharField(
-        max_length=30, choices=STATUS_CHOICES, default="AGENDADO"
+        max_length=30, choices=STATUS_CHOICES, default="AGENDADO" # <-- Perfeito!
     )
     disponivel = models.BooleanField(default=True)
     data_inicio = models.DateTimeField()
@@ -89,22 +89,30 @@ class CriarEvento(models.Model):
         verbose_name_plural = "Agendamentos"
 
 class ListaEspera(models.Model):
-    medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
-    data_inicio = models.DateTimeField()
-    data_fim = models.DateTimeField()
-    observacoes = models.TextField(blank=True, null=True)
-    motivo = models.TextField(
-        verbose_name="Motivo",
+    paciente = models.ForeignKey(
+        Paciente, on_delete=models.CASCADE, related_name="lista_espera_paciente"
+    )
+    medico = models.ForeignKey(
+        Medico,
+        on_delete=models.CASCADE,
+        related_name="lista_espera_medico",
         blank=True,
         null=True,
-        help_text="Motivo pelo qual o agendamento não pôde ser realizado.",
     )
-
+    procedimentos = models.CharField(max_length=200, choices=CriarEvento.PROCEDIMENTOS_CHOICES, default="Consulta")
+    convenio = models.CharField(max_length=100, choices=CriarEvento.CONVENIO_CHOICES, default="", null=True, blank=True)
+    observacoes = models.TextField(blank=True, null=True)
+    queixa = models.TextField(blank=True, null=True)
+    data_inicio = models.DateTimeField()
+    data_fim = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
     class Meta:
         verbose_name = "Lista de Espera"
         verbose_name_plural = "Listas de Espera"
-        ordering = ["data_inicio"]
 
 class BloquearDia(models.Model):
     DIAS_CHOICES = [
@@ -134,6 +142,10 @@ class BloquearDia(models.Model):
         null=True,
         blank=True,
     )
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = "Dia Bloqueado"

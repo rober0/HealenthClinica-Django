@@ -28,6 +28,25 @@ class AgendamentoAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(models.ListaEspera)
+class ListaEsperaAdmin(admin.ModelAdmin):
+    model = models.BloquearDia
+    list_display = [
+        "id",
+        "paciente",
+        "medico",
+        "procedimentos",
+        "convenio",
+        "observacoes",
+        "queixa",
+        "data_inicio",
+        "data_fim",
+        "is_active",
+        "is_deleted",
+        "created_at",
+        "updated_at",
+    ]
+
 @admin.register(models.BloquearDia)
 class BloqueamentoAdmin(admin.ModelAdmin):
     model = models.BloquearDia
@@ -37,6 +56,10 @@ class BloqueamentoAdmin(admin.ModelAdmin):
         "dia_escolhido",
         "horario_inicio",
         "horario_fim",
+        "is_active",
+        "is_deleted",
+        "created_at",
+        "updated_at",
     ]
     list_filter = ["usuario", "dia_escolhido"]
     search_fields = [

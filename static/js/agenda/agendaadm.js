@@ -157,8 +157,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 headers: {
                     'X-CSRFToken': getCookie('csrftoken'),
                     'Content-Type': 'application/json'
-                }
-            }).then(response => {
+                }  
+            })
+            location.reload()
+            .then(response => {
                 if (!response.ok) {
                     throw new Error('Erro ao deletar o evento.');
                 }

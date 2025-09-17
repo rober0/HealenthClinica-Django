@@ -13,7 +13,7 @@ from dashboard.forms import (
     MarcarAgendamentoForm,
     BloquearDiaForm,
 )
-from dashboard.models import CriarEvento, BloquearDia
+from dashboard.models import CriarEvento, ListaEspera, BloquearDia
 import json
 
 
@@ -165,26 +165,21 @@ def dashboard_view(request):
 @admin_required
 def administrador(request):
     eventos = eventos_filtrados(request.user)
-    eventos_agendados = eventos.filter(status="AGENDADO").count()
-    eventos_pedidos = eventos.filter(status="PEDIDOS").count()
-    eventos_confirmados = eventos.filter(status="CONFIRMADO").count()
-    eventos_cancelados = eventos.filter(status="CANCELADO").count()
-    eventos_concluidos = eventos.filter(status="CONCLUIDO").count()
-    eventos_ausentes = eventos.filter(status="AUSENTE").count()
-    eventos_proximos = eventos.filter(
-        status__in=["AGENDADO", "CONFIRMADO"], data_inicio__gte=timezone.now()
-    ).order_by("data_inicio")
-    proximo_agendamento = eventos_proximos.first()
-    proxima_data = proximo_agendamento.data_inicio if proximo_agendamento else None
-
-    eventos_lista = eventos.filter(
-        status__in=["AGENDADO", "PEDIDOS", "CONFIRMADO", "CANCELADO", "AUSENTE"],
+    eventos_futuros = eventos.filter(
+        status__in=["AGENDADO", "PEDIDO", "CONFIRMADO", "CANCELADO", "AUSENTE"],
         data_inicio__gte=timezone.now(),
-    ).order_by("data_inicio")
+    )
 
-    eventos_lista_concluidos = eventos.filter(
-        status__in=["CONCLUIDO"],
-    ).order_by("data_fim")
+    eventos_agendados = eventos_futuros.filter(status="AGENDADO").count()
+    eventos_pedidos = eventos_futuros.filter(status="PEDIDOS").count()
+    eventos_confirmados = eventos_futuros.filter(status="CONFIRMADO").count()
+    eventos_cancelados = eventos_futuros.filter(status="CANCELADO").count()
+    eventos_ausentes = eventos_futuros.filter(status="AUSENTE").count()
+    eventos_concluidos = eventos.filter(status="CONCLUIDO").count()
+    eventos_lista_concluidos = eventos.filter(status="CONCLUIDO").order_by("-data_fim")
+    eventos_lista = eventos_futuros.order_by("data_inicio")
+    proximo_agendamento = eventos_lista.first()
+    proxima_data = proximo_agendamento.data_inicio if proximo_agendamento else None
 
     horario_atual = timezone.now().strftime("%H:%M:%S")
     data_atual = timezone.now().strftime("%Y/%m/%d")
@@ -209,17 +204,16 @@ def administrador(request):
 @login_required
 @admin_required
 def administrador_agendamentos(request):
-    eventos = eventos_filtrados(request.user)
-    eventos_andamento = eventos.filter(
-        data_inicio__lte=timezone.now(), data_fim__gte=timezone.now()
-    )
+    user = request.user
 
-    eventos_completos = eventos.filter(data_fim__lt=timezone.now())
-    eventos_proximos = eventos.filter(data_inicio__gte=timezone.now())
-    ultimos_eventos = eventos.order_by("-id")[:10]
+    eventos_do_admin = eventos_filtrados(user)
+    eventos_disponiveis = eventos_do_admin.filter(
+        status__in=["AGENDADO", "PEDIDO", "CONFIRMADO"],
+    ).order_by("data_inicio")
+    eventos_indisponiveis = ListaEspera.objects.all().order_by("created_at")
 
     event_list = []
-    for e in eventos:
+    for e in eventos_do_admin:
         colors = {
             "Agendado": {"backgroundColor": "#2c5ee9ff", "borderColor": "#2c5ee9ff"},
             "Pedido": {"backgroundColor": "#eeae00ff", "borderColor": "#eeae00ff"},
@@ -228,15 +222,18 @@ def administrador_agendamentos(request):
             "Concluido": {"backgroundColor": "#3fa17dff", "borderColor": "#3fa17dff"},
             "Ausente": {"backgroundColor": "#b8b6b4ff", "borderColor": "#b8b6b4ff"},
         }
-        
         status_display = e.get_status_display()
         event_dict = {
             "id": e.id,
-            "title": f"{e.paciente.username}",
+            "title": f"{e.paciente.username} - {e.medico}",
             "avatar": e.paciente.avatar.url if e.paciente.avatar else "",
             "paciente": e.paciente.username,
             "genero": e.paciente.genero,
-            "data_nascimento": (e.paciente.data_nascimento.strftime("%Y-%m-%d") if e.paciente.data_nascimento else ""),
+            "data_nascimento": (
+                e.paciente.data_nascimento.strftime("%Y-%m-%d")
+                if e.paciente.data_nascimento
+                else ""
+            ),
             "procedimentos": e.procedimentos,
             "convenio": e.convenio,
             "observacoes": e.observacoes,
@@ -244,35 +241,16 @@ def administrador_agendamentos(request):
             "start": timezone.localtime(e.data_inicio).isoformat(),
             "end": timezone.localtime(e.data_fim).isoformat(),
             "overlap": False,
-            **colors.get(status_display, {"backgroundColor": "#808080", "borderColor": "#808080"}),
+            **colors.get(status_display, {}),
             "textColor": "#FFFFFF",
         }
         event_list.append(event_dict)
 
-    dias_bloqueados = BloquearDia.objects.filter(usuario=request.user)
-    
-    for dia in dias_bloqueados:
-        bloqueio_dict = {
-            "id": f"bloqueio-{dia.id}",
-            "title": f"Horário Bloqueado - {dia.get_dia_escolhido_display()}",
-            "daysOfWeek": [dia.dia_escolhido],
-            "display": "background",
-            "rendering": "background",
-            "backgroundColor": "#D1D5DB",
-            "allDay": False,
-            "overlap": False,
-            "startTime": dia.horario_inicio.strftime("%H:%M:%S"),
-            "endTime": dia.horario_fim.strftime("%H:%M:%S"),
-        }
-        event_list.append(bloqueio_dict)
-
     context = {
         "form": AgendamentoForm(),
         "form_2": BloquearDiaForm(),
-        "ultimos_eventos": ultimos_eventos,
-        "eventos_andamento": eventos_andamento,
-        "eventos_completos": eventos_completos.count(),
-        "eventos_proximos": eventos_proximos.count(),
+        "eventos_disponiveis": eventos_disponiveis,
+        "eventos_indisponiveis": eventos_indisponiveis,
         "eventos": json.dumps(event_list, default=str),
     }
     return render(request, "dashboard/administradores/agendamentos.html", context)
@@ -293,27 +271,21 @@ def administrador_prontuario(request):
 @medico_required
 def medico(request):
     eventos = eventos_filtrados(request.user)
-    eventos_agendados = eventos.filter(status="AGENDADO").count()
-    eventos_pedidos = eventos.filter(status="PEDIDOS").count()
-    eventos_confirmados = eventos.filter(status="CONFIRMADO").count()
-    eventos_cancelados = eventos.filter(status="CANCELADO").count()
-    eventos_concluidos = eventos.filter(status="CONCLUIDO").count()
-    eventos_ausentes = eventos.filter(status="AUSENTE").count()
-    eventos_proximos = eventos.filter(
-        status__in=["AGENDADO", "CONFIRMADO"], data_inicio__gte=timezone.now()
-    ).order_by("data_inicio")
-    proximo_agendamento = eventos_proximos.first()
-    proxima_data = proximo_agendamento.data_inicio if proximo_agendamento else None
-
-    eventos_lista = eventos.filter(
-        status__in=["AGENDADO", "PEDIDOS", "CONFIRMADO", "CANCELADO", "AUSENTE"],
+    eventos_futuros = eventos.filter(
+        status__in=["AGENDADO", "PEDIDO", "CONFIRMADO", "CANCELADO", "AUSENTE"],
         data_inicio__gte=timezone.now(),
-    ).order_by("data_inicio")
+    )
 
-    eventos_lista_concluidos = eventos.filter(
-        status__in=["CONCLUIDO"],
-    ).order_by("data_fim")
-
+    eventos_agendados = eventos_futuros.filter(status="AGENDADO").count()
+    eventos_pedidos = eventos_futuros.filter(status="PEDIDOS").count()
+    eventos_confirmados = eventos_futuros.filter(status="CONFIRMADO").count()
+    eventos_cancelados = eventos_futuros.filter(status="CANCELADO").count()
+    eventos_ausentes = eventos_futuros.filter(status="AUSENTE").count()
+    eventos_concluidos = eventos.filter(status="CONCLUIDO").count()
+    eventos_lista_concluidos = eventos.filter(status="CONCLUIDO").order_by("-data_fim")
+    eventos_lista = eventos_futuros.order_by("data_inicio")
+    proximo_agendamento = eventos_lista.first()
+    proxima_data = proximo_agendamento.data_inicio if proximo_agendamento else None
     horario_atual = timezone.now().strftime("%H:%M:%S")
     data_atual = timezone.now().strftime("%Y/%m/%d")
 
@@ -337,17 +309,18 @@ def medico(request):
 @login_required
 @medico_required
 def medico_agendamentos(request):
-    eventos = eventos_filtrados(request.user)
-    eventos_andamento = eventos.filter(
-        data_inicio__lte=timezone.now(), data_fim__gte=timezone.now()
+    user = request.user
+
+    eventos_do_medico = eventos_filtrados(user)
+    eventos_disponiveis = eventos_do_medico.filter(
+        status__in=["AGENDADO", "PEDIDO", "CONFIRMADO"],
+    ).order_by("data_inicio")
+    eventos_indisponiveis = ListaEspera.objects.filter(medico=user.medico).order_by(
+        "created_at"
     )
 
-    eventos_completos = eventos.filter(data_fim__lt=timezone.now())
-    eventos_proximos = eventos.filter(data_inicio__gte=timezone.now())
-    ultimos_eventos = eventos.order_by("-id")[:10]
-
     event_list = []
-    for e in eventos:
+    for e in eventos_do_medico:
         colors = {
             "Agendado": {"backgroundColor": "#2c5ee9ff", "borderColor": "#2c5ee9ff"},
             "Pedido": {"backgroundColor": "#eeae00ff", "borderColor": "#eeae00ff"},
@@ -356,15 +329,18 @@ def medico_agendamentos(request):
             "Concluido": {"backgroundColor": "#3fa17dff", "borderColor": "#3fa17dff"},
             "Ausente": {"backgroundColor": "#b8b6b4ff", "borderColor": "#b8b6b4ff"},
         }
-        
         status_display = e.get_status_display()
         event_dict = {
             "id": e.id,
-            "title": f"{e.paciente.username}",
+            "title": f"{e.paciente.username} - {e.medico}",
             "avatar": e.paciente.avatar.url if e.paciente.avatar else "",
             "paciente": e.paciente.username,
             "genero": e.paciente.genero,
-            "data_nascimento": (e.paciente.data_nascimento.strftime("%Y-%m-%d") if e.paciente.data_nascimento else ""),
+            "data_nascimento": (
+                e.paciente.data_nascimento.strftime("%Y-%m-%d")
+                if e.paciente.data_nascimento
+                else ""
+            ),
             "procedimentos": e.procedimentos,
             "convenio": e.convenio,
             "observacoes": e.observacoes,
@@ -372,20 +348,18 @@ def medico_agendamentos(request):
             "start": timezone.localtime(e.data_inicio).isoformat(),
             "end": timezone.localtime(e.data_fim).isoformat(),
             "overlap": False,
-            **colors.get(status_display, {"backgroundColor": "#808080", "borderColor": "#808080"}),
+            **colors.get(status_display, {}),
             "textColor": "#FFFFFF",
         }
         event_list.append(event_dict)
 
-    dias_bloqueados = BloquearDia.objects.filter(usuario=request.user)
-    
+    dias_bloqueados = BloquearDia.objects.filter(usuario=user)
     for dia in dias_bloqueados:
         bloqueio_dict = {
             "id": f"bloqueio-{dia.id}",
-            "title": f"Horário Bloqueado - {dia.get_dia_escolhido_display()}",
+            "title": f"Horário Bloqueado",
             "daysOfWeek": [dia.dia_escolhido],
             "display": "background",
-            "rendering": "background",
             "backgroundColor": "#D1D5DB",
             "allDay": False,
             "overlap": False,
@@ -397,10 +371,8 @@ def medico_agendamentos(request):
     context = {
         "form": AgendamentoForm(),
         "form_2": BloquearDiaForm(),
-        "ultimos_eventos": ultimos_eventos,
-        "eventos_andamento": eventos_andamento,
-        "eventos_completos": eventos_completos.count(),
-        "eventos_proximos": eventos_proximos.count(),
+        "eventos_disponiveis": eventos_disponiveis,
+        "eventos_indisponiveis": eventos_indisponiveis,
         "eventos": json.dumps(event_list, default=str),
     }
 
@@ -420,27 +392,20 @@ def medico_prontuario(request):
 @paciente_required
 def paciente(request):
     eventos = eventos_filtrados(request.user)
-    eventos_agendados = eventos.filter(status="AGENDADO").count()
-    eventos_pedidos = eventos.filter(status="PEDIDOS").count()
-    eventos_confirmados = eventos.filter(status="CONFIRMADO").count()
-    eventos_cancelados = eventos.filter(status="CANCELADO").count()
-    eventos_concluidos = eventos.filter(status="CONCLUIDO").count()
-    eventos_ausentes = eventos.filter(status="AUSENTE").count()
-    eventos_proximos = eventos.filter(
-        status__in=["AGENDADO", "CONFIRMADO"], data_inicio__gte=timezone.now()
-    ).order_by("data_inicio")
-    proximo_agendamento = eventos_proximos.first()
-    proxima_data = proximo_agendamento.data_inicio if proximo_agendamento else None
-
-    eventos_lista = eventos.filter(
-        status__in=["AGENDADO", "PEDIDOS", "CONFIRMADO", "CANCELADO", "AUSENTE"],
+    eventos_futuros = eventos.filter(
+        status__in=["AGENDADO", "PEDIDO", "CONFIRMADO", "CANCELADO", "AUSENTE"],
         data_inicio__gte=timezone.now(),
-    ).order_by("data_inicio")
+    )
 
-    eventos_lista_pedidos = eventos.filter(
-        status__in=["PEDIDOS"],
-    ).order_by("data_fim")
-
+    eventos_agendados = eventos_futuros.filter(status="AGENDADO").count()
+    eventos_pedidos = eventos_futuros.filter(status="PEDIDOS").count()
+    eventos_confirmados = eventos_futuros.filter(status="CONFIRMADO").count()
+    eventos_cancelados = eventos_futuros.filter(status="CANCELADO").count()
+    eventos_ausentes = eventos_futuros.filter(status="AUSENTE").count()
+    eventos_concluidos = eventos.filter(status="CONCLUIDO").count()
+    eventos_lista = eventos_futuros.order_by("data_inicio")
+    proximo_agendamento = eventos_lista.first()
+    proxima_data = proximo_agendamento.data_inicio if proximo_agendamento else None
     horario_atual = timezone.now().strftime("%H:%M:%S")
     data_atual = timezone.now().strftime("%Y/%m/%d")
 
@@ -452,7 +417,6 @@ def paciente(request):
         "eventos_concluidos": eventos_concluidos,
         "eventos_ausentes": eventos_ausentes,
         "eventos_lista": eventos_lista,
-        "eventos_lista_concluidos": eventos_lista_pedidos,
         "proxima_data": proxima_data,
         "proximo_agendamento": proximo_agendamento,
         "horario_atual": horario_atual,
@@ -477,6 +441,7 @@ def paciente_agenda(request):
         event_dict = {
             "id": e.id,
             "avatar": e.paciente.avatar.url if e.paciente.avatar else "",
+            "medico": e.medico.username,
             "paciente": e.paciente.username,
             "genero": e.paciente.genero,
             "data_nascimento": (
@@ -505,54 +470,90 @@ def paciente_agenda(request):
 
 
 def paciente_prontuario(request):
-    context = {
-        "medicos": Medico.objects.all()
-    }
+    context = {"medicos": Medico.objects.all()}
     return render(request, "dashboard/pacientes/listas.html", context)
 
 
 @login_required
 def create_agendamento(request):
+    user = request.user
     if request.method == "POST":
-        form = AgendamentoForm(request.POST)
-        if form.is_valid():
-            evento = form.save(commit=False)
+        post_data = request.POST.copy()
 
-            user = request.user
-            if hasattr(user, "paciente"):
-                evento.paciente = user.paciente
-            elif hasattr(user, "medico"):
-                evento.medico = user.medico
+        post_data["status"] = "AGENDADO"
+    if hasattr(user, "medico"):
+        post_data["medico"] = user.medico.pk
 
-            evento.save()
+    form = AgendamentoForm(post_data)
 
+    if form.is_valid():
+        form.save()
+
+        if hasattr(user, "administrador"):
+            return redirect("dashboard:agenda_adm")
+        elif hasattr(user, "medico"):
+            return redirect("dashboard:agenda_med")
+
+    else:
+        if hasattr(form, "_is_conflict") and form._is_conflict:
+            ListaEspera.objects.create(
+                paciente_id=form.data.get("paciente"),
+                medico_id=form.data.get("medico"),
+                procedimentos=form.data.get("procedimentos"),
+                convenio=form.data.get("convenio"),
+                observacoes=form.data.get("observacoes"),
+                data_inicio=form.data.get("data_inicio"),
+                data_fim=form.data.get("data_fim"),
+            )
             if hasattr(user, "administrador"):
                 return redirect("dashboard:agenda_adm")
             elif hasattr(user, "medico"):
                 return redirect("dashboard:agenda_med")
-            else:
-                if hasattr(request.user, "administrador"):
-                    return redirect("dashboard:agenda_adm")
-                elif hasattr(request.user, "medico"):
-                    return redirect("dashboard:agenda_med")
+
+        print("Erro")
+        print(form.errors.as_json())
+
+        if hasattr(user, "administrador"):
+            return redirect("dashboard:agenda_adm")
+        elif hasattr(user, "medico"):
+            return redirect("dashboard:agenda_med")
+
 
 @login_required
 @paciente_required
 def create_consulta(request):
     if request.method == "POST":
         form = MarcarAgendamentoForm(request.POST)
-
         if form.is_valid():
-            evento = form.save(commit=False)
-            
-            evento.paciente = request.user.paciente
-            
-            evento.status = "PEDIDO"
-            
-            evento.procedimentos = "Consulta" 
+            data_inicio = form.cleaned_data["data_inicio"]
+            data_fim = form.cleaned_data["data_fim"]
+            medico_selecionado = form.cleaned_data["medico"]
+            paciente_atual = request.user.paciente
 
-            evento.save()
-            
+            agendamentos_conflitantes = CriarEvento.objects.filter(
+                medico=medico_selecionado,
+                data_inicio__lt=data_fim,
+                data_fim__gt=data_inicio,
+                is_deleted=False,
+            ).exists()
+
+            if agendamentos_conflitantes:
+                ListaEspera.objects.create(
+                    paciente=paciente_atual,
+                    medico=medico_selecionado,
+                    procedimentos="Consulta",
+                    convenio=form.cleaned_data["convenio"],
+                    queixa=form.cleaned_data["queixa"],
+                    data_inicio=data_inicio,
+                    data_fim=data_fim,
+                )
+            else:
+                evento = form.save(commit=False)
+                evento.paciente = paciente_atual
+                evento.status = "PEDIDO"
+                evento.procedimentos = "Consulta"
+                evento.save()
+
             return redirect("dashboard:pacientes")
     else:
         form = MarcarAgendamentoForm()
@@ -614,6 +615,7 @@ def delete_agendamento(request, event_id):
         return JsonResponse({"message": "Agendamento deletado com sucesso."})
     return JsonResponse({"message": "Erro!"}, status=400)
 
+
 @login_required
 def create_bloqueio(request):
     if request.method == "POST":
@@ -630,9 +632,11 @@ def create_bloqueio(request):
         else:
             if hasattr(request.user, "administrador"):
                 contexto = {"form_2": form}
-                return render(request, "dashboard/administradores/agendamentos.html", contexto)
+                return render(
+                    request, "dashboard/administradores/agendamentos.html", contexto
+                )
             elif hasattr(request.user, "medico"):
                 contexto = {"form_2": form}
                 return render(request, "dashboard/medicos/agendamentos.html", contexto)
-    
+
     return redirect("users:login")

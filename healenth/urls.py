@@ -35,6 +35,7 @@ urlpatterns = [
     path("gestao/", views.gestao, name="gestao"),
     path("contato/", include("contato.urls"), name="contato"),
     path("sugestoes/", views.sugestoes, name="sugestoes"),
+    path("sobre/", views.sobre, name="quemsomos"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

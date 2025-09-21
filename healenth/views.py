@@ -27,3 +27,6 @@ def gestao(request):
 
 def sugestoes(request):
     return render(request, "sugestoes.html")
+
+def sobre(request):
+    return render(request, "quemsomos.html")

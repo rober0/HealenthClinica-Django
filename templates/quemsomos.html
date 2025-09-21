@@ -1,0 +1,43 @@
+{% extends "base.html" %}  
+{% load static %}
+{% load django_vite %}
+
+{% block article %}
+  <article>
+  <head>
+    <script src="{% static 'js/intl.js' %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/intl-tel-input/build/css/intlTelInput.css' %}">
+    <script src="{% static 'intl-tel-input/build/js/intlTelInputWithUtils.min.js' %}"></script>
+    {% vite_asset 'static/css/index.css' %}
+  </head>
+
+    <body class="bg-white">
+    <div class="cont">
+    <form method="post"> 
+      {% csrf_token %} 
+      
+        <main class="p-2 pb-20 pt-10 flex items-center justify-center">
+<div class="bg-white rounded-8 p-2 flex shadow-md items-center justify-center h-auto">
+     <div class="m-auto p-2 flex flex-col h-auto w-250 gap-10 min-h-70">
+      <h1 class="mx-8 font-bold text-4xl">Quem nós<br>somos?<h1>
+      
+        <div class="w-full items-center justify-between flex">
+      <p class="mb-1.5 text-justify">
+        Lorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa.
+      Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo,
+      quando un anonimo tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. 
+      È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, 
+      pervenendoci sostanzialmente inalterato.
+      </p>
+    </div>
+  </div>
+  </div>
+</main>
+
+</fieldset>
+    </body>
+  </article>
+{% endblock %}
+  </body>
+</html>

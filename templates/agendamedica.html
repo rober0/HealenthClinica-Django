@@ -1,9 +1,39 @@
 {% extends "base.html" %}  
+{% load static %}
+{% load django_vite %}
+
+      {% block head %}
+    <script src="{% static 'js/intl.js' %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% endblock head %}
 
 {% block article %}
-    <article>
-      
-  </article>
+<article>
+<body>
+<main class="p-8 flex justify-center">
+  <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 max-w-6xl items-center mx-auto shadow-md pl-2.5 pb-1.5 text-lg">
+    
+    <div class="space-y-4"><br>
+      <div class="text-justify">
+        A agenda médica serve como a ferramenta central para otimizar a organização de atendimentos médicos e consultas de pacientes. 
+        Com interfaces diferentes para os usuários, sendo um sistema dinâmico que gerencia consultas, procedimentos, retornos e até encaixes de emergência. 
+        Controlando o envio de lembretes automáticos para pacientes e o controle de faltas.
+      </div>
+
+      <div class="text-justify pb-7.5">
+        Há recursos como Status de agendamento, bloqueio de horários, cadastro de pacientes, reserva e agendamento seriado.
+      </div>
+    </div>
+
+    <div class="flex justify-center">
+      <a class="inline-flex m-5">
+        <img src="/media/agendaazul.jpg" alt="agd" width="700" class="rounded-lg shadow-md"/>
+      </a>
+    </div>
+
+  </div>
+</main>
+</article>
 {% endblock %}
   </body>
 </html>

@@ -29,39 +29,39 @@
             <label>Email:</label>
             {{ form.email }}
             {% if form.email.errors %}
-            <div class="text-error">
-              {% for error in form.email.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+              <div class="text-error">
+                {% for error in form.email.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
             <label>Nome:</label>
             {{ form.username }}
             {% if form.username.errors %}
-            <div class="text-error">
-              {% for error in form.username.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+              <div class="text-error">
+                {% for error in form.username.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
             <label>Senha:</label>
             {{ form.password }}
             {% if form.password.errors %}
-            <div class="text-error">
-              {% for error in form.password.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+              <div class="text-error">
+                {% for error in form.password.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
             <label>Confirmação de Senha:</label>
             {{ form.password_confirm }}
             {% if form.password_confirm.errors %}
-            <div class="text-error">
-              {% for error in form.password_confirm.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+              <div class="text-error">
+                {% for error in form.password_confirm.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -71,5 +71,4 @@
       </div>
     </div>
   </form>
-
 {% endblock %}

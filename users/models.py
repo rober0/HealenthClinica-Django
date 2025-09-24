@@ -86,6 +86,8 @@ class Paciente(Usuario):
     data_nascimento = models.DateField(null=False, blank=False)
     telefone = models.CharField(max_length=15, null=False, blank=False)
     genero = models.CharField(max_length=20, null=False, blank=False, default="")
+    cpf = models.CharField(max_length=14, null=True, blank=True, unique=True)
+    cep = models.CharField(max_length=9, null=True, blank=True)
 
     class Meta:
         verbose_name = "Paciente"
@@ -111,6 +113,8 @@ class Medico(Usuario):
     data_nascimento = models.DateField(null=False, blank=False)
     telefone = models.CharField(max_length=15, null=False, blank=False)
     genero = models.CharField(max_length=20, null=False, blank=False, default="")
+    cpf = models.CharField(max_length=14, null=True, blank=True, unique=True)
+    cep = models.CharField(max_length=9, null=True, blank=True)
 
     class Meta:
         verbose_name = "Médico"

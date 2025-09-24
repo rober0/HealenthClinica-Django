@@ -67,7 +67,7 @@ class RegistroForm(forms.ModelForm):
                 attrs={
                     "type": "tel",
                     "id": "telefone",
-                    "placeholder": "Telefone",
+                    "placeholder": "(XX) XXXXX-XXXX",
                     "class": "input validator",
                     "required": "required",
                 }

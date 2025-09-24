@@ -1,10 +1,11 @@
 {% extends '../base.html' %}
 {% load django_vite %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block head %}
   <title>Editar Usuário</title>
-  <script type="module" src="{% vite_asset_url 'static/js/intl.js' %}"></script>
+  <script type="module" src="{% vite_asset_url 'static/js/imask.js' %}"></script>
 {% endblock %}
 
 {% block main %}
@@ -22,13 +23,23 @@
       <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center gap-4 mb-2">
           {% if edit_user.avatar %}
-            <img src="{{ edit_user.avatar.url }}" alt="Avatar" width="80" style="border-radius: 50%;" />
+            <img src="{{ edit_user.avatar.url }}" class="w-20 h-20 rounded-full object-cover object-center" alt="Avatar" width="80" />
           {% endif %}
           <div class="flex flex-col gap-0.5">
             {% if edit_user.username %}
               <p class="text-2xl">{{ edit_user.username }}</p>
             {% endif %}
             <p class="text-sm text-gray-500">Data de Registro: {{ edit_user.date_joined }}</p>
+          </div>
+          <div class="flex flex-row gap-0.5">
+            <div>{{ form.avatar }}</div>
+            {% if form.avatar.errors %}
+              <div class="text-error">
+                {% for error in form.avatar.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
           </div>
         </div>
         <div class="container flex flex-col md:flex-row mt-4 gap-4">
@@ -41,62 +52,73 @@
             <label>Email:</label>
             {{ form.email }}
             {% if form.email.errors %}
-            <div class="text-error">
-              {% for error in form.email.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+              <div class="text-error">
+                {% for error in form.email.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
             <label>Nome:</label>
             {{ form.username }}
             {% if form.username.errors %}
-            <div class="text-error">
-              {% for error in form.username.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+              <div class="text-error">
+                {% for error in form.username.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+            {% if form.telefone %}
+              <label>Telefone:</label>
+              {{ form.telefone }}
+              {% if form.telefone.errors %}
+                <div class="text-error">
+                  {% for error in form.telefone.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endif %}
             {% if edit_user.paciente %}
               <p class="text-xl font-normal mt-6">Alterar Senha</p>
               <label>Digite uma Senha:</label>
               {{ form.password }}
               {% if form.password.errors %}
-            <div class="text-error">
-              {% for error in form.password.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+                <div class="text-error">
+                  {% for error in form.password.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
               <label>Confirme a Senha:</label>
               {{ form.password_confirm }}
               {% if form.password_confirm.errors %}
-            <div class="text-error">
-              {% for error in form.password_confirm.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+                <div class="text-error">
+                  {% for error in form.password_confirm.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
             {% endif %}
             {% if edit_user.medico %}
               <p class="text-xl font-normal mt-6">Alterar Senha</p>
               <label>Digite uma Senha:</label>
               {{ form.password }}
               {% if form.password.errors %}
-            <div class="text-error">
-              {% for error in form.password.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+                <div class="text-error">
+                  {% for error in form.password.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
               <label>Confirme a Senha:</label>
               {{ form.password_confirm }}
               {% if form.password_confirm.errors %}
-            <div class="text-error">
-              {% for error in form.password_confirm.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+                <div class="text-error">
+                  {% for error in form.password_confirm.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
             {% endif %}
           </div>
           <div class="flex flex-col items-start w-full md:w-1/2 gap-y-2">
@@ -111,85 +133,97 @@
               <label>Digite uma Senha:</label>
               {{ form.password }}
               {% if form.password.errors %}
-            <div class="text-error">
-              {% for error in form.password.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+                <div class="text-error">
+                  {% for error in form.password.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
               <label>Confirme a Senha:</label>
               {{ form.password_confirm }}
               {% if form.password_confirm.errors %}
-            <div class="text-error">
-              {% for error in form.password_confirm.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+                <div class="text-error">
+                  {% for error in form.password_confirm.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
             {% endif %}
-            {% if form.telefone %}
-              <label>Telefone:</label>
-              {{ form.telefone }}
-              {% if form.telefone.errors %}
-            <div class="text-error">
-              {% for error in form.telefone.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+            {% if form.cpf %}
+              <label>CPF:</label>
+              {{ form.cpf }}
+              {% if form.cpf.errors %}
+                <div class="text-error">
+                  {% for error in form.cpf.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endif %}
+            {% if form.cep %}
+              <label>CEP:</label>
+              {{ form.cep }}
+              {% if form.cep.errors %}
+                <div class="text-error">
+                  {% for error in form.cep.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
             {% endif %}
             {% if form.especialidade %}
               <label>Especialidade:</label>
               {{ form.especialidade }}
               {% if form.especialidade.errors %}
-            <div class="text-error">
-              {% for error in form.especialidade.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+                <div class="text-error">
+                  {% for error in form.especialidade.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
             {% endif %}
             {% if form.data_nascimento %}
               <label>Data de Nascimento:</label>
               {{ form.data_nascimento }}
               {% if form.data_nascimento.errors %}
-            <div class="text-error">
-              {% for error in form.data_nascimento.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+                <div class="text-error">
+                  {% for error in form.data_nascimento.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
             {% endif %}
             {% if form.genero %}
               <label>Gênero:</label>
               {{ form.genero }}
               {% if form.genero.errors %}
-            <div class="text-error">
-              {% for error in form.genero.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+                <div class="text-error">
+                  {% for error in form.genero.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
             {% endif %}
             {% if edit_user.medico %}
               <label>CRM:</label>
               <div class="flex flex-row w-1/2">
                 {{ form.crm_estado }}
                 {% if form.crm_estado.errors %}
-            <div class="text-error">
-              {% for error in form.crm_estado.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-                {{ form.crm_numero }}</div>
-                {% if form.crm_numero.errors %}
-            <div class="text-error">
-              {% for error in form.crm_numero.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+                  <div class="text-error">
+                    {% for error in form.crm_estado.errors %}
+                      <p>{{ error }}</p>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+                {{ form.crm_numero }}
+              </div>
+              {% if form.crm_numero.errors %}
+                <div class="text-error">
+                  {% for error in form.crm_numero.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
             {% endif %}
           </div>
         </div>
@@ -201,5 +235,4 @@
       </div>
     </div>
   </form>
-
 {% endblock %}

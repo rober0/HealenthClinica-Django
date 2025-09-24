@@ -4,7 +4,7 @@
 
 {% block head %}
   <title>Registrar Médico</title>
-  <script type="module" src="{% vite_asset_url 'static/js/intl.js' %}"></script>
+  <script type="module" src="{% vite_asset_url 'static/js/imask.js' %}"></script>
 {% endblock %}
 
 {% block main %}
@@ -30,97 +30,115 @@
             <label>Email:</label>
             {{ form.email }}
             {% if form.email.errors %}
-            <div class="text-error">
-              {% for error in form.email.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
+              <div class="text-error">
+                {% for error in form.email.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
             <label>Nome:</label>
             {{ form.username }}
             {% if form.username.errors %}
-            <div class="text-error">
-              {% for error in form.username.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-            <label>Senha:</label>
-            {{ form.password }}
-            {% if form.password.errors %}
-            <div class="text-error">
-              {% for error in form.password.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-            <label>Confirme a Senha:</label>
-            {{ form.password_confirm }}
-            {% if form.password_confirm.errors %}
-            <div class="text-error">
-              {% for error in form.password_confirm.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-          </div>
-          <div class="flex flex-col items-start w-full md:w-1/2 gap-y-2">
-            <p class="text-xl font-medium mb-1">Informações Pessoais</p>
+              <div class="text-error">
+                {% for error in form.username.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
             <label>Telefone:</label>
             {{ form.telefone }}
             {% if form.telefone.errors %}
-            <div class="text-error">
-              {% for error in form.telefone.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-            <label>Data de Nascimento:</label>
-            {{ form.data_nascimento }}
-            {% if form.data_nascimento.errors %}
-            <div class="text-error">
-              {% for error in form.data_nascimento.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-            <label>Gênero:</label>
-            {{ form.genero }}
-            {% if form.genero.errors %}
-            <div class="text-error">
-              {% for error in form.genero.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-            <label>Especialidade:</label>
-            {{ form.especialidade }}
-            {% if form.especialidade.errors %}
-            <div class="text-error">
-              {% for error in form.especialidade.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-            <label>CRM:</label>
-            <div class="flex flex-row w-1/2">
-              {{ form.crm_estado }}
-              {% if form.crm_estado.errors %}
-            <div class="text-error">
-              {% for error in form.crm_estado.errors %}
-                <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-              {{ form.crm_numero }}
-              {% if form.crm_numero.errors %}
               <div class="text-error">
-                {% for error in form.crm_numero.errors %}
+                {% for error in form.telefone.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <label>Senha:</label>
+            {{ form.password }}
+            {% if form.password.errors %}
+              <div class="text-error">
+                {% for error in form.password.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <label>Confirme a Senha:</label>
+            {{ form.password_confirm }}
+            {% if form.password_confirm.errors %}
+              <div class="text-error">
+                {% for error in form.password_confirm.errors %}
                   <p>{{ error }}</p>
                 {% endfor %}
               </div>
             {% endif %}
           </div>
+          <div class="flex flex-col items-start w-full md:w-1/2 gap-y-2">
+            <p class="text-xl font-medium mb-1">Informações Pessoais</p>
+            <label>CPF:</label>
+            {{ form.cpf }}
+            {% if form.cpf.errors %}
+              <div class="text-error">
+                {% for error in form.cpf.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <label>CEP:</label>
+            {{ form.cep }}
+            {% if form.cep.errors %}
+              <div class="text-error">
+                {% for error in form.cep.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <label>Data de Nascimento:</label>
+            {{ form.data_nascimento }}
+            {% if form.data_nascimento.errors %}
+              <div class="text-error">
+                {% for error in form.data_nascimento.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <label>Gênero:</label>
+            {{ form.genero }}
+            {% if form.genero.errors %}
+              <div class="text-error">
+                {% for error in form.genero.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <label>Especialidade:</label>
+            {{ form.especialidade }}
+            {% if form.especialidade.errors %}
+              <div class="text-error">
+                {% for error in form.especialidade.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <label>CRM:</label>
+            <div class="flex flex-row w-1/2">
+              {{ form.crm_estado }}
+              {% if form.crm_estado.errors %}
+                <div class="text-error">
+                  {% for error in form.crm_estado.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              {{ form.crm_numero }}
+              {% if form.crm_numero.errors %}
+                <div class="text-error">
+                  {% for error in form.crm_numero.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>

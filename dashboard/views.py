@@ -11,9 +11,10 @@ from dashboard.forms import (
     AdministradorForm,
     AgendamentoForm,
     MarcarAgendamentoForm,
+    ListaEsperaForm,
     BloquearDiaForm,
 )
-from dashboard.models import CriarEvento, ListaEspera, BloquearDia
+from dashboard.models import CriarAgendamento, ListaEspera, BloquearDia
 import json
 
 
@@ -137,7 +138,7 @@ def register_adm(request):
 
 
 def eventos_filtrados(user):
-    base_query = CriarEvento.objects.filter(is_active=True, is_deleted=False)
+    base_query = CriarAgendamento.objects.filter(is_active=True, is_deleted=False)
 
     if hasattr(user, "paciente"):
         return base_query.filter(paciente=user.paciente)
@@ -146,7 +147,7 @@ def eventos_filtrados(user):
     elif hasattr(user, "administrador"):
         return base_query
 
-    return CriarEvento.objects.none()
+    return CriarAgendamento.objects.none()
 
 
 @login_required
@@ -353,7 +354,7 @@ def medico_agendamentos(request):
         }
         event_list.append(event_dict)
 
-    dias_bloqueados = BloquearDia.objects.filter(usuario=user)
+    dias_bloqueados = BloquearDia.objects.filter(medico=user)
     for dia in dias_bloqueados:
         bloqueio_dict = {
             "id": f"bloqueio-{dia.id}",
@@ -404,6 +405,7 @@ def paciente(request):
     eventos_ausentes = eventos_futuros.filter(status="AUSENTE").count()
     eventos_concluidos = eventos.filter(status="CONCLUIDO").count()
     eventos_lista = eventos_futuros.order_by("data_inicio")
+    eventos_consulta = eventos_futuros.order_by("data_inicio").filter(status="PEDIDO")
     proximo_agendamento = eventos_lista.first()
     proxima_data = proximo_agendamento.data_inicio if proximo_agendamento else None
     horario_atual = timezone.now().strftime("%H:%M:%S")
@@ -417,6 +419,7 @@ def paciente(request):
         "eventos_concluidos": eventos_concluidos,
         "eventos_ausentes": eventos_ausentes,
         "eventos_lista": eventos_lista,
+        "eventos_consulta": eventos_consulta,
         "proxima_data": proxima_data,
         "proximo_agendamento": proximo_agendamento,
         "horario_atual": horario_atual,
@@ -544,7 +547,7 @@ def create_consulta(request):
             medico_selecionado = form.cleaned_data["medico"]
             paciente_atual = request.user.paciente
 
-            agendamentos_conflitantes = CriarEvento.objects.filter(
+            agendamentos_conflitantes = CriarAgendamento.objects.filter(
                 medico=medico_selecionado,
                 data_inicio__lt=data_fim,
                 data_fim__gt=data_inicio,
@@ -580,11 +583,11 @@ def edit_agendamento(request, pk):
     user = request.user
 
     if hasattr(user, "paciente"):
-        evento = get_object_or_404(CriarEvento, pk=pk, paciente=user.paciente)
+        evento = get_object_or_404(CriarAgendamento, pk=pk, paciente=user.paciente)
     elif hasattr(user, "medico"):
-        evento = get_object_or_404(CriarEvento, pk=pk, medico=user.medico)
+        evento = get_object_or_404(CriarAgendamento, pk=pk, medico=user.medico)
     elif hasattr(user, "administrador"):
-        evento = get_object_or_404(CriarEvento, pk=pk)
+        evento = get_object_or_404(CriarAgendamento, pk=pk)
 
     def get_template():
         user = request.user
@@ -612,15 +615,15 @@ def edit_agendamento(request, pk):
 
 
 @login_required
-def delete_agendamento(request, event_id):
+def delete_agendamento(request, agendamento_id):
     user = request.user
 
     if hasattr(user, "paciente"):
-        eventos = get_object_or_404(CriarEvento, id=event_id, paciente=user.paciente)
+        eventos = get_object_or_404(CriarAgendamento, id=agendamento_id, paciente=user.paciente)
     elif hasattr(user, "medico"):
-        eventos = get_object_or_404(CriarEvento, id=event_id, medico=user.medico)
+        eventos = get_object_or_404(CriarAgendamento, id=agendamento_id, medico=user.medico)
     elif hasattr(user, "administrador"):
-        eventos = get_object_or_404(CriarEvento, id=event_id)
+        eventos = get_object_or_404(CriarAgendamento, id=agendamento_id)
     else:
         return JsonResponse({"message": "Não autorizado!"}, status=403)
 
@@ -629,28 +632,116 @@ def delete_agendamento(request, event_id):
         return JsonResponse({"message": "Agendamento deletado com sucesso."})
     return JsonResponse({"message": "Erro!"}, status=400)
 
+@login_required
+def edit_lista_espera(request, pk):
+    user = request.user
+
+    if hasattr(user, "medico"):
+        espera = get_object_or_404(ListaEspera, pk=pk, medico=user.medico)
+    elif hasattr(user, "administrador"):
+        espera = get_object_or_404(ListaEspera, pk=pk)
+
+    def get_template():
+        user = request.user
+        if hasattr(user, "administrador"):
+            return "dashboard/administradores/editlistaespera.html"
+        elif hasattr(user, "medico"):
+            return "dashboard/medicos/editlistaespera.html"
+
+    if request.method == "POST":
+        form = ListaEsperaForm(request.POST)
+        if form.is_valid():
+            data_inicio = form.cleaned_data["data_inicio"]
+            data_fim = form.cleaned_data["data_fim"]
+            medico_selecionado = espera.medico
+            paciente_atual = espera.paciente
+
+            agendamentos_conflitantes = CriarAgendamento.objects.filter(
+                medico=medico_selecionado,
+                data_inicio__lt=data_fim,
+                data_fim__gt=data_inicio,
+                is_deleted=False,
+            ).exists()
+
+            if not agendamentos_conflitantes:
+                evento = form.save(commit=False)
+                evento.paciente = paciente_atual
+                evento.medico = medico_selecionado
+                evento.status = "AGENDADO"
+                evento.procedimentos = espera.procedimentos
+                evento.convenio = espera.convenio
+                evento.observacoes = espera.observacoes
+                evento.queixa = espera.queixa
+                evento.save()
+                espera.delete()
+
+                if hasattr(request.user, "administrador"):
+                    return redirect("dashboard:agenda_adm")
+                elif hasattr(request.user, "medico"):
+                    return redirect("dashboard:agenda_med")
+            else:
+                form.add_error(None, "Conflito de agendamento. Tente outro horário.")
+    else:
+        initial_data = {
+            "paciente": espera.paciente,
+            "medico": espera.medico,
+            "procedimentos": espera.procedimentos,
+            "convenio": espera.convenio,
+            "observacoes": espera.observacoes,
+            "queixa": espera.queixa,
+            "data_inicio": espera.data_inicio,
+            "data_fim": espera.data_fim,
+        }
+        form = ListaEsperaForm(initial=initial_data)
+
+    context = {
+        "form": form,
+        "espera": espera,
+    }
+    return render(request, get_template(), context)
+
+@login_required
+def delete_lista_espera(request, lista_espera_id):
+    user = request.user
+
+    if hasattr(user, "medico"):
+        espera = get_object_or_404(ListaEspera, id=lista_espera_id, medico=user.medico)
+    elif hasattr(user, "administrador"):
+        espera = get_object_or_404(ListaEspera, id=lista_espera_id)
+    else:
+        return JsonResponse({"message": "Não autorizado!"}, status=403)
+
+    if request.method == "POST":
+        espera.delete()
+        if hasattr(user, "medico"):
+            return redirect("dashboard:agenda_med")
+        elif hasattr(user, "administrador"):
+            return redirect("dashboard:agenda_adm")
+    return JsonResponse({"message": "Erro!"}, status=400)
 
 @login_required
 def create_bloqueio(request):
+    user = request.user
     if request.method == "POST":
-        form = BloquearDiaForm(request.POST)
+        post_data = request.POST.copy()
+        if hasattr(user, "medico"):
+            post_data["medico"] = user.medico.pk
+        form = BloquearDiaForm(post_data)
         if form.is_valid():
-            bloqueio = form.save(commit=False)
-            bloqueio.usuario = request.user
-            bloqueio.save()
-
+            form.save()   
+            
             if hasattr(request.user, "administrador"):
                 return redirect("dashboard:agenda_adm")
             elif hasattr(request.user, "medico"):
                 return redirect("dashboard:agenda_med")
         else:
             if hasattr(request.user, "administrador"):
-                contexto = {"form_2": form}
+                context = {"form_2": form}
                 return render(
-                    request, "dashboard/administradores/agendamentos.html", contexto
+                    request, "dashboard/administradores/agendamentos.html", context
                 )
             elif hasattr(request.user, "medico"):
-                contexto = {"form_2": form}
-                return render(request, "dashboard/medicos/agendamentos.html", contexto)
+                context = {"form_2": form}
+                return render(request, "dashboard/medicos/agendamentos.html", context)
 
     return redirect("users:login")

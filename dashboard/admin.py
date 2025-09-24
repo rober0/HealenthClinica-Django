@@ -2,9 +2,9 @@ from django.contrib import admin
 from . import models
 
 
-@admin.register(models.CriarEvento)
+@admin.register(models.CriarAgendamento)
 class AgendamentoAdmin(admin.ModelAdmin):
-    model = models.CriarEvento
+    model = models.CriarAgendamento
     list_display = [
         "id",
         "paciente",
@@ -52,7 +52,7 @@ class BloqueamentoAdmin(admin.ModelAdmin):
     model = models.BloquearDia
     list_display = [
         "id",
-        "usuario",
+        "medico",
         "dia_escolhido",
         "horario_inicio",
         "horario_fim",
@@ -61,8 +61,8 @@ class BloqueamentoAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
     ]
-    list_filter = ["usuario", "dia_escolhido"]
+    list_filter = ["medico", "dia_escolhido"]
     search_fields = [
-        "usuario__username",
+        "medico",
         "dia_escolhido",
     ]

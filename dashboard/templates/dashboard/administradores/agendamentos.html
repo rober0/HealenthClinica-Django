@@ -4,6 +4,7 @@
 {% load widget_tweaks %}
 
 {% block head %}
+<title>Sua Agenda</title>
   <script type="module" src="{% vite_asset_url 'static/js/agenda/agendaadm.js' %}"></script>
 {% endblock %}
 
@@ -11,65 +12,81 @@
   <div class="container mx-auto">
     <div class="flex flex-col lg:flex-row gap-6">
       <div class="lg:w-1/3 xl:w-1/4">
-    <div class="bg-base-200 border-1 border-gray-300 rounded-lg p-4">        
-      <div class="mb-6">
+        <div class="bg-base-200 border-1 border-gray-300 rounded-lg p-4">
+          <div class="mb-6">
             <h3 class="text-lg font-semibold mb-4">Agendamentos Disponíveis</h3>
             <div class="space-y-3 max-h-80 overflow-y-auto">
-            {% for evento in eventos_disponiveis %}
+              {% for evento in eventos_disponiveis %}
                 <div class="bg-white rounded-lg p-3 shadow-sm border border-blue-300">
-                    <div class="flex items-center gap-3">
-                        <div class="avatar">
-                            <div class="mask mask-squircle w-12 h-12">
-                                {% if evento.paciente.avatar %}
-                                    <img src="{{ evento.paciente.avatar.url }}" alt="Avatar" />
-                                {% else %}
-                                    <img src="{% static 'default-avatar.png' %}" alt="Avatar" />
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div>
-                            <p class="font-medium">{{ evento.paciente.username }}</p>
-                            <p class="text-sm text-gray-600">{{ evento.data_inicio|date:"d/m/Y H:i" }}</p>
-                            <span class="badge badge-sm {% if evento.status == 'AGENDADO' %}badge-primary{% elif evento.status == 'CONFIRMADO' %}badge-success{% endif %}">
-                                {{ evento.get_status_display }}
-                            </span>
-                        </div>
+                  <div class="flex items-center gap-3">
+                    <div class="avatar">
+                      <div class="mask mask-squircle w-12 h-12">
+                        {% if evento.paciente.avatar %}
+                          <img src="{{ evento.paciente.avatar.url }}" class="w-20 h-20 rounded-full object-cover object-center" alt="Avatar" />
+                        {% else %}
+                          <img src="{% static 'default-avatar.png' %}" alt="Avatar" />
+                        {% endif %}
+                      </div>
                     </div>
+                    <div>
+                      <p class="font-medium">{{ evento.paciente.username }}</p>
+                      <p class="text-sm text-gray-600">{{ evento.data_inicio|date:'d/m/Y H:i' }}</p>
+                      <span class="badge badge-sm {% if evento.status == 'AGENDADO' %}
+                          
+                          
+                          
+                          badge-primary
+
+
+
+                        {% elif evento.status == 'CONFIRMADO' %}
+                          
+                          
+                          
+                          badge-success
+
+
+
+                        {% endif %}">
+                        {{ evento.get_status_display }}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                {% empty %}
+              {% empty %}
                 <p class="text-gray-500 text-center">Nenhum agendamento disponível</p>
-                {% endfor %}
+              {% endfor %}
             </div>
-        </div>
-        <div>
+          </div>
+          <div>
             <h3 class="text-lg font-semibold mb-4">Lista de Espera</h3>
             <div class="space-y-3 max-h-80 overflow-y-auto">
-                {% for evento in eventos_indisponiveis %}
+              {% for evento in eventos_indisponiveis %}
                 <div class="bg-white rounded-lg p-3 shadow-sm border border-yellow-200">
-                    <div class="flex items-center gap-3">
-                        <div class="avatar">
-                            <div class="mask mask-squircle w-12 h-12">
-                                {% if evento.paciente.avatar %}
-                                    <img src="{{ evento.paciente.avatar.url }}" alt="Avatar" />
-                                {% else %}
-                                    <img src="{% static 'default-avatar.png' %}" alt="Avatar" />
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div>
-                            <p class="font-medium">{{ evento.paciente.username }}</p>
-                            <p class="text-sm text-gray-600">{{ evento.data_inicio|date:"d/m/Y H:i" }}</p>
-                            <span class="badge badge-sm badge-warning">Em espera</span>
-                        </div>
+                  <div class="flex items-center gap-3">
+                    <div class="avatar">
+                      <div class="mask mask-squircle w-12 h-12">
+                        {% if evento.paciente.avatar %}
+                          <img src="{{ evento.paciente.avatar.url }}" class="w-20 h-20 rounded-full object-cover object-center" alt="Avatar" />
+                        {% else %}
+                          <img src="{% static '' %}" alt="Avatar" />
+                        {% endif %}
+                      </div>
                     </div>
+                    <div>
+                      <p class="font-medium">{{ evento.paciente.username }}</p>
+                      <p class="text-sm text-gray-600">{{ evento.data_inicio|date:'d/m/Y H:i' }}</p>
+                      <span class="badge badge-sm badge-warning">Em espera</span>
+                    </div>
+                  </div>
                 </div>
-                {% empty %}
+              {% empty %}
                 <p class="text-gray-500 text-center">Nenhum agendamento em espera</p>
-                {% endfor %}
+              {% endfor %}
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
       <div class="lg:w-2/3 xl:w-3/4">
         <div id="calendar" class="bg-white rounded-lg shadow p-4"></div>
       </div>
@@ -204,8 +221,12 @@
         {% csrf_token %}
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium mb-1">Dia</label>
+            <label class="block text-sm font-medium mb-1">Dia Escolhido</label>
             {{ form_2.dia_escolhido }}
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Médico</label>
+            {{ form_2.medico }}
           </div>
           <div>
             <label class="block text-sm font-medium mb-1">Horário Início</label>
@@ -224,6 +245,6 @@
   </dialog>
 
   <script id="events-data" type="application/json">
-    {{ eventos | safe}}
+    {{ eventos | safe }}
   </script>
 {% endblock %}

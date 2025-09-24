@@ -76,8 +76,15 @@ document.addEventListener('DOMContentLoaded', function () {
         editable: false,
         dayMaxEvents: true,
         timeZone: 'local',
+        slotDuration: '00:30:00',
         slotMinTime: '07:00:00',
         slotMaxTime: '18:30:00',
+        slotLabelFormat: {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+        },
+        height: 'auto',
         allDaySlot: false,
         displayEventTime: true,
         events: combinedEvents,
@@ -129,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const avatarEl = document.getElementById('paciente_avatar');
             if (avatarEl) {
                 if (data.avatar) {
-                    avatarEl.innerHTML = `<img src="${data.avatar}" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%;">`;
+                    avatarEl.innerHTML = `<img src="${data.avatar}" alt="Avatar" class="w-20 h-20 rounded-full object-cover object-center">`;
                 } else {
                     avatarEl.innerHTML = '';
                 }

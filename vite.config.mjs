@@ -16,7 +16,7 @@ export default defineConfig({
         global: resolve('./static/css/global.css'),
         simple_datatables: resolve('./static/js/datatables.js'),
         simple_datatables_css: resolve('./static/css/datatables.css'),
-        intl_input: resolve('./static/js/intl.js'),
+        imask: resolve('./static/js/imask.js'),
         agenda_adm: resolve('./static/js/agenda/agendaadm.js'),
         agenda_med: resolve('./static/js/agenda/agendamed.js'),
         agenda_pac: resolve('./static/js/agenda/agendapac.js')

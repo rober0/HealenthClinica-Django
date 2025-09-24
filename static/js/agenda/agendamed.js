@@ -76,8 +76,16 @@ document.addEventListener('DOMContentLoaded', function () {
             editable: false,
             dayMaxEvents: true,
             timeZone: 'local',
+            slotDuration: '00:30:00',
             slotMinTime: '07:00:00',
             slotMaxTime: '18:30:00',
+            slotLabelFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+            },
+            height: 'auto',
+            
             allDaySlot: false,
             displayEventTime: true,
             events: combinedEvents,
@@ -113,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const avatarEl = document.getElementById('paciente_avatar');
             if (avatarEl) {
                 if (data.avatar) {
-                    avatarEl.innerHTML = `<img src="${data.avatar}" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%;">`;
+                    avatarEl.innerHTML = `<img src="${data.avatar}" alt="Avatar" class="w-20 h-20 rounded-full object-cover object-center">`;
                 } else {
                     avatarEl.innerHTML = '';
                 }
@@ -127,14 +135,14 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('data_inicio_detalhes').textContent = formatDateTime(e.start) || '';
             document.getElementById('data_fim_detalhes').textContent = formatDateTime(e.end) || '';
             deleteBtn.setAttribute("data-event-id", eventId);
-            editBtn.setAttribute("href", `/dashboard/administradores/agendamentos/editar/${eventId}`);
+            editBtn.setAttribute("href", `/dashboard/medicos/agendamentos/editar/${eventId}`);
             modalView.showModal();
         },
     }); calendar.render(); deleteBtn.addEventListener('click', function () {
     const eventId = this.getAttribute('data-event-id');
     if (!eventId) return;
     if (confirm('Tem certeza que deseja deletar este evento?')) {
-        fetch(`/dashboard/administradores/agendamentos/deletar/${eventId}`, {
+        fetch(`/dashboard/medicos/agendamentos/deletar/${eventId}`, {
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),

@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.db import models
-from users.models import Paciente, Medico, Usuario
+from users.models import Paciente, Medico
 from django.utils import timezone
 import datetime
 
@@ -36,7 +36,7 @@ class GerenciadorEvento(models.Manager):
         ).order_by("data_inicio")
 
 
-class CriarEvento(models.Model):
+class CriarAgendamento(models.Model):
     STATUS_CHOICES = [
         ("AGENDADO", "Agendado"),
         ("PEDIDO", "Pedido"),
@@ -45,14 +45,14 @@ class CriarEvento(models.Model):
         ("CONCLUIDO", "Concluido"),
         ("AUSENTE", "Ausente"),
     ]
-    
+
     PROCEDIMENTOS_CHOICES = [
         ("", "Selecione um Procedimento"),
         ("Consulta", "Consulta"),
         ("Exame", "Exame"),
         ("Retorno", "Retorno"),
     ]
-    
+
     CONVENIO_CHOICES = [
         ("", "Selecione um Convênio"),
         ("Publico", "Público"),
@@ -67,26 +67,26 @@ class CriarEvento(models.Model):
         on_delete=models.CASCADE,
         related_name="agendamentos_medico",
     )
-    procedimentos = models.CharField(max_length=200, choices=PROCEDIMENTOS_CHOICES, default="Consulta")
+    procedimentos = models.CharField(
+        max_length=200, choices=PROCEDIMENTOS_CHOICES, default="Consulta"
+    )
     convenio = models.CharField(max_length=100, choices=CONVENIO_CHOICES, default="")
     observacoes = models.TextField(blank=True, null=True)
     queixa = models.TextField(blank=True, null=True)
-    status = models.CharField(
-        max_length=30, choices=STATUS_CHOICES, default="AGENDADO" # <-- Perfeito!
-    )
-    disponivel = models.BooleanField(default=True)
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default="AGENDADO")
     data_inicio = models.DateTimeField()
     data_fim = models.DateTimeField()
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     objects = GerenciadorEvento()
 
     class Meta:
         verbose_name = "Agendamento"
         verbose_name_plural = "Agendamentos"
+
 
 class ListaEspera(models.Model):
     paciente = models.ForeignKey(
@@ -99,8 +99,16 @@ class ListaEspera(models.Model):
         blank=True,
         null=True,
     )
-    procedimentos = models.CharField(max_length=200, choices=CriarEvento.PROCEDIMENTOS_CHOICES, default="Consulta")
-    convenio = models.CharField(max_length=100, choices=CriarEvento.CONVENIO_CHOICES, default="", null=True, blank=True)
+    procedimentos = models.CharField(
+        max_length=200, choices=CriarAgendamento.PROCEDIMENTOS_CHOICES, default="Consulta"
+    )
+    convenio = models.CharField(
+        max_length=100,
+        choices=CriarAgendamento.CONVENIO_CHOICES,
+        default="",
+        null=True,
+        blank=True,
+    )
     observacoes = models.TextField(blank=True, null=True)
     queixa = models.TextField(blank=True, null=True)
     data_inicio = models.DateTimeField()
@@ -109,10 +117,11 @@ class ListaEspera(models.Model):
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
         verbose_name = "Lista de Espera"
         verbose_name_plural = "Listas de Espera"
+
 
 class BloquearDia(models.Model):
     DIAS_CHOICES = [
@@ -124,8 +133,8 @@ class BloquearDia(models.Model):
         (5, "Sexta-Feira"),
         (6, "Sábado"),
     ]
-    usuario = models.ForeignKey(
-        Usuario, on_delete=models.CASCADE, related_name="dia_bloqueado_user"
+    medico = models.ForeignKey(
+        Medico, on_delete=models.CASCADE, related_name="dia_bloqueado_medico", null=True, blank=True
     )
     dia_escolhido = models.IntegerField(
         choices=DIAS_CHOICES, verbose_name="Dia da Semana"
@@ -144,10 +153,10 @@ class BloquearDia(models.Model):
     )
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = "Dia Bloqueado"
         verbose_name_plural = "Dias Bloqueados"
-        unique_together = ("dia_escolhido", "usuario")
+        unique_together = ("dia_escolhido", "medico")

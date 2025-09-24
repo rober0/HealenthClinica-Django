@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block head %}
-  <title>Editar Agendamento</title>
+  <title>Editar Espera</title>
 {% endblock %}
 
 {% block main %}
@@ -13,12 +13,12 @@
         <li>
           <a href="{% url 'dashboard:agenda_med' %}">Sua Agenda</a>
         </li>
-        <li>Editar Agendamento</li>
+        <li>Editar Espera</li>
       </ul>
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
-      <h2 class="text-2xl font-semibold mb-6">Editar Agendamento</h2>
+      <h2 class="text-2xl font-semibold mb-6">Editar Espera</h2>
 
       <form method="post">
         {% csrf_token %}
@@ -27,7 +27,8 @@
           <div class="flex flex-col gap-y-2 w-1/2">
             <label class="label"><span class="label-text">Paciente</span></label>
             {{ form.paciente }}
-            <label class="label"><span class="label-text">Procedimentos</span></label>
+
+            <label class="label"><span class="label-text">Convênio</span></label>
             {{ form.procedimentos }}
 
             <label class="label"><span class="label-text">Convênio</span></label>
@@ -37,9 +38,8 @@
             {{ form.observacoes }}
           </div>
           <div class="flex flex-col gap-y-2 w-1/2">
-
-            <label class="label"><span class="label-text">Status</span></label>
-            {{ form.status }}
+            <label class="label"><span class="label-text">Médico</span></label>
+            {{ form.medico }}
 
             <label class="label"><span class="label-text">Data Início</span></label>
             {{ form.data_inicio }}
@@ -47,8 +47,8 @@
             <label class="label"><span class="label-text">Data Fim</span></label>
             {{ form.data_fim }}
 
-            <label class="label"><span class="label-text">Queixa</span></label>
-            {{ form.queixa}}
+            <label>Queixa</label>
+            {{ form.queixa }}
           </div>
         </div>
         <div class="flex justify-end gap-4 mt-6">

@@ -11,7 +11,7 @@
     <div class="breadcrumbs text-sm mb-4">
       <ul>
         <li>
-          <a href="{% url 'dashboard:agenda_med' %}">Agenda</a>
+          <a href="{% url 'dashboard:agenda_med' %}">Sua Agenda</a>
         </li>
         <li>Editar Agendamento</li>
       </ul>
@@ -27,7 +27,6 @@
           <div class="flex flex-col gap-y-2 w-1/2">
             <label class="label"><span class="label-text">Paciente</span></label>
             {{ form.paciente }}
-
             <label class="label"><span class="label-text">Procedimentos</span></label>
             {{ form.procedimentos }}
 
@@ -38,6 +37,7 @@
             {{ form.observacoes }}
           </div>
           <div class="flex flex-col gap-y-2 w-1/2">
+
             <label class="label"><span class="label-text">Status</span></label>
             {{ form.status }}
 
@@ -46,6 +46,9 @@
 
             <label class="label"><span class="label-text">Data Fim</span></label>
             {{ form.data_fim }}
+
+            <label class="label"><span class="label-text">Queixa</span></label>
+            {{ form.queixa}}
           </div>
         </div>
         <div class="flex justify-end gap-4 mt-6">

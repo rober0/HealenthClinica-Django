@@ -11,7 +11,7 @@
     <div class="breadcrumbs text-sm mb-4">
       <ul>
         <li>
-          <a href="{% url 'dashboard:agenda_adm' %}">Agenda</a>
+          <a href="{% url 'dashboard:agenda_adm' %}">Sua Agenda</a>
         </li>
         <li>Editar Agendamento</li>
       </ul>
@@ -27,25 +27,71 @@
           <div class="flex flex-col gap-y-2 w-1/2">
             <label class="label"><span class="label-text">Paciente</span></label>
             {{ form.paciente }}
-
+            {% if form.paciente.errors %}
+            <div class="text-error">
+              {% for error in form.paciente.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
             <label class="label"><span class="label-text">Procedimentos</span></label>
             {{ form.procedimentos }}
-
+            {% if form.procedimentos.errors %}
+            <div class="text-error">
+              {% for error in form.procedimentos.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
             <label class="label"><span class="label-text">Convênio</span></label>
             {{ form.convenio }}
-
+            {% if form.convenio.errors %}
+            <div class="text-error">
+              {% for error in form.convenio.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
             <label class="label"><span class="label-text">Observações</span></label>
             {{ form.observacoes }}
+            {% if form.observacoes.errors %}
+            <div class="text-error">
+              {% for error in form.observacoes.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
           </div>
           <div class="flex flex-col gap-y-2 w-1/2">
+            <label class="label"><span class="label-text">Médico</span></label>
+            {{ form.medico }}
             <label class="label"><span class="label-text">Status</span></label>
             {{ form.status }}
-
+            {% if form.status.errors %}
+            <div class="text-error">
+              {% for error in form.status.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
             <label class="label"><span class="label-text">Data Início</span></label>
             {{ form.data_inicio }}
-
+            {% if form.data_inicio.errors %}
+            <div class="text-error">
+              {% for error in form.data_inicio.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
             <label class="label"><span class="label-text">Data Fim</span></label>
             {{ form.data_fim }}
+            {% if form.data_fim.errors %}
+            <div class="text-error">
+              {% for error in form.data_fim.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
           </div>
         </div>
         <div class="flex justify-end gap-4 mt-6">
@@ -55,16 +101,4 @@
       </form>
     </div>
   </div>
-
-  {% if form.errors %}
-    <div class="alert alert-error mt-4">
-      <ul>
-        {% for field in form %}
-          {% for error in field.errors %}
-            <li>{{ field.label }}: {{ error }}</li>
-          {% endfor %}
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
 {% endblock %}

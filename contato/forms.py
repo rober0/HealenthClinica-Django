@@ -5,14 +5,10 @@ from .models import Contato, Sugestao
 class ContatoForm(forms.ModelForm):
     class Meta:
         model = Contato
-        fields = ["solicitanteC", "nomeC", "emailC", "categoria", "comentarios"]
+        fields = ["nome", "email", "categoria"]
 
         widgets = {
-            "solicitanteC": forms.Select(
-                attrs={"class": "input validator", "required": "required",
-                       }
-            ),
-            "nomeC": forms.TextInput(
+            "nome": forms.TextInput(
                 attrs={
                     "type": "text",
                     "class": "input validator",
@@ -21,7 +17,7 @@ class ContatoForm(forms.ModelForm):
                     "required": "required",
                 }
             ),
-            "emailC": forms.EmailInput(
+            "email": forms.EmailInput(
                 attrs={
                     "class": "form-control",
                     "placeholder": "exemplo@email.com",
@@ -31,42 +27,25 @@ class ContatoForm(forms.ModelForm):
                 }
             ),
             "categoria": forms.Select(
-                attrs={"class": "input validator", "required": "required",
-                }
-            ),
-            "comentarios": forms.Textarea(
                 attrs={
-                    "placeholder": "Descreva o assunto ...",
-                    "rows": 4,
                     "class": "input validator",
                     "required": "required",
                 }
             ),
         }
 
-        error_messages = {
-            "solicitanteC": {"required": "selecione o solicitante"},
-            "nomeC": {"required": "Insira um nome válido"},
-            "emailC": {
-                "required": "Por favor, informe seu e-mail",
-                "invalid": "Digite um e-mail válido",
-            },
-            "categoria": {"required": "Por favor, selecione uma categoria"},
-            "comentarios": {"required": "Por favor, descreva seu assunto"},
-        }
-
 
 class SugestoesForm(forms.ModelForm):
     class Meta:
         model = Sugestao
-        fields = ["solicitanteS", "nomeS", "emailS", "procedimentosS", "convenio", "observacoes"]
+        fields = [
+            "nome",
+            "email",
+            "sugestao",
+        ]
 
         widgets = {
-            "solicitanteS": forms.Select(
-                attrs={"class": "input validator", "required": "required",
-                       }
-            ),
-            "nomeS": forms.TextInput(
+            "nome": forms.TextInput(
                 attrs={
                     "type": "text",
                     "class": "input validator",
@@ -75,7 +54,7 @@ class SugestoesForm(forms.ModelForm):
                     "required": "required",
                 }
             ),
-            "emailS": forms.EmailInput(
+            "email": forms.EmailInput(
                 attrs={
                     "class": "form-control",
                     "placeholder": "exemplo@email.com",
@@ -84,15 +63,7 @@ class SugestoesForm(forms.ModelForm):
                     "required": "required",
                 }
             ),
-            "procedimentosS": forms.Select(
-                attrs={"class": "input validator", "required": "required",
-                }
-            ),
-            "convenio": forms.Select(
-                attrs={"class": "input validator", "required": "required",
-                }
-            ),
-            "observacoes": forms.Textarea(
+            "sugestao": forms.Textarea(
                 attrs={
                     "placeholder": "...",
                     "rows": 4,
@@ -100,16 +71,4 @@ class SugestoesForm(forms.ModelForm):
                     "required": "required",
                 }
             ),
-        }
-
-        error_messages = {
-            "solicitanteS": {"required": "selecione o solicitante"},
-            "nomeS": {"required": "Insira um nome válido"},
-            "emailS": {
-                "required": "Por favor, informe seu e-mail",
-                "invalid": "Digite um e-mail válido",
-            },
-            "procedimentosS": {"required": "Por favor, selecione um procedimento válido"},
-            "convenio": {"required": "Por favor, selecione uma convênio válido"},
-            "observacoes": {"required": "Por favor, descreva seu assunto"},
         }

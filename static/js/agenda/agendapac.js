@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
         timeZone: 'local', 
         slotMinTime: '07:00:00',
         slotMaxTime: '18:30:00',
+        height: 'auto',
         allDaySlot: false,
         displayEventTime: true,
         events: events.map(event => ({
@@ -37,9 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
         observacoes: event.observacoes,
         status: event.status
     },
-    backgroundColor: event.status === 'Agendado' ? '#2035ecff' : event.status === 'Confirmado' ? '#34D399' : event.status === 'Cancelado' ? '#F87171' : event.status === 'Concluido' ? '#006b44ff' : '#ffffffff',
-    borderColor: event.status === 'Agendado' ? '#2035ecff' : event.status === 'Confirmado' ? '#34D399' : event.status === 'Cancelado' ? '#F87171' : event.status === 'Concluido' ? '#006b44ff' : '#ffffffff',
-    textColor: '#FFFFFF',
 })),
         initialView: 'listWeek',
         locale: 'pt-br',

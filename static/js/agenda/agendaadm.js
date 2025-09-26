@@ -1,4 +1,6 @@
-import { Calendar } from '@fullcalendar/core';
+import {
+    Calendar
+} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -6,7 +8,6 @@ import interactionPlugin from '@fullcalendar/interaction';
 function dataFormat(data) {
     const dataJS = new Date(data);
     dataJS.setMinutes(dataJS.getMinutes() - dataJS.getTimezoneOffset());
-    
     const year = dataJS.getFullYear();
     const month = (dataJS.getMonth() + 1).toString().padStart(2, '0');
     const day = dataJS.getDate().toString().padStart(2, '0');
@@ -31,7 +32,6 @@ function formatDateOnly(dataStr) {
         year: 'numeric'
     });
 }
-
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
     const modalCreate = document.getElementById('create_modal');
@@ -39,10 +39,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalBlock = document.getElementById('block_modal');
     const deleteBtn = document.getElementById('delete-event-button');
     const editBtn = document.getElementById('edit-event-button');
-
     const startInput = document.getElementById('id_data_inicio');
     const endInput = document.getElementById('id_data_fim');
-
     const eventsJsonEl = document.getElementById('events-data');
     const eventsJson = eventsJsonEl ? eventsJsonEl.textContent.trim() : '[]';
     let combinedEvents;
@@ -52,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error("Erro ao parsear eventos JSON: ", e);
         combinedEvents = [];
     }
-
     let calendar = new Calendar(calendarEl, {
         plugins: [
             dayGridPlugin,
@@ -62,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
         customButtons: {
             blockButton: {
                 text: 'Bloquear Dia',
-                click: function() {
+                click: function () {
                     modalBlock.showModal();
                 }
             }
@@ -79,8 +76,15 @@ document.addEventListener('DOMContentLoaded', function () {
         editable: false,
         dayMaxEvents: true,
         timeZone: 'local',
+        slotDuration: '00:30:00',
         slotMinTime: '07:00:00',
         slotMaxTime: '18:30:00',
+        slotLabelFormat: {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+        },
+        height: 'auto',
         allDaySlot: false,
         displayEventTime: true,
         events: combinedEvents,
@@ -93,39 +97,50 @@ document.addEventListener('DOMContentLoaded', function () {
             timeGridDay: 'Dia',
         },
         eventOverlap: false,
-        
-selectOverlap: function(event) {
-      return event.display !== 'background';
-    },
-
-    select: function (arg) {
-        if (arg.allDay) {
+        selectOverlap: function (event) {
+            return event.display !== 'background';
+        },
+        select: function (arg) {
+            if (arg.allDay) {
+                calendar.unselect();
+                return;
+            }
+            const dayOfWeekSelected = arg.start.getDay();
+            const selectionStart = arg.start;
+            const selectionEnd = arg.end;
+            const blockedEvent = calendar.getEvents().find(event => {
+                const props = event.extendedProps;
+                return event.display === 'background' && Array.isArray(props.daysOfWeek) && props.daysOfWeek.includes(dayOfWeekSelected);
+            });
+            if (blockedEvent) {
+                const blockedStart = new Date(blockedEvent.extendedProps.horario_inicio);
+                const blockedEnd = new Date(blockedEvent.extendedProps.horario_fim);
+                if (selectionStart >= blockedStart && selectionEnd <= blockedEnd) {
+                    calendar.unselect();
+                    alert('Não é possível criar um agendamento neste horário, pois ele está bloqueado.');
+                    return;
+                }
+            }
+            if (startInput) startInput.value = arg.startStr.slice(0, 16);
+            if (endInput && arg.end) endInput.value = arg.endStr.slice(0, 16);
+            modalCreate.showModal();
             calendar.unselect();
-            return;
-        }
-
-        if (startInput) startInput.value = arg.startStr.slice(0, 16);
-        if (endInput && arg.end) endInput.value = arg.endStr.slice(0, 16);
-        modalCreate.showModal();
-        calendar.unselect();
-    },
+        },
         eventClick: function (arg) {
             const e = arg.event;
             const data = e._def.extendedProps;
             const eventId = e.id;
-
             if (typeof eventId === 'string' && eventId.startsWith('bloqueio-')) {
                 return;
             }
             const avatarEl = document.getElementById('paciente_avatar');
             if (avatarEl) {
                 if (data.avatar) {
-                    avatarEl.innerHTML = `<img src="${data.avatar}" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%;">`;
+                    avatarEl.innerHTML = `<img src="${data.avatar}" alt="Avatar" class="w-20 h-20 rounded-full object-cover object-center">`;
                 } else {
                     avatarEl.innerHTML = '';
                 }
             }
-
             document.getElementById('paciente_nome').textContent = data.paciente || '';
             document.getElementById('paciente_genero').textContent = data.genero || '';
             document.getElementById('paciente_data_nascimento').textContent = formatDateOnly(data.data_nascimento) || '';
@@ -134,27 +149,22 @@ selectOverlap: function(event) {
             document.getElementById('status_detalhes').textContent = data.status || '';
             document.getElementById('data_inicio_detalhes').textContent = formatDateTime(e.start) || '';
             document.getElementById('data_fim_detalhes').textContent = formatDateTime(e.end) || '';
-
             deleteBtn.setAttribute("data-event-id", eventId);
             editBtn.setAttribute("href", `/dashboard/administradores/agendamentos/editar/${eventId}`);
-
             modalView.showModal();
         },
     });
-
     calendar.render();
-
     deleteBtn.addEventListener('click', function () {
         const eventId = this.getAttribute('data-event-id');
         if (!eventId) return;
-
         if (confirm('Tem certeza que deseja deletar este evento?')) {
             fetch(`/dashboard/administradores/agendamentos/deletar/${eventId}`, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': getCookie('csrftoken'),
                     'Content-Type': 'application/json'
-                }
+                }  
             })
             location.reload()
             .then(response => {
@@ -162,14 +172,12 @@ selectOverlap: function(event) {
                     throw new Error('Erro ao deletar o evento.');
                 }
                 return response.json();
-            })
-            .then(data => {
+            }).then(data => {
                 alert(data.message);
                 modalView.close();
                 const event = calendar.getEventById(eventId);
                 if (event) event.remove();
-            })
-            .catch(() => alert('Erro ao deletar evento.'));
+            }).catch(() => alert('Erro ao deletar evento.'));
         }
     });
 

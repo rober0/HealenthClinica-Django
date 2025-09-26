@@ -24,9 +24,19 @@ urlpatterns = [
         name="edit_agenda_med",
     ),
     path(
-        "medicos/agendamentos/deletar/<int:event_id>",
+        "medicos/agendamentos/deletar/<int:agendamento_id>",
         views.delete_agendamento,
         name="delete_agenda_med",
+    ),
+    path(
+        "medicos/agendamentos/lista-espera/editar/<int:pk>",
+        views.edit_lista_espera,
+        name="edit_lista_espera_med",
+    ),
+    path(
+        "medicos/agendamentos/lista-espera/deletar/<int:lista_espera_id>",
+        views.delete_lista_espera,
+        name="delete_lista_espera_med",
     ),
     path(
         "medicos/bloquear-dia/",
@@ -52,9 +62,19 @@ urlpatterns = [
         name="edit_agenda_adm",
     ),
     path(
-        "administradores/agendamentos/deletar/<int:event_id>",
+        "administradores/agendamentos/deletar/<int:agendamento_id>",
         views.delete_agendamento,
         name="delete_agenda_adm",
+    ),
+    path(
+        "administradores/agendamentos/lista-espera/editar/<int:pk>",
+        views.edit_lista_espera,
+        name="edit_lista_espera_adm",
+    ),
+    path(
+        "administradores/agendamentos/lista-espera/deletar/<int:lista_espera_id>",
+        views.delete_lista_espera,
+        name="delete_lista_espera_adm",
     ),
     path(
         "administradores/bloquear-dia/",

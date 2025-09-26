@@ -3,7 +3,7 @@ from django.forms import ModelForm, DateInput
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from users.models import Paciente, Medico, Administrador, Usuario
-from dashboard.models import CriarEvento, MarcarEvento, BloquearDia
+from dashboard.models import CriarAgendamento, BloquearDia
 
 
 class PacienteForm(forms.ModelForm):
@@ -41,6 +41,8 @@ class PacienteForm(forms.ModelForm):
             "username",
             "data_nascimento",
             "telefone",
+            "cpf",
+            "cep",
             "genero",
         ]
         widgets = {
@@ -77,15 +79,40 @@ class PacienteForm(forms.ModelForm):
                 attrs={
                     "type": "tel",
                     "id": "telefone",
-                    "placeholder": "Telefone",
+                    "placeholder": "(XX) XXXXX-XXXX",
+                    "pattern": "(\(\d{2}\)\s?9?\d{4,5}-\d{4})",
                     "class": "input validator tabular-nums",
                     "required": "required",
+                }
+            ),
+            "cpf": forms.TextInput(
+                attrs={
+                    "type": "text",
+                    "id": "cpf",
+                    "inputmode": "numeric",
+                    "class": "input validator tabular-nums",
+                    "pattern": "\d{3}\.\d{3}\.\d{3}-\d{2}",
+                    "placeholder": "XXX.XXX.XXX-XX",
+                    "maxlength": "14",
+                    "title": "Digite apenas números do CPF",
+                }
+            ),
+            "cep": forms.TextInput(
+                attrs={
+                    "type": "text",
+                    "id": "cep",
+                    "inputmode": "numeric",
+                    "class": "input validator tabular-nums",
+                    "pattern": "[0-9]{5}-[0-9]{3}",
+                    "placeholder": "XXXXX-XXX",
+                    "maxlength": "9",
+                    "title": "Digite apenas números do CEP",
                 }
             ),
             "genero": forms.Select(
                 attrs={"class": "select validator", "required": "required"},
                 choices=[
-                    ("", ""),
+                    ("", "Selecione"),
                     ("Masculino", "Masculino"),
                     ("Feminino", "Feminino"),
                     ("Outro", "Outro"),
@@ -114,12 +141,18 @@ class PacienteForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data.get("username")
+        if not username:
+            raise forms.ValidationError("Nome de usuário é obrigatório.")
 
-        qs = Usuario.objects.filter(username=username)
-        if self.instance.pk:
-            qs = qs.exclude(pk=self.instance.pk)
-        if qs.exists():
-            raise forms.ValidationError("Este nome já está em uso.")
+        upper_username = username.upper()
+
+        if (
+            Usuario.objects.filter(username=upper_username)
+            .exclude(pk=self.instance.pk)
+            .exists()
+        ):
+            raise forms.ValidationError("Este nome de usuário já está em uso.")
+
         return username
 
     def clean_telefone(self):
@@ -137,6 +170,25 @@ class PacienteForm(forms.ModelForm):
             raise forms.ValidationError("Este email já está em uso.")
         return email
 
+    def clean_cpf(self):
+        cpf = self.cleaned_data.get("cpf")
+        if cpf:
+            cpf_numbers = "".join(filter(str.isdigit, cpf))
+            if len(cpf_numbers) != 11:
+                raise forms.ValidationError("O CPF deve conter 11 dígitos.")
+            qs = Paciente.objects.filter(cpf=cpf)
+            if self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise forms.ValidationError("Este CPF já está em uso.")
+        return cpf
+
+    def clean_cep(self):
+        cep = self.cleaned_data.get("cep")
+        if cep and len(cep) != 9:
+            raise forms.ValidationError("O CEP deve estar no formato XXXXX-XXX.")
+        return cep
+
     def save(self, commit=True):
         user = super().save(commit=False)
         password = self.cleaned_data.get("password")
@@ -149,6 +201,7 @@ class PacienteForm(forms.ModelForm):
 
 class MedicoForm(forms.ModelForm):
     avatar = forms.ImageField(required=False)
+
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
@@ -183,6 +236,8 @@ class MedicoForm(forms.ModelForm):
             "especialidade",
             "crm_estado",
             "crm_numero",
+            "cpf",
+            "cep",
             "data_nascimento",
             "telefone",
             "genero",
@@ -210,7 +265,7 @@ class MedicoForm(forms.ModelForm):
             "especialidade": forms.Select(
                 attrs={"class": "select validator", "required": "required"},
                 choices=[
-                    ("Selecione", ""),
+                    ("", "Selecione"),
                     ("Anestesiologia", "Anestesiologia"),
                     ("Angiologia", "Angiologia"),
                     ("Cardiologia", "Cardiologia"),
@@ -219,9 +274,13 @@ class MedicoForm(forms.ModelForm):
                 ],
             ),
             "crm_estado": forms.Select(
-                attrs={"class": "select", "required": "required"},
+                attrs={
+                    "id": "crm_estado",
+                    "class": "select validator",
+                    "required": "required",
+                },
                 choices=[
-                    ("Selecione", ""),
+                    ("", "Selecione"),
                     ("CRM/AC", "CRM/AC"),
                     ("CRM/AL", "CRM/AL"),
                     ("CRM/AM", "CRM/AM"),
@@ -253,6 +312,7 @@ class MedicoForm(forms.ModelForm):
             "crm_numero": forms.TextInput(
                 attrs={
                     "type": "text",
+                    "id": "crm_numero",
                     "inputmode": "numeric",
                     "class": "input validator",
                     "pattern": "[0-9]{6}",
@@ -275,15 +335,40 @@ class MedicoForm(forms.ModelForm):
                 attrs={
                     "type": "tel",
                     "id": "telefone",
-                    "placeholder": "Telefone",
+                    "placeholder": "(XX) XXXXX-XXXX",
+                    "pattern": "(\(\d{2}\)\s?9?\d{4,5}-\d{4})",
                     "class": "input validator tabular-nums",
                     "required": "required",
+                }
+            ),
+            "cpf": forms.TextInput(
+                attrs={
+                    "type": "text",
+                    "id": "cpf",
+                    "inputmode": "numeric",
+                    "class": "input validator tabular-nums",
+                    "pattern": "\d{3}\.\d{3}\.\d{3}-\d{2}",
+                    "placeholder": "XXX.XXX.XXX-XX",
+                    "maxlength": "14",
+                    "title": "Digite apenas números do CPF",
+                }
+            ),
+            "cep": forms.TextInput(
+                attrs={
+                    "type": "text",
+                    "id": "cep",
+                    "inputmode": "numeric",
+                    "class": "input validator tabular-nums",
+                    "pattern": "[0-9]{5}-[0-9]{3}",
+                    "placeholder": "XXXXX-XXX",
+                    "maxlength": "9",
+                    "title": "Digite apenas números do CEP",
                 }
             ),
             "genero": forms.Select(
                 attrs={"class": "select validator", "required": "required"},
                 choices=[
-                    ("", ""),
+                    ("", "Selecione"),
                     ("Masculino", "Masculino"),
                     ("Feminino", "Feminino"),
                     ("Outro", "Outro"),
@@ -312,12 +397,18 @@ class MedicoForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data.get("username")
+        if not username:
+            raise forms.ValidationError("Nome de usuário é obrigatório.")
 
-        qs = Usuario.objects.filter(username=username)
-        if self.instance.pk:
-            qs = qs.exclude(pk=self.instance.pk)
-        if qs.exists():
-            raise forms.ValidationError("Este nome já está em uso.")
+        upper_username = username.upper()
+
+        if (
+            Usuario.objects.filter(username=upper_username)
+            .exclude(pk=self.instance.pk)
+            .exists()
+        ):
+            raise forms.ValidationError("Este nome de usuário já está em uso.")
+
         return username
 
     def clean_telefone(self):
@@ -347,6 +438,25 @@ class MedicoForm(forms.ModelForm):
         if qs.exists():
             raise forms.ValidationError("Este CRM já está em uso.")
         return crm_numero
+
+    def clean_cpf(self):
+        cpf = self.cleaned_data.get("cpf")
+        if cpf:
+            cpf_numbers = "".join(filter(str.isdigit, cpf))
+            if len(cpf_numbers) != 11:
+                raise forms.ValidationError("O CPF deve conter 11 dígitos.")
+            qs = Paciente.objects.filter(cpf=cpf)
+            if self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise forms.ValidationError("Este CPF já está em uso.")
+        return cpf
+
+    def clean_cep(self):
+        cep = self.cleaned_data.get("cep")
+        if cep and len(cep) != 9:
+            raise forms.ValidationError("O CEP deve estar no formato XXXXX-XXX.")
+        return cep
 
     def __str__(self):
         return f"Dr(a). {self.username}"
@@ -429,6 +539,22 @@ class AdministradorForm(forms.ModelForm):
                 self.add_error("password_confirm", "As senhas não coincidem")
         return cleaned_data
 
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
+        if not username:
+            raise forms.ValidationError("Nome de usuário é obrigatório.")
+
+        upper_username = username.upper()
+
+        if (
+            Usuario.objects.filter(username=upper_username)
+            .exclude(pk=self.instance.pk)
+            .exists()
+        ):
+            raise forms.ValidationError("Este nome de usuário já está em uso.")
+
+        return username
+
     def clean_email(self):
         email = self.cleaned_data.get("email")
         qs = Usuario.objects.filter(email=email)
@@ -452,12 +578,14 @@ class AdministradorForm(forms.ModelForm):
 
 class AgendamentoForm(ModelForm):
     class Meta:
-        model = CriarEvento
+        model = CriarAgendamento
         fields = [
             "paciente",
+            "medico",
             "procedimentos",
             "convenio",
             "observacoes",
+            "queixa",
             "status",
             "data_inicio",
             "data_fim",
@@ -466,31 +594,24 @@ class AgendamentoForm(ModelForm):
             "paciente": forms.Select(
                 attrs={"class": "select validator", "required": "required"}
             ),
+            "medico": forms.Select(attrs={"class": "select validator"}),
             "procedimentos": forms.Select(
-                attrs={
-                    "class": "select validator",
-                    "required": "required",
-                    "placeholder": "Procedimentos",
-                },
-                choices=[
-                    ("", "Selecione um Procedimento"),
-                    ("Consulta", "Consulta"),
-                    ("Exame", "Exame"),
-                    ("Retorno", "Retorno"),
-                ],
+                attrs={"class": "select validator", "required": "required"}
             ),
             "convenio": forms.Select(
-                attrs={"class": "select validator", "required": "required"},
-                choices=[
-                    ("", "Selecione um Convênio"),
-                    ("Publico", "Público"),
-                    ("Particular", "Particular"),
-                ],
+                attrs={"class": "select validator", "required": "required"}
             ),
             "observacoes": forms.Textarea(
                 attrs={
                     "class": "textarea",
                     "placeholder": "Observações",
+                    "style": "height: 15px;",
+                }
+            ),
+            "queixa": forms.Textarea(
+                attrs={
+                    "class": "textarea",
+                    "placeholder": "Queixa",
                     "style": "height: 15px;",
                 }
             ),
@@ -509,32 +630,57 @@ class AgendamentoForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["medico"].required = False
+        self.fields["status"].required = False
         self.fields["data_inicio"].input_formats = ("%Y-%m-%dT%H:%M",)
         self.fields["data_fim"].input_formats = ("%Y-%m-%dT%H:%M",)
 
     def clean(self):
         cleaned_data = super().clean()
-        inicio = cleaned_data.get("data_inicio")
-        fim = cleaned_data.get("data_fim")
+        data_inicio = cleaned_data.get("data_inicio")
+        data_fim = cleaned_data.get("data_fim")
+        medico = cleaned_data.get("medico")
 
-        if fim and inicio and fim < inicio:
-            raise ValidationError("Data final não pode ser anterior à data inicial")
+        if not medico:
+            raise ValidationError("O médico responsável precisa ser especificado.")
+
+        if data_inicio and data_fim:
+            if data_fim <= data_inicio:
+                raise ValidationError("A data final deve ser posterior à data inicial.")
+
+            conflitos = CriarAgendamento.objects.filter(
+                medico=medico,
+                data_inicio__lt=data_fim,
+                data_fim__gt=data_inicio,
+                is_deleted=False,
+            )
+            if self.instance and self.instance.pk:
+                conflitos = conflitos.exclude(pk=self.instance.pk)
+
+            if conflitos.exists():
+                self._is_conflict = True
+                raise ValidationError(
+                    "Conflito de horário! Este período já está agendado."
+                )
+
         return cleaned_data
 
 
 class MarcarAgendamentoForm(ModelForm):
     class Meta:
-        model = MarcarEvento
+        model = CriarAgendamento
         fields = [
             "medico",
-            "status",
+            "convenio",
             "queixa",
+            "data_inicio",
+            "data_fim",
         ]
         widgets = {
             "medico": forms.Select(
                 attrs={"class": "select validator", "required": "required"}
             ),
-            "status": forms.Select(
+            "convenio": forms.Select(
                 attrs={"class": "select validator", "required": "required"}
             ),
             "queixa": forms.Textarea(
@@ -544,15 +690,87 @@ class MarcarAgendamentoForm(ModelForm):
                     "style": "height: 15px;",
                 }
             ),
+            "data_inicio": DateInput(
+                attrs={"type": "datetime-local", "class": "input validator"},
+                format="%Y-%m-%dT%H:%M",
+            ),
+            "data_fim": DateInput(
+                attrs={"type": "datetime-local", "class": "input validator"},
+                format="%Y-%m-%dT%H:%M",
+            ),
         }
 
+class ListaEsperaForm(ModelForm):
+    class Meta:
+        model = CriarAgendamento
+        fields = [
+            "paciente",
+            "medico",
+            "procedimentos",
+            "observacoes",
+            "convenio",
+            "queixa",
+            "data_inicio",
+            "data_fim",
+        ]
+        widgets = {
+            "paciente": forms.Select(
+                attrs={"class": "select validator", "required": "required"}
+            ),
+            "medico": forms.Select(attrs={"class": "select validator"}),
+            "procedimentos": forms.Select(
+                attrs={"class": "select validator", "required": "required"}
+            ),
+            "convenio": forms.Select(
+                attrs={"class": "select validator", "required": "required"}
+            ),
+            "observacoes": forms.Textarea(
+                attrs={
+                    "class": "textarea",
+                    "placeholder": "Observações",
+                    "style": "height: 15px;",
+                }
+            ),
+            "queixa": forms.Textarea(
+                attrs={
+                    "class": "textarea",
+                    "placeholder": "Queixa",
+                    "style": "height: 15px;",
+                }
+            ),
+            "data_inicio": DateInput(
+                attrs={"type": "datetime-local", "class": "input validator"},
+                format="%Y-%m-%dT%H:%M",
+            ),
+            "data_fim": DateInput(
+                attrs={"type": "datetime-local", "class": "input validator"},
+                format="%Y-%m-%dT%H:%M",
+            ),
+        }
 
 class BloquearDiaForm(ModelForm):
     class Meta:
         model = BloquearDia
-        fields = ["dia_escolhido"]
+        fields = ["medico", "dia_escolhido", "horario_inicio", "horario_fim"]
         widgets = {
+            "medico": forms.Select(
+                attrs={"class": "select validator", "required": "required"},
+            ),
             "dia_escolhido": forms.Select(
                 attrs={"class": "select validator", "required": "required"},
+            ),
+            "horario_inicio": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "input validator",
+                    "required": "required",
+                },
+            ),
+            "horario_fim": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "input validator",
+                    "required": "required",
+                },
             ),
         }

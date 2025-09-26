@@ -24,7 +24,7 @@
               <a href="{% url 'dashboard:agenda_med' %}" class="btn-ghost text-gray-800/80 hover:text-gray-400">Agenda</a>
             </li>
             <li>
-              <a href="{% url 'dashboard:prontuarios_med' %}" class="btn-ghost text-gray-800/80 hover:text-gray-400">Prontuário</a>
+              <a href="{% url 'dashboard:prontuarios_med' %}" class="btn-ghost text-gray-800/80 hover:text-gray-400">Pacientes</a>
             </li>
           </ul>
         </div>
@@ -34,7 +34,7 @@
           <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
             <div class="w-10 rounded-full overflow-hidden bg-gray-100">
               {% if user.avatar %}
-                <img src="{{ user.avatar.url }}" alt="Avatar" width="80" />
+                <img src="{{ user.avatar.url }}" class="w-20 h-20 rounded-full object-cover object-center" alt="Avatar" width="80" />
               {% endif %}
             </div>
           </div>

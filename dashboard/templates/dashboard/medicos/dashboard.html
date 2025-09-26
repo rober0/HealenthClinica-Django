@@ -107,7 +107,7 @@
                   <div class="avatar">
                     <div class="mask mask-squircle h-12 w-12">
                       {% if eventos.paciente.avatar %}
-                        <img src="{{ eventos.paciente.avatar.url }}" alt="Avatar" />
+                        <img src="{{ eventos.paciente.avatar.url }}" class="w-20 h-20 rounded-full object-cover object-center" alt="Avatar" />
                       {% else %}
                         <img src="{% static 'default-avatar.png' %}" alt="Avatar Padrão" />
                       {% endif %}
@@ -201,7 +201,7 @@
                   <div class="avatar">
                     <div class="mask mask-squircle h-12 w-12">
                       {% if eventos.paciente.avatar %}
-                        <img src="{{ eventos.paciente.avatar.url }}" alt="Avatar" />
+                        <img src="{{ eventos.paciente.avatar.url }}" class="w-20 h-20 rounded-full object-cover object-center" alt="Avatar" />
                       {% else %}
                         <img src="{% static 'default-avatar.png' %}" alt="Avatar Padrão" />
                       {% endif %}

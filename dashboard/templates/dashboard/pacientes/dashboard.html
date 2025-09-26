@@ -24,7 +24,7 @@
   <div class="grid grid-cols-4 gap-4">
     <div class="col-span-3 overflow-x-auto">
       <div class="flex md:flex-col items-start bg-base-200 border-t-1 border-r-1 border-l-1 border-gray-300 p-3">
-        <h2 class="text-lg font-semibold">Seus Agendamentos</h2>
+        <h2 class="text-lg font-semibold">Próximos Agendamentos</h2>
       </div>
       <table class="table bg-base-200 border-1 border-gray-300" id="pagination-table">
         <thead>
@@ -47,8 +47,8 @@
                 <div class="flex items-center gap-3">
                   <div class="avatar">
                     <div class="mask mask-squircle h-12 w-12">
-                      {% if eventos.paciente.avatar %}
-                        <img src="{{ eventos.paciente.avatar.url }}" alt="Avatar" />
+                      {% if eventos.medico.avatar %}
+                        <img src="{{ eventos.medico.avatar.url }}" class="w-20 h-20 rounded-full object-cover object-center" alt="Avatar" />
                       {% else %}
                         <img src="{% static 'default-avatar.png' %}" alt="Avatar Padrão" />
                       {% endif %}
@@ -56,8 +56,8 @@
                   </div>
                   <div>
                     <div class="font-medium">
-                      {% if eventos.paciente.username %}
-                        {{ eventos.paciente.username }}
+                      {% if eventos.medico %}
+                        {{ eventos.medico }}
                       {% else %}
                         Nenhum agendamento
                       {% endif %}
@@ -120,8 +120,10 @@
     </div>
 
     <div class="col-span-1 overflow-x-auto">
-      <div class="flex md:flex-col items-start bg-base-200 border-t-1 border-r-1 border-l-1 border-gray-300 p-3">
+      <div class="flex flex-row gap-x-16 items-start bg-base-200 border-t-1 border-r-1 border-l-1 border-gray-300 p-3">
         <h2 class="text-lg font-semibold">Suas Consultas</h2>
+        <a class="text-sm font-normal underline decoration-primary text-primary mt-1" href="{% url 'dashboard:create_agenda_pac' %}">Marcar Consulta</a>
+
       </div>
       <table class="table bg-base-200 border-1 border-gray-300" id="pagination-table-2">
         <thead>
@@ -135,14 +137,14 @@
           </tr>
         </thead>
         <tbody>
-          {% for eventos in eventos_lista_pedidos %}
+          {% for eventos in eventos_consulta %}
             <tr>
               <td>
                 <div class="flex items-center gap-3">
                   <div class="avatar">
                     <div class="mask mask-squircle h-12 w-12">
-                      {% if eventos.paciente.avatar %}
-                        <img src="{{ eventos.paciente.avatar.url }}" alt="Avatar" />
+                      {% if eventos.medico.avatar %}
+                        <img src="{{ eventos.paciente.avatar.url }}" class="w-20 h-20 rounded-full object-cover object-center" alt="Avatar" />
                       {% else %}
                         <img src="{% static 'default-avatar.png' %}" alt="Avatar Padrão" />
                       {% endif %}
@@ -174,15 +176,8 @@
           {% endfor %}
         </tbody>
       </table>
-        <div class="flex md:flex-col items-center bg-base-200 border-r-1 border-b-1 border-l-1 border-gray-300 p-3">
-        <a href="{% url "dashboard:create_agenda_pac" %}"><button class="btn btn-sm btn-outline btn-primary">Marcar Consulta</button></a>
-      </div>
     </div>
   </div>
-
-
-  </div>
-</div>
 
   <script>
     function updateClock() {

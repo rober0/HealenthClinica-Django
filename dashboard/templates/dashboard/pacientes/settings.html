@@ -2,7 +2,8 @@
 {% load django_vite %}
 
 {% block head %}
-  <title>Configurações</title>
+  <title>Configurações do Perfil</title>
+  <script type="module" src="{% vite_asset_url 'static/js/imask.js' %}"></script>
 {% endblock %}
 
 {% block main %}
@@ -20,7 +21,7 @@
       <div class="bg-white rounded-lg shadow p-6">
         <div class="flex items-center gap-4 mb-2">
           {% if view_config.avatar %}
-            <img src="{{ view_config.avatar.url }}" alt="Avatar" width="80" style="border-radius: 50%;" />
+            <img src="{{ view_config.avatar.url }}" class="w-20 h-20 rounded-full object-cover object-center" alt="Avatar" width="80" />
           {% endif %}
           <div class="flex flex-col gap-0.5">
             {% if view_config.username %}
@@ -36,16 +37,25 @@
             {{ form.email }}
             <label>Nome:</label>
             {{ form.username }}
-            <label>Senha:</label>
-            {{ form.password }}
-            <label>Confirmação de Senha:</label>
-            {{ form.password_confirm }}
+            <label>Telefone:</label>
+            {{ form.telefone }}
+          </div>
+          <div class="flex flex-col items-start w-full md:w-1/2 gap-y-2">
+            <p class="text-xl font-medium mb-1">Configurações Pessoais</p>
+            <label>CPF</label>
+            {{ form.cpf }}
+            <label>CEP:</label>
+            {{ form.cep }}
+            <label>Data de Nascimento:</label>
+            {{ form.data_nascimento }}
+            <label>Gênero:</label>
+            {{ form.genero }}
           </div>
         </div>
-      </div>
-      <div class="flex justify-end gap-2 mt-6">
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <button class="btn btn-error"><a href="{% url 'dashboard:medicos' %}">Cancelar</a></button>
+        <div class="flex justify-end gap-2 mt-6">
+          <button type="submit" class="btn btn-primary">Salvar</button>
+          <button class="btn btn-error"><a href="{% url 'dashboard:medicos' %}">Cancelar</a></button>
+        </div>
       </div>
     </div>
   </form>

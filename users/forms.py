@@ -67,7 +67,7 @@ class RegistroForm(forms.ModelForm):
                 attrs={
                     "type": "tel",
                     "id": "telefone",
-                    "placeholder": "Telefone",
+                    "placeholder": "(XX) XXXXX-XXXX",
                     "class": "input validator",
                     "required": "required",
                 }
@@ -75,7 +75,7 @@ class RegistroForm(forms.ModelForm):
             "genero": forms.Select(
                 attrs={"class": "select validator", "required": "required"},
                 choices=[
-                    ("", ""),
+                    ("", "Selecione"),
                     ("Masculino", "Masculino"),
                     ("Feminino", "Feminino"),
                     ("Outro", "Outro"),

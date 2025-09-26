@@ -1,10 +1,9 @@
 {% extends './base.html' %}
 {% load django_vite %}
 {% load static %}
-{% load widget_tweaks %}
 
 {% block head %}
-  <title>Marcar Consulta</title>
+  <title>Editar Espera</title>
 {% endblock %}
 
 {% block main %}
@@ -12,37 +11,49 @@
     <div class="breadcrumbs text-sm mb-4">
       <ul>
         <li>
-          <a href="{% url 'dashboard:agenda_pac' %}">Agenda</a>
+          <a href="{% url 'dashboard:agenda_med' %}">Sua Agenda</a>
         </li>
-        <li>Marcar Consulta</li>
+        <li>Editar Espera</li>
       </ul>
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
-      <h2 class="text-2xl font-semibold mb-6">Marcar Consulta</h2>
+      <h2 class="text-2xl font-semibold mb-6">Editar Espera</h2>
 
       <form method="post">
         {% csrf_token %}
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="flex flex-col gap-y-2 w-1/2">
-            <label class="label"><span class="label-text">Médico</span></label>
-            {{ form.medico }}
+            <label class="label"><span class="label-text">Paciente</span></label>
+            {{ form.paciente }}
+
+            <label class="label"><span class="label-text">Convênio</span></label>
+            {{ form.procedimentos }}
+
             <label class="label"><span class="label-text">Convênio</span></label>
             {{ form.convenio }}
-            <label class="label"><span class="label-text">Queixa</span></label>
-            {{ form.queixa }}
+
+            <label class="label"><span class="label-text">Observações</span></label>
+            {{ form.observacoes }}
           </div>
           <div class="flex flex-col gap-y-2 w-1/2">
+            <label class="label"><span class="label-text">Médico</span></label>
+            {{ form.medico }}
+
             <label class="label"><span class="label-text">Data Início</span></label>
             {{ form.data_inicio }}
+
             <label class="label"><span class="label-text">Data Fim</span></label>
             {{ form.data_fim }}
+
+            <label>Queixa</label>
+            {{ form.queixa }}
           </div>
         </div>
         <div class="flex justify-end gap-4 mt-6">
-          <a href="{% url 'dashboard:agenda_pac' %}" class="btn btn-ghost">Cancelar</a>
-          <button type="submit" class="btn btn-primary">Salvar</button>
+          <a href="{% url 'dashboard:agenda_med' %}" class="btn btn-ghost">Cancelar</a>
+          <button type="submit" class="btn btn-primary">Salvar Alterações</button>
         </div>
       </form>
     </div>

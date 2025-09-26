@@ -3,14 +3,14 @@
 {% load static %}
 
 {% block head %}
-  <title>Lista de Pacientes</title>
+  <title>Lista de Médicos</title>
   <script type="module" src="{% vite_asset_url 'static/js/datatables.js' %}"></script>
   <link rel="stylesheet" href="{% vite_asset_url 'static/css/datatables.css' %}" />
 {% endblock %}
 
 {% block main %}
   <div class="flex flex-row w-full bg-base-200 border-1 border-gray-300 rounded-md p-2">
-    <p class="text-3xl font-normal w-full">Lista de Pacientes</p>
+    <p class="text-3xl font-normal w-full">Lista de Médicos</p>
   </div>
   <br />
   <table id="sorting-table">
@@ -30,13 +30,29 @@
             </svg>
           </span>
         </th>
+        <th>
+          <span class="flex items-center">
+            Telefone<svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+            </svg>
+          </span>
+        </th>
+        <th>
+          <span class="flex items-center">
+            Especialidade<svg class="w-4 h-4 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 15 4 4 4-4m0-6-4-4-4 4" />
+            </svg>
+          </span>
+        </th>
       </tr>
     </thead>
     <tbody>
-      {% for paciente in pacientes %}
+      {% for medico in medicos %}
         <tr>
-          <td>{{ paciente.username }}</td>
-          <td>{{ paciente.email }}</td>
+          <td>{{ medico }}</td>
+          <td>{{ medico.email }}</td>
+          <td>{{ medico.telefone }}</td>
+          <td>{{ medico.especialidade }}</td>
         </tr>
       {% endfor %}
     </tbody>
